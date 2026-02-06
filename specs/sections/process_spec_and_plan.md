@@ -30,6 +30,8 @@ Detailed plans for each phase, pulling relevant details from the spec into a sel
 
 ### Challenge the AI Early
 
-One thing I do in steps 1 and 2: explicitly ask the agent to challenge my assumptions. Push back on my ideas. Tell me what's wrong with my approach. Suggest alternatives. Keep pushing for feedback on the top issues, until it's feedback feels like nits you can skip.
+One thing I do in steps 1 and 2: challenge the plan and refine details early. This is a two-way street:
+ - Challenge AI decisions, propose alternatives, fix its mistakes
+ - Explicitly ask the agent to challenge my assumptions. Push back on my ideas. Tell me what's wrong with my approach. Suggest alternatives. Keep pushing for feedback on the top issues, until its feedback feels like nits you can skip.
 
 This matters because AI agents are sycophantic by default — they'll agree with whatever you say and build exactly what you asked for, even if it's a bad idea. If you ask for pushback early, you surface problems before they're baked into the spec. Much cheaper to fix a bad assumption in step 1 than to rewrite three components in step 4.

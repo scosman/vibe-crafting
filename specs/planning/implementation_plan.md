@@ -12,10 +12,7 @@ specs/sections/
   process_project_overview.md
   process_spec_and_plan.md
   process_build_phases.md
-  process_review.md
-  process_testing_iteration.md
   process_code_review.md
-  process_external_review.md
   lessons_learned.md
   prior_art.md
   conclusion.md
@@ -49,17 +46,11 @@ Assembly: `cat specs/sections/*.md > README.md`
 
 ### Phase 3: The Process — Build, Review, Iterate
 - [ ] Write `process_build_phases.md`
-  - "Implement phase N" pattern, `/clear`, phase instructions
-  - Manual test plans for UI
-  - Link to phase_instructions.md, implement prompt
-- [ ] Write `process_review.md`
-  - Agent code review, human manual testing, human code review, git commit
-- [ ] Write `process_testing_iteration.md`
-  - Human testing loop, keeping spec updated
+  - The per-phase loop, mirroring structure from `process_overview.md` item 4
+  - Sub-steps: Build (autonomous agent, `/clear`, phase instructions loop), Review (agent CR + human code review), Manual Testing (test plans, diagnostic UI), Iteration (human testing, keeping spec updated), Commit
+  - Link to phase_instructions.md, CLAUDE.md, manual_test_plan_guide.md
 - [ ] Write `process_code_review.md`
-  - End-to-end agentic review (Autonomous → Interactive)
-  - Link to review prompt
-- [ ] Write `process_external_review.md`
+  - End-to-end agentic review (Autonomous → Interactive), link to agentic_cr.md
   - External tools (Gemini/CodeRabbit), no unreviewed code ships
 - [ ] **Human review:** Does the build→review→iterate loop feel natural? Is it clear when to use which agent?
 
