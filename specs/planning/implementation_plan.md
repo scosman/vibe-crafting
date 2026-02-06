@@ -26,14 +26,14 @@ Assembly: `cat specs/sections/*.md > README.md`
 ## Phases
 
 ### Phase 1: Foundation — Introduction & Two Tools
-- [ ] Write `introduction.md`
+- [x] Write `introduction.md`
   - Title, vibe crafting vs vibe coding, thesis, repo description, what was built
   - Compact TOC (will finalize links in assembly phase)
-- [ ] Write `two_tools.md`
+- [x] Write `two_tools.md`
   - Interactive Agent / Autonomous Agent framework
   - Cost and attention model (90/90 split)
   - Specific toolset as examples, not definitions
-- [ ] **Human review:** Does the intro hook? Is the two-tool concept clear to someone unfamiliar?
+- [x] **Human review:** Does the intro hook? Is the two-tool concept clear to someone unfamiliar?
 
 ### Phase 2: The Process — Overview & Planning Steps
 - [ ] Write `process_overview.md`
@@ -88,6 +88,10 @@ Assembly: `cat specs/sections/*.md > README.md`
 - [ ] Collect and add all prompt files to `prompts/` directory (per `needed_prompts.md`)
 - [ ] **Human review:** Do prompt files make sense standalone? Are they all linked from the right sections?
 
+### Phase 7: Examples
+ - [ ] Ask users for examples of key outputs of the process
+ - [ ] link to the samples throughout our doc
+
 ### Phase 7: Assembly & Polish
 - [ ] Cat all section files into `README.md`
 - [ ] Fix TOC content and links to match actual headings/sections/anchors
@@ -100,3 +104,4 @@ Assembly: `cat specs/sections/*.md > README.md`
 - All phases use the **Interactive Agent** — this is a writing project, not a coding one. Every section benefits from human collaboration and iteration.
 - Prompt files (Phase 5) may require pulling from external sources (chat history, other projects). Flag anything we can't find.
 - Keep sections self-contained enough that reordering or cutting a section doesn't break the rest.
+- Each process section (3.0 through 3.7) should have an effort bar right under the header showing human vs agent split: `[██████████] Human` · `[░░░░░░░░░░] Agent` (adjust fill to reflect the ratio).
