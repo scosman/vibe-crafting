@@ -10,7 +10,7 @@
 - Compact TOC — one line per major section, sub-links inline. Format:
   > **The Two Tools:** Interactive Agent | Autonomous Agent
   > **The Process:** Overview | Project Overview | Spec & Plan | Build Phases | Review | Testing & Iteration | Code Review | External Review
-  > **Lessons Learned:** It Still Needs You | Sycophancy | AI-Driven Manual Testing | Free Polish | Speccing | Tools & Xcode | Tokens & Cost
+  > **Lessons Learned:** It Still Needs You | Sycophancy | AI-Driven Manual Testing | Free Polish | Speccing | Projects & Costs | Autonomous Development
 
 ## 2. The Two Tools
 - Concept: two tools, two levels of attention and intelligence
@@ -94,8 +94,9 @@
   - Example: notification recurrence design that would have been fragile
   - Mitigation: explicitly ask it to push back (and remember to do so every time)
 
-- ### 4.3 AI-Driven Manual Testing
+- ### 4.3 AI-Driven Manual Testing [Interactive Tool]
   - Concept: agent writes manual test plans + diagnostic UI
+  - Mostly UI, but also for system integrations (AlarmKit, notifications, etc). Give examples
   - Found genuine bugs (alarm schedules, intents not in system UI)
   - More testing than you'd do manually, and it's repeatable
   - Link: prompt, example test plan, example diagnostic UI
@@ -104,26 +105,36 @@
   - Tiny improvements become free: "make return key advance to next step" — 15 seconds
   - Example from another project: async REST calls instead of threaded SDK calls
 
-- ### 4.5 It's not great a specing (a bit)
+- ### 4.5 It's not great at speccing (a bit)
   - Multiple competing sources of truth
   - AI assumptions: iOS background runtime is reliable, non-defensive scheduler
   - Design weak spots
 
-- ### 4.6 The Hard Parts: Tools and Xcode
-  - More time setting up MCP servers to let it work atonomouly than working on code. Okay, one time cost.
-  - xCode/iOS particulary awful (golang and python are much better)
-    - CLIs don't work in sandbox — needed MCP server to bypass for builds/warnings
-    - Xcode CLI is second class to UI — occasionally had to run manually
-    - Some APIs require physical device testing
-
-- ### 4.7 Tokens, Cost and the Evnironment
-  - 185M+ coding tokens
+- ### 4.6 Example Projects and Costs
+  - Two real projects summarized with token/cost breakdowns
+  - **iOS App** — the main project described in this post
+    - Token breakdown, model costs, z.ai Coder plan value
+  - **Pipeline Project** — a data pipeline / backend project
+    - Token breakdown, model costs
   - z.ai Coder plan: ~$30/mo for essentially unlimited (only hit temp limit once)
-  - Same usage on Sonnet: ~$2,400
-  - Same usage on GLM 7.5 API: ~$320
+  - What comparable usage would cost on other models/plans
   - Note on electricity / carbon credits
 
-## 5. Conclusion
+- ### 4.7 True Autonomous Development With Security
+  - The real hard part: autonomous agents need a secure sandbox
+  - More time setting up MCP servers to let it work autonomously than working on code. This is okay, one time cost.
+  - Sandboxing is essential but painful — agents need to build, test, lint, but you can't just give them full system access
+  - Some toolchains work fine: golang, uv+Python.
+  - xCode/iOS particularly awful
+    - CLIs don't work in sandbox — needed MCP server to bypass for builds/warnings
+    - Xcode CLI is second class to UI — occasionally had to run manually
+    - Some APIs require physical device testing. Manual testing needed [link].
+
+## 5. Prior Art
+- Other spec-driven development tools and approaches
+- TODO: research and fill in details
+
+## 6. Conclusion
 - Summary: vibe crafting = deliberate process + right tools + human judgment
 - When to use this approach / who it's for
 - Links to all prompts and artifacts in the repo

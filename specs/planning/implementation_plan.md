@@ -17,6 +17,7 @@ specs/sections/
   process_code_review.md
   process_external_review.md
   lessons_learned.md
+  prior_art.md
   conclusion.md
 ```
 
@@ -64,20 +65,32 @@ Assembly: `cat specs/sections/*.md > README.md`
 
 ### Phase 4: Lessons Learned
 - [ ] Write `lessons_learned.md`
-  - All subsections (4.1–4.7) from outline
+  - 4.1 It Still Needs You — technical, UX, and product design examples
+  - 4.2 Sycophancy is Real — examples and mitigation
+  - 4.3 AI-Driven Manual Testing — concept, bugs found, links to prompts/test plans
+  - 4.4 More Polish Than You'd Bother With — "free" improvements
+  - 4.5 It's not great at speccing — competing sources of truth, AI assumptions
+  - 4.6 Example Projects and Costs — two projects (iOS app, pipeline) with token/cost breakdowns
+  - 4.7 True Autonomous Development With Security — sandboxing challenges, toolchain differences, Xcode pain
   - Concrete examples for each lesson
   - Links to relevant prompts and artifacts where applicable
 - [ ] **Human review:** Are the anecdotes compelling? Anything missing from real experience? Tone check — honest, not preachy.
 
-### Phase 5: Conclusion & Prompts
+### Phase 5: Prior Art
+- [ ] Write `prior_art.md`
+  - Other spec-driven development tools and approaches
+  - TODO: research and fill in details
+- [ ] **Human review:** Coverage and fairness of comparisons.
+
+### Phase 6: Conclusion & Prompts
 - [ ] Write `conclusion.md`
   - Summary, audience, links to all prompts/artifacts
 - [ ] Collect and add all prompt files to `prompts/` directory (per `needed_prompts.md`)
 - [ ] **Human review:** Do prompt files make sense standalone? Are they all linked from the right sections?
 
-### Phase 6: Assembly & Polish
+### Phase 7: Assembly & Polish
 - [ ] Cat all section files into `README.md`
-- [ ] Fix TOC links to match actual heading anchors
+- [ ] Fix TOC content and links to match actual headings/sections/anchors
 - [ ] Fix any spelling issues carried from outline (see review notes)
 - [ ] Final read-through for flow, tone, consistency
 - [ ] **Human review:** Full end-to-end read of the assembled README. Final sign-off.
