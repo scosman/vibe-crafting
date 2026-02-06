@@ -1,0 +1,39 @@
+
+- Title: 
+  - Vibe Crafting: High Quality App Development without Coding
+    - 
+- Specing:
+  - it still sucks at design. Multiple completing sources of truth. Assuming background runtime on iOS is reliable. Non-defensive scheduler.  Etc.
+  - Still vibe-spacing. I’m not reading the specs. I’m asking it questions about them and telling it what to do, and forcing it to think through the plan end to end.
+- Models/Cost
+  - Opus + Cursor = specs. Opus is smarter. Cursor is nice for linking to changes.
+  - Implementation: Claude Code + GLM 4.7 from z.ai: much much cheaper, but very good. Good web-search tools for API research.
+- Hard part is Xcode: 
+  - CLIs don’t work in sandbox, had to create a MCP server to bypass sandbox for builds and warnings
+  - Xcode still expects you to use UI for things and CLI is second class. Would occasionally need to run manually to break out of loop
+  - Some APIs require testing on a physical device and not simulator
+- Manual test plans: Automating manual testing
+  - Explain concept, show prompt, show diagnostic UI and test file
+  - Found genuine bugs! Alarms schedules incorrect, intents not showing up in system UI. Really powerful and easy. Did more testing that I probably would have manually, and ended up with repeatable test plan and test UI.
+- Syncophatic (sp?)
+  - will do what I say to a fault. Any thing I ask, even if it’s a bad idea. 
+  - Technical design would have been awful: would have bent over backwards to follow one line in the spec (notification recurrence) even though it would have been fragile: both code and reliability.
+  - Need to ask it to push back (it will then), but need to remember that on every prompt.
+- More polish that I would have
+  - “make it so return on the keyboard proceeds to the next step” <- not hard, but now done in 15s.
+  - another project: using google cloud SDK on python (no async in 2026, come on folks): made async calls using REST API instead of threads
+- Different tools, different modes
+  - Cursor+Opus: more interactive spacing, code reviewing. 
+  - Claude Code + GLM: long uninterrupted coding agent tasks.
+- needs me
+  - Technical design flaws: had to review and call Opus out.
+    - No you can json serialize then hash to get a static ID, json serialization isn’t deterministic. No, not even if it hasn’t changed in a long while. No really.
+    - No you can’t rely on consistent background execution time in iOS, even if they have an API for it.
+    - Yes you can atomically move a batch of files in Google Cloud storage. No really you can. It’s new and called HNS.
+  - UX design: modals vs nav stacks. Overall plan needed me. Was great at details (implementing a table cell). Needed a little feedback/iteration on design, but not a ton. Best to let it take a run at it, and only fix what’s needed vs over-specifing.
+  - Product design
+- Tokens and cost:
+  - 185M coding tokens and counting.
+  - My z.ai coder plan made this viable, only $30/mo for essentially unlimited tokens (this only took a few days). I only hit temp limit once. 
+  - The usage same on sonnet would be $2400. The same usage of GLM 7.5 API would be $320
+  - Electricity: carbon credits.
