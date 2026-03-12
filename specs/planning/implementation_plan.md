@@ -12,7 +12,10 @@ specs/sections/
   process_project_overview.md
   process_spec_and_plan.md
   process_build_phases.md
+  process_review.md
+  process_testing_iteration.md
   process_code_review.md
+  process_external_review.md
   lessons_learned.md
   prior_art.md
   conclusion.md
@@ -33,26 +36,32 @@ Assembly: `cat specs/sections/*.md > README.md`
 - [x] **Human review:** Does the intro hook? Is the two-tool concept clear to someone unfamiliar?
 
 ### Phase 2: The Process — Overview & Planning Steps
-- [ ] Write `process_overview.md`
+- [x] Write `process_overview.md`
   - High-level diagram or summary of the full flow
   - Key idea: broad → specific before any code
-- [ ] Write `process_project_overview.md`
+- [x] Write `process_project_overview.md`
   - Human writes `project_overview.md`, what goes in it
-- [ ] Write `process_spec_and_plan.md`
+- [x] Write `process_spec_and_plan.md`
   - Iterative spec building (5 steps), human interaction curve
   - "Vibe-speccing" concept
   - Link to challenge prompt, spec prompts
-- [ ] **Human review:** Does the planning flow read as a clear sequence? Are the spec steps understandable without seeing the actual artifacts?
+- [x] **Human review:** Does the planning flow read as a clear sequence? Are the spec steps understandable without seeing the actual artifacts?
 
 ### Phase 3: The Process — Build, Review, Iterate
-- [ ] Write `process_build_phases.md`
-  - The per-phase loop, mirroring structure from `process_overview.md` item 4
-  - Sub-steps: Build (autonomous agent, `/clear`, phase instructions loop), Review (agent CR + human code review), Manual Testing (test plans, diagnostic UI), Iteration (human testing, keeping spec updated), Commit
-  - Link to phase_instructions.md, CLAUDE.md, manual_test_plan_guide.md
-- [ ] Write `process_code_review.md`
-  - End-to-end agentic review (Autonomous → Interactive), link to agentic_cr.md
+- [x] Write `process_build_phases.md`
+  - "Implement phase N" pattern, `/clear`, phase instructions
+  - Manual test plans for UI
+  - Link to phase_instructions.md, implement prompt
+- [x] Write `process_review.md`
+  - Agent code review, human manual testing, human code review, git commit
+- [x] Write `process_testing_iteration.md`
+  - Human testing loop, keeping spec updated
+- [x] Write `process_code_review.md`
+  - End-to-end agentic review (Autonomous → Interactive)
+  - Link to review prompt
+- [x] Write `process_external_review.md`
   - External tools (Gemini/CodeRabbit), no unreviewed code ships
-- [ ] **Human review:** Does the build→review→iterate loop feel natural? Is it clear when to use which agent?
+- [x] **Human review:** Does the build→review→iterate loop feel natural? Is it clear when to use which agent?
 
 ### Phase 4: Lessons Learned
 - [ ] Write `lessons_learned.md`
@@ -79,14 +88,18 @@ Assembly: `cat specs/sections/*.md > README.md`
 - [ ] Collect and add all prompt files to `prompts/` directory (per `needed_prompts.md`)
 - [ ] **Human review:** Do prompt files make sense standalone? Are they all linked from the right sections?
 
-### Phase 7: Examples
- - [ ] Ask users for examples of key outputs of the process
- - [ ] link to the samples throughout our doc
+### Phase 7: Examples & Links
+ - [ ] Ask users for examples of key outputs of the process (specs, arhcitecture, etc)
+ - [ ] link to the examples throughout our doc
+ - [ ] setup appriopiate links between related sections (process -> lessons learned). Anchor links won't funtionally work yet but that's okay.
+
+### Phase 8: Polish
+- [ ] Review all complete sections from quality
+- [ ] Fix any spelling issues carried from outline (see review notes)
 
 ### Phase 7: Assembly & Polish
 - [ ] Cat all section files into `README.md`
 - [ ] Fix TOC content and links to match actual headings/sections/anchors
-- [ ] Fix any spelling issues carried from outline (see review notes)
 - [ ] Final read-through for flow, tone, consistency
 - [ ] **Human review:** Full end-to-end read of the assembled README. Final sign-off.
 
