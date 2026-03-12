@@ -17,7 +17,6 @@ Every prompt referenced in this post is a real file from various projects I buil
 - [build_phase_plans.md](../prompts/build_phase_plans.md) — Prompt for writing detailed per-phase plans
 
 **Building (Autonomous Agent):**
-- [CLAUDE.md](../prompts/CLAUDE.md) — Standing project rules file (points to phase instructions, defines commands)
 - [phase_instructions.md](../prompts/phase_instructions.md) — The autonomous loop: full instructions the coding agent follows for every phase
 
 **Testing & Review:**
@@ -26,3 +25,5 @@ Every prompt referenced in this post is a real file from various projects I buil
 
 **Example Artifacts:**
 - [example phase plan](../example_specs/phase13.md) — A real per-phase plan from the pipeline project, showing the level of detail the coding agent works from
+
+Note: this blog post was vibe-crafted! See the [specs](/specs/) folder for how it was built.

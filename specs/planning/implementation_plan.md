@@ -6,19 +6,16 @@ Each section of the README is drafted as its own file in `specs/sections/`. This
 
 ```
 specs/sections/
-  introduction.md
-  two_tools.md
-  process_overview.md
-  process_project_overview.md
-  process_spec_and_plan.md
-  process_build_phases.md
-  process_review.md
-  process_testing_iteration.md
-  process_code_review.md
-  process_external_review.md
-  lessons_learned.md
-  prior_art.md
-  conclusion.md
+  01_introduction.md
+  02_two_tools.md
+  03_process_overview.md
+  04_process_project_overview.md
+  05_process_spec_and_plan.md
+  06_process_build_phases.md
+  07_process_code_review.md
+  08_lessons_learned.md
+  09_prior_art.md
+  10_conclusion.md
 ```
 
 Assembly: `cat specs/sections/*.md > README.md`
@@ -64,7 +61,7 @@ Assembly: `cat specs/sections/*.md > README.md`
 - [x] **Human review:** Does the build→review→iterate loop feel natural? Is it clear when to use which agent?
 
 ### Phase 4: Lessons Learned
-- [ ] Write `lessons_learned.md`
+- [x] Write `lessons_learned.md`
   - 4.1 It Still Needs You — technical, UX, and product design examples
   - 4.2 Sycophancy is Real — examples and mitigation
   - 4.3 AI-Driven Manual Testing — concept, bugs found, links to prompts/test plans
@@ -74,19 +71,19 @@ Assembly: `cat specs/sections/*.md > README.md`
   - 4.7 True Autonomous Development With Security — sandboxing challenges, toolchain differences, Xcode pain
   - Concrete examples for each lesson
   - Links to relevant prompts and artifacts where applicable
-- [ ] **Human review:** Are the anecdotes compelling? Anything missing from real experience? Tone check — honest, not preachy.
+- [x] **Human review:** Are the anecdotes compelling? Anything missing from real experience? Tone check — honest, not preachy.
 
 ### Phase 5: Prior Art
-- [ ] Write `prior_art.md`
+- [x] Write `prior_art.md`
   - Other spec-driven development tools and approaches
   - TODO: research and fill in details
-- [ ] **Human review:** Coverage and fairness of comparisons.
+- [x] **Human review:** Coverage and fairness of comparisons.
 
 ### Phase 6: Conclusion & Prompts
-- [ ] Write `conclusion.md`
+- [x] Write `conclusion.md`
   - Summary, audience, links to all prompts/artifacts
-- [ ] Collect and add all prompt files to `prompts/` directory (per `needed_prompts.md`)
-- [ ] **Human review:** Do prompt files make sense standalone? Are they all linked from the right sections?
+- [x] Collect and add all prompt files to `prompts/` directory (per `needed_prompts.md`)
+- [x] **Human review:** Do prompt files make sense standalone? Are they all linked from the right sections?
 
 ### Phase 7: Examples & Links
  - [ ] Ask users for examples of key outputs of the process (specs, arhcitecture, etc)
