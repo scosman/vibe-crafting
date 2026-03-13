@@ -14,7 +14,7 @@
 ```
 
 # Vibe Crafting 
-**High Quality App Development without Coding**
+**Vibe Coding for Stuff You Care About**
 
 I recently built an iOS app without writing a single line of code. I'm an ex-Apple software engineer — I could have written it myself, but I wanted to push the boundary of AI development.
 
