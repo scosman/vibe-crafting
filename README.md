@@ -16,7 +16,7 @@
 # Vibe Crafting 
 ### Vibe Coding for Stuff You Care About
 
-About a month ago I decided to try this "vibe coding" thing, but for real — shippable code, up to my standards.
+About a month ago I decided to try this "vibe coding" thing, but for real shippable code, up to my standards.
 
 The goal: produce code as good or better than I would write, without writing any of it. Zero compromises on architecture or quality. Take as much time as needed to get it right. But offload all the coding to agents.
 
