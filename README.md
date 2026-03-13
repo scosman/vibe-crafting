@@ -28,7 +28,7 @@ I've now completed several projects this way and I'm pretty happy with it — fi
 
 ## Table of Contents
 
-> **[Two Tools:](#two-tools-interactive-vs-autonomous-agents)** Interactive Agent | Autonomous Agent
+> **[Two Tools:](#two-tools-interactive-vs-autonomous-agents)** [Interactive Agent](#interactive-agent--planning-and-review) | [Autonomous Agent](#autonomous-agent--coding-sessions)
 > 
 > **[The Process:](#the-process)** [Project Overview](#human-writes-project_overviewmd) | [Spec & Plan](#build-spec--implementation-plan-interactive-agent) | [Build Phases](#build-phase-by-phase) | [Code Review](#code-review)
 >
@@ -44,7 +44,7 @@ The whole process uses two tools — really two modes of working with AI. They'r
 
 ## Interactive Agent — Planning and Review
 
-This is the one where you're actually paying attention. You're going back and forth with the agent, reviewing diffs, pushing back on ideas, making design calls.
+This is the user-interactive agent where you're actually paying attention. You're going back and forth with the agent, reviewing diffs, pushing back on ideas, making design calls.
 
 - High level of user attention, interactive loop
 - Best model you can get — the decisions here ripple through everything
@@ -58,10 +58,10 @@ My setup: Cursor + Claude Opus.
 This is the opposite. You type "implement phase 4" and walk away. The agent reads the plan, writes code, runs tests, fixes lint errors, and keeps going until everything passes. You come back and review the results.
 
 - No user attention. I prompt 'Implement phase 11' and walk away.
-- Smart but much cheaper model. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting).
+- Smart but much cheaper model. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting). Models like Kimi 2.5 or GLM 5 are great choices.
 - Built-in tools so it can really be autonomous -- build, test, lint, format and web-search for docs.
 
-My setup: Claude Code using GLM 5 on the z.ai Coder plan, web-search MCP (Z.ai), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
+My setup: Claude Code in terminal using GLM 5 on the [z.ai Coder plan](https://z.ai/subscribe), web-search for docs (Z.ai or tavily), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
 
 > Yes it's ironic I'm using a Claude model in Cursor and non-Claude model in Claude Code. But it works and I like it.
 
