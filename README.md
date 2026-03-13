@@ -16,13 +16,15 @@
 # Vibe Crafting 
 ### Vibe Coding for Stuff You Care About
 
-I recently built an iOS app without writing a single line of code. I'm an ex-Apple software engineer — I could have written it myself, but I wanted to push the boundary of AI development.
+About a month ago I decided to try this "vibe coding" thing, but for real — shippable code, up to my standards.
 
-The goal: produce code that's as good or better than I would write, without writing any of it. Zero compromises on architecture or quality. Take as much time as needed to get it right. But offload all the coding.
+The goal: produce code as good or better than I would write, without writing any of it. Zero compromises on architecture or quality. Take as much time as needed to get it right. But offload all the coding to agents.
 
 **TLDR** I ended up developing a process — upfront technical specs, phased autonomous builds, and ample code review (both manual and agentic). It's like vibe coding in that I don't read every line or write any lines, but the AI doesn't get to wing it either. I'm calling it "vibe crafting" for lack of a better term. The result was a codebase better than I would have written — not because I can't, but because I'm lazy. I would never have written 288 tests and a full UI test suite on my own.
 
-This repo contains the actual process I used, along with the real prompts, specs, and planning docs from the project. When I reference a prompt, you can click through and see exactly what I fed the agent.
+This repo contains the actual process I used, along with sample prompts, specs, and planning docs from the project. When I reference a prompt, you can click through and see exactly what I fed the agent.
+
+I've now completed several projects this way and I'm pretty happy with it — first an iOS app from scratch, then a Python data-pipeline manager backed by Google Cloud storage.
 
 ## Table of Contents
 
