@@ -105,24 +105,19 @@ I'd call this "vibe-speccing." You're not reading every line of the spec like a 
 
 ### The Five Steps
 
-**Step 1: Functional Spec** (`functional_spec.md`)
-`[█████░░░░░] Human` · `[░░░░░█████] Agent`
+#### Step 1: Functional Spec `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 Start from your project overview and build out a full description of what the app does. Features, user flows, edge cases. The agent drafts, you iterate until it captures what you actually want. ([spec_guide.md](prompts/spec_guide.md))
 
-**Step 2: Architecture** (`architecture.md`)
-`[█████░░░░░] Human` · `[░░░░░█████] Agent`
+#### Step 2: Architecture `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 High-level technical design — data model, key components, how they interact. This is where you make the big calls: what frameworks, what patterns, what tradeoffs. ([spec_guide.md](prompts/spec_guide.md))
 
-**Step 3: Component Designs** (`components/[name].md`)
-`[██░░░░░░░░] Human` · `[████████░░] Agent`
+#### Step 3: Component Designs `[██░░░░░░░░] Human` · `[░░████████] Agent`
 Individual specs for each component, including public interfaces, design patterns, API usage, and test plans. For UI components, I used a separate pass with its own prompt. ([spec_guide.md](prompts/spec_guide.md), [ui_spec_guide.md](prompts/ui_spec_guide.md))
 
-**Step 4: Implementation Plan** (`implementation_plan.md`)
-`[█░░░░░░░░░] Human` · `[█████████░] Agent`
+#### Step 4: Implementation Plan `[█░░░░░░░░░] Human` · `[░█████████] Agent`
 Order the work into phases. What gets built first, what depends on what. Each phase should be roughly one component — small enough to review in one sitting. ([implementation_plan_prompt.md](prompts/implementation_plan_prompt.md))
 
-**Step 5: Per-Phase Plans** (`phase_plan/phase_N.md`)
-`[█░░░░░░░░░] Human` · `[█████████░] Agent`
+#### Step 5: Per-Phase Plans `[█░░░░░░░░░] Human` · `[░█████████] Agent`
 Detailed plans for each phase, pulling relevant details from the spec into a self-contained reference. This is what the coding agent actually reads when it starts a phase — it shouldn't need to go back to the full spec. ([build_phase_plans.md](prompts/build_phase_plans.md), [example plan](example_specs/phase13.md))
 
 ### Challenge the AI Early
@@ -137,8 +132,7 @@ This matters because AI agents are [sycophantic by default](#sycophancy-is-real)
 
 For each phase, the loop is: build autonomously, review, test, iterate, commit. Here's what each step looks like.
 
-### Build [Autonomous Agent]
-`[░░░░░░░░░░] Human` · `[██████████] Agent`
+### Build [Autonomous Agent] `[░░░░░░░░░░] Human` · `[██████████] Agent`
 
 The prompt is almost comically simple: "implement phase N." That's it. The agent reads the phase plan, knows what to build, and gets to work. You walk away.
 
@@ -150,15 +144,13 @@ That loop is what makes "low attention" possible. You're not trusting the agent 
 
 If it ever gets really stuck, you probably have a spec problem. Throw it out, improve your spec, and start again. (More on why in [It's Not Great at Speccing](#its-not-great-at-speccing).)
 
-### Review [Interactive Agent]
-`[█████░░░░░] Human` · `[██░░░░░░░░] Agent`
+### Review [Interactive Agent] `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 
 Every phase gets a quick review before you move on. Check the code it generated, check the list of tests, make sure it looks good. Not line-by-line — that comes later in the end-to-end review.
 
 For substantial phases, I'll feed the `git diff` and phase plan to the Interactive Agent and ask it to check the implementation against the spec. You're using the smarter model to code-review the cheaper model. It's also good for catching structural mismatches.
 
-### Agent-Led Manual Testing (UI Only) [Interactive Agent]
-`[█████░░░░░] Human` · `[█████░░░░░] Agent`
+### Agent-Led Manual Testing (UI Only) [Interactive Agent] `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 
 Not everything can be unit tested. UI components, system API integrations (notifications, alarms, live activities) — these need human help. When unit tests aren't sufficient, the agent writes a manual test plan as part of the phase ([manual_test_plan_guide.md](prompts/manual_test_plan_guide.md)). It creates a diagnostic view in the app and writes step-by-step instructions: "tap this button, verify this appears, check that the notification fires." 
 
@@ -168,8 +160,7 @@ See [AI-Driven Manual Testing](#ai-driven-manual-testing) in Lessons Learned for
 
 One commit per phase. Keeps the history clean and makes it easy to bisect if something breaks later.
 
-## Code Review
-`[█████░░░░░] Human` · `[█████░░░░░] Agent`
+## Final Code Review `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 
 Once all phases are built, I run a full codebase review — not a per-phase diff, but a comprehensive audit of the entire codebase against the spec.
 
@@ -185,7 +176,7 @@ I also run external reviews: Gemini code review and CodeRabbit on pull requests 
 
 ### Human Code Review
 
-We still do a full human code review pass before shipping. This isn't vibe-coding, we want to know what we've build and stand by it.
+We still do a full human code review pass before shipping. This isn't vibe-coding, we want to know what we've build and stand by every line.
 
 # Lessons Learned
 
