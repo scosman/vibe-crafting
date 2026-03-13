@@ -85,20 +85,20 @@ Assembly: `cat specs/sections/*.md > README.md`
 - [x] Collect and add all prompt files to `prompts/` directory (per `needed_prompts.md`)
 - [x] **Human review:** Do prompt files make sense standalone? Are they all linked from the right sections?
 
-### Phase 7: Examples & Links
- - [ ] Ask users for examples of key outputs of the process (specs, arhcitecture, etc)
- - [ ] link to the examples throughout our doc
- - [ ] setup appriopiate links between related sections (process -> lessons learned). Anchor links won't funtionally work yet but that's okay.
-
-### Phase 8: Polish
-- [ ] Review all complete sections from quality
-- [ ] Fix any spelling issues carried from outline (see review notes)
-
 ### Phase 7: Assembly & Polish
 - [ ] Cat all section files into `README.md`
 - [ ] Fix TOC content and links to match actual headings/sections/anchors
-- [ ] Final read-through for flow, tone, consistency
+- [ ] setup appriopiate links between related sections (process -> lessons learned).
 - [ ] **Human review:** Full end-to-end read of the assembled README. Final sign-off.
+
+### Phase 8: Polish
+- [ ] Final read-through for flow, tone, consistency
+- [ ] Review for quality
+- [ ] Fix any spelling or grammar issues
+
+### Phase 9: Examples & Links
+- [x] Ask users for examples of key outputs of the process (specs, architecture, etc) — see [example_artifacts_wanted.md](example_artifacts_wanted.md)
+- [x] Link to the examples throughout our doc (phase plan example linked from 03, 05, 10; add more as artifacts are added)
 
 ## Notes
 

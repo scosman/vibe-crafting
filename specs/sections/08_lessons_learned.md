@@ -38,7 +38,7 @@ This found real bugs. Alarm schedules were being set incorrectly — off by a ti
 
 The best part: I ended up doing more testing than I would have on my own. Writing test plans is tedious, so normally I'd test the happy path and move on. Here, the agent wrote thorough plans covering edge cases I would have skipped, and I just followed the instructions. Repeatable test plans as a free side effect of the build process.
 
-([Example manual_test_plan_guide.md](../prompts/manual_test_plan_guide.md))
+(Prompt: [manual_test_plan_guide.md](../prompts/manual_test_plan_guide.md).)
 
 ## More Polish Than You'd Bother With
 

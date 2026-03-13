@@ -13,6 +13,6 @@ Here's the full flow, start to finish:
 5. **End-to-end agentic code review** — full codebase review [Autonomous Agent → Interactive Agent]
 6. **Code review** — open a PR and review
 
-The key idea: you go broad to specific before any code is written. By the time the coding agent starts, it has a functional spec, architecture doc, component designs with test plans, a phased implementation plan, and detailed per-phase plans. It's not winging it — it's executing a well-defined plan.
+The key idea: you go broad to specific before any code is written. By the time the coding agent starts, it has a functional spec, architecture doc, component designs with test plans, a phased implementation plan, and [detailed per-phase plans](../example_specs/phase13.md). It's not winging it — it's executing a well-defined plan.
 
 This front-loaded planning is where most of the important decisions happen. It's also where the human does most of their work. Once you're in the build loop, you're mostly reviewing output and giving feedback.
