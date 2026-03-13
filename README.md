@@ -14,7 +14,7 @@
 ```
 
 # Vibe Crafting 
-**Vibe Coding for Stuff You Care About**
+### Vibe Coding for Stuff You Care About
 
 I recently built an iOS app without writing a single line of code. I'm an ex-Apple software engineer — I could have written it myself, but I wanted to push the boundary of AI development.
 
@@ -27,15 +27,18 @@ This repo contains the actual process I used, along with the real prompts, specs
 ## Table of Contents
 
 > **[Two Tools:](#two-tools-interactive-vs-autonomous-agents)** Interactive Agent | Autonomous Agent
+> 
 > **[The Process:](#the-process)** [Project Overview](#human-writes-project_overviewmd) | [Spec & Plan](#build-spec--implementation-plan-interactive-agent) | [Build Phases](#build-phase-by-phase) | [Code Review](#code-review)
+>
 > **[Lessons Learned:](#lessons-learned)** [It Still Needs You](#it-still-needs-you) | [Sycophancy](#sycophancy-is-real) | [Manual Testing](#ai-driven-manual-testing) | [Free Polish](#more-polish-than-youd-bother-with) | [Speccing](#its-not-great-at-speccing) | [Projects & Cost](#example-projects-and-costs) | [Tools & Sandboxing](#the-hard-part-tools-and-sandboxing)
-> **[Prior Art](#prior-art)** | **[Conclusion](#conclusion)**
+>
+> **[Prior Art](#prior-art)** -- **[Conclusion](#conclusion)**
 
 # Two Tools: Interactive vs Autonomous Agents
 
 The whole process uses two tools — really two modes of working with AI. They're different in cost, attention level, and what they're good at.
 
-**Key Insight**: About 90% of the important decisions happen during planning. About 90% of the token usage happens during coding. Use two different tools.
+> **Key Insight**: About 90% of the important decisions happen during planning. About 90% of the token usage happens during coding. Use two different tools.
 
 ## Interactive Agent — Planning and Review
 
@@ -56,9 +59,9 @@ This is the opposite. You type "implement phase 4" and walk away. The agent read
 - Smart but much cheaper model. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting).
 - Built-in tools so it can really be autonomous -- build, test, lint, format and web-search for docs.
 
-My setup: Claude Code using GLM 4.7 on the z.ai Coder plan, web-search MCP (Z.ai), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
+My setup: Claude Code using GLM 5 on the z.ai Coder plan, web-search MCP (Z.ai), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
 
-Note: yes it's ironic I'm using a Claude model in Cursor and non-Claude model in Claude Code. But it works and I like it.
+> Yes it's ironic I'm using a Claude model in Cursor and non-Claude model in Claude Code. But it works and I like it.
 
 # The Process
 
@@ -261,7 +264,7 @@ Two real projects, to give a sense of scale.
 
 The z.ai Coder plan is what made this practical for me. $30/month for what would otherwise be hundreds or thousands in API costs. Your mileage will vary depending on model choice and provider, but the key insight is: separate your planning model (best available, low token volume) from your coding model (good enough, high token volume).
 
-One last note: all those tokens running on GPUs use electricity. Carbon credits exist and are cheap. Worth considering if you're burning through millions of tokens regularly.
+> One last note: all those tokens running on GPUs use electricity. Carbon credits exist and are cheap. Worth considering if you're burning through millions of tokens regularly.
 
 ## The Hard Part: Tools and Sandboxing
 
