@@ -16,25 +16,23 @@
 # Vibe Crafting 
 ### Vibe Coding for Stuff You Care About
 
-About a month ago I decided to try this "vibe coding" thing, but for real shippable code, up to my standards.
+I wanted to try vibe coding, but for stuff I actually care about shipping. The goal: produce code as good or better than I'd write, without writing any of it. Zero compromises on architecture or quality.
 
-The goal: produce code as good or better than I would write, without writing any of it. Zero compromises on architecture or quality. Take as much time as needed to get it right. But offload all the coding to agents.
+I ended up developing a process: upfront technical specs, phased autonomous builds, and layered code review (both manual and agentic). I don't write code, and I don't read every line the AI writes. But the AI doesn't get to wing it either — it's executing a detailed plan, hitting quality gates, and getting reviewed from multiple angles. I'm calling it "vibe crafting" for lack of a better term.
 
-**TLDR** I ended up developing a process — upfront technical specs, phased autonomous builds, and ample code review (both manual and agentic). It's like vibe coding in that I don't read every line or write any lines, but the AI doesn't get to wing it either. I'm calling it "vibe crafting" for lack of a better term. The result was a codebase better than I would have written — not because I can't, but because I'm lazy. I would never have written 288 tests and a full UI test suite on my own.
+The result was a codebase better than I would have written — not because I can't, but because I'm lazy. I would never have written 288 tests and a full UI test suite on my own. I've now shipped several projects this way — an iOS app from scratch, then a Python data-pipeline manager backed by Google Cloud storage.
 
-This repo contains the actual process I used, along with sample prompts, specs, and planning docs from the project. When I reference a prompt, you can click through and see exactly what I fed the agent.
+This repo contains the actual process, along with every prompt, spec, and planning doc I used. When I reference a prompt below, you can click through and see exactly what I fed the agent.
 
-I've now completed several projects this way and I'm pretty happy with it — first an iOS app from scratch, then a Python data-pipeline manager backed by Google Cloud storage.
+## What's in This Post
 
-## Table of Contents
-
-> **[Two Tools:](#two-tools-interactive-vs-autonomous-agents)** [Interactive Agent](#interactive-agent--planning-and-review) | [Autonomous Agent](#autonomous-agent--coding-sessions)
+> **[Two Tools](#two-tools-interactive-vs-autonomous-agents)** — Why I use two different AI setups: an [interactive agent](#interactive-agent--planning-and-review) for planning and review, and an [autonomous agent](#autonomous-agent--coding-sessions) for building
 > 
-> **[The Process:](#the-process)** [Project Overview](#human-writes-project_overviewmd) | [Spec & Plan](#build-spec--implementation-plan-interactive-agent) | [Build Phases](#build-phase-by-phase) | [Code Review](#code-review)
+> **[The Process](#the-process)** — The full workflow from blank page to shipped code: [human project overview](#human-writes-project_overviewmd), [interactive specs & planning](#build-spec--implementation-plan-interactive-agent), [phased autonomous builds](#build-phase-by-phase), and [code review](#code-review)
 >
-> **[Lessons Learned:](#lessons-learned)** [It Still Needs You](#it-still-needs-you) | [Sycophancy](#sycophancy-is-real) | [Manual Testing](#ai-driven-manual-testing) | [Free Polish](#more-polish-than-youd-bother-with) | [Speccing](#its-not-great-at-speccing) | [Projects & Cost](#example-projects-and-costs) | [Tools & Sandboxing](#the-hard-part-tools-and-sandboxing)
+> **[Lessons Learned](#lessons-learned)** — What went wrong, what surprised me, and what the AI still can't do: [it still needs you](#it-still-needs-you), [sycophancy is real](#sycophancy-is-real), [AI-driven manual testing](#ai-driven-manual-testing), [free polish](#more-polish-than-youd-bother-with), [limitations of speccing](#its-not-great-at-speccing), [project costs](#example-projects-and-costs), and [tooling pain](#the-hard-part-tools-and-sandboxing)
 >
-> **[Prior Art](#prior-art)** -- **[Conclusion](#conclusion)**
+> **[Prior Art](#prior-art)** | **[Conclusion](#conclusion)**
 
 # Two Tools: Interactive vs Autonomous Agents
 
