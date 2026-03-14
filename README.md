@@ -26,7 +26,7 @@ This repo contains the actual process, along with every prompt, spec, and planni
 
 ## What's in This Post
 
-> **[Two Tools](#two-tools-interactive-vs-autonomous-agents)** — Why I use two different AI setups: an [interactive agent](#interactive-agent--planning-and-review) for planning and review, and an [autonomous agent](#autonomous-agent--coding-sessions) for building
+> **[Two Tools](#two-tools-interactive-vs-autonomous-agents)** — Why I use two different AI setups: an [interactive AI IDE](#interactive-agent--planning-and-review) for planning and review, and an [autonomous agent](#autonomous-agent--coding-sessions) for building
 > 
 > **[The Process](#the-process)** — The full workflow from blank page to shipped code: [human project overview](#human-writes-project_overviewmd), [interactive specs & planning](#build-spec--implementation-plan-interactive-agent), [phased autonomous builds](#build-phase-by-phase), and [code review](#code-review)
 >
