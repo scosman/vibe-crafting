@@ -24,7 +24,7 @@ The result was a codebase better than I would have written — not because I can
 
 This repo contains the actual process, along with every prompt, spec, and planning doc I used. When I reference a prompt below, you can click through and see exactly what I fed the agent.
 
-## What's in This Post
+## The Short Version
 
 > **[Two Tools](#two-tools-interactive-vs-autonomous-agents)** — Why I use two different AI setups: an [interactive AI IDE](#interactive-agent--planning-and-review) for planning and review, and an [autonomous agent](#autonomous-agent--coding-sessions) for building
 > 
