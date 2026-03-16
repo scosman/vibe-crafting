@@ -13,6 +13,9 @@
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝        ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
 ```
 
+> [!TIP]
+> **[Skill available](/skill)** — the Spec Driven Agentic Development Flow described here is packaged as a ready-to-use Skill. Plug it into your workflow and start building.
+
 # Vibe Crafting 
 ### Vibe Coding for Stuff You Care About
 
