@@ -35,7 +35,9 @@ This repo contains the actual process, along with every prompt, spec, and planni
 >
 > **[Lessons Learned](#lessons-learned)** — What went wrong, what surprised me, and what the AI still can't do: [it still needs you](#it-still-needs-you), [sycophancy is real](#sycophancy-is-real), [AI-driven manual testing](#ai-driven-manual-testing), [free polish](#more-polish-than-youd-bother-with), [limitations of speccing](#its-not-great-at-speccing), [project costs](#example-projects-and-costs), and [tooling pain](#the-hard-part-tools-and-sandboxing)
 >
-> **[Prior Art](#prior-art)** | **[Conclusion](#conclusion)**
+> **[Prior Art](#prior-art)**
+> 
+> **[Conclusion](#conclusion)**
 
 # Two Tools: Interactive vs Autonomous Agents
 
