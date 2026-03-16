@@ -30,35 +30,35 @@ The skill is project-agnostic. It provides the process; your project-specific co
 
 ## Command Reference
 
-### `/spec setup` or `/spec setup`
+### `/spec setup`
 
 One-time (or incremental) setup for using the skill in a repo. Adds `.specs_skill_state/` to gitignore, creates `/specs/projects/` directories, detects monorepo layout, and checks for commonly-needed configuration.
 
-→ Read [references/cmd_setup.md](references/cmd_setup.md)
+→ Read [setup command reference](references/cmd_setup.md)
 
 ### `/spec new_project` or `/spec new`
 
 Create a new project from scratch. Walks through planning steps: project overview, functional spec, architecture (with optional component designs), and implementation plan. Sets this as your active project.
 
-→ Read [references/cmd_new_project.md](references/cmd_new_project.md)
+→ Read [new project command reference](references/cmd_new_project.md)
 
 ### `/spec continue` or `/spec cont`
 
 Resume work on the active project. Shows current state and routes to the next logical action — continue speccing, implement next phase, or review code.
 
-→ Read [references/cmd_continue.md](references/cmd_continue.md)
+→ Read [continue command reference](references/cmd_continue.md)
 
 ### `/spec implement` or `/spec impl`
 
 Implement the active project. Routes to phase-specific or full implementation. Use `/spec implement next` for one phase, `/spec implement all` for all remaining, or `/spec implement phase N` for a specific phase.
 
-→ Read [references/cmd_implement.md](references/cmd_implement.md)
+→ Read [implement command reference](references/cmd_implement.md)
 
 ### `/spec cr` or `/spec code_review`
 
 Structured, spec-aware code review. Reviews `git diff` by default, or a specified scope. Always runs as a sub-agent with clean context.
 
-→ Read [references/cmd_code_review.md](references/cmd_code_review.md)
+→ Read [code review command reference](references/cmd_code_review.md)
 
 ### Bare `/spec` — Router
 
@@ -70,15 +70,15 @@ To check state: read `.specs_skill_state/current_project.md` and scan artifact f
 
 Every project lives under `/specs/projects/PROJECT_NAME/`:
 
-| File | Purpose |
-|------|---------|
-| `project_overview.md` | Your description of what to build |
-| `functional_spec.md` | Features, behaviors, edge cases, contracts |
-| `ui_design.md` | UI structure, screens, navigation (conditional) |
-| `architecture.md` | Technical design, deep enough for coding |
-| `/components/NAME.md` | Per-component detailed design (conditional) |
-| `implementation_plan.md` | Phased build order as checklist |
-| `/phase_plans/phase_N.md` | Per-phase plan written by coding agent |
+| File | Created During | Purpose |
+|------|---------------|---------|
+| `project_overview.md` | new_project Step 1 | Your description of what to build |
+| `functional_spec.md` | new_project Step 2 | Features, behaviors, edge cases, contracts |
+| `ui_design.md` | new_project Step 3 | UI structure, screens, navigation (conditional) |
+| `architecture.md` | new_project Step 4 | Technical design, deep enough for coding |
+| `/components/NAME.md` | new_project Step 5 | Per-component detailed design (conditional) |
+| `implementation_plan.md` | new_project Step 6 | Phased build order as checklist |
+| `/phase_plans/phase_N.md` | Implementation | Per-phase plan written by coding agent |
 
 ## Artifact Conventions
 
