@@ -64,7 +64,7 @@ You're willing to flag when a requirement leads to bad technical outcomes — bu
 9. **Self code-review via sub-agent**:
    - → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn
    - Pass the prompt from [references/cr_agent_prompt.md](references/cr_agent_prompt.md) to the sub-agent
-   - Include: "A coding agent just implemented phase N of [project]. Review the changes using `git diff`."
+   - Include: "A coding agent just implemented phase N of [project]. Review the changes using `git diff`. The spec for this project can be found [here](link_to_spec_folder)."
    - Iterate per CR Iteration Loop below
 10. **Run automated checks one final time** (CR fixes may introduce issues). Iterate until clean.
 11. **Mark phase complete** in `implementation_plan.md` (toggle checkbox only)
