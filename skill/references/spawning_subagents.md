@@ -54,18 +54,13 @@ Use when: the sub-agent needs to continue work it already started
 
 ### Claude Code
 
-Capture the agent ID from the initial spawn, then pass it back to Task():
+When continuing prior subagent work, save the agent ID from the initial Agent call and resume it with:
 
-```python
-result = Task("Implement phase 2...")  # initial spawn
-agent_id = result.agent_id
-
-Task("Address this CR feedback...", agent_id=agent_id)  # resume
-```
+Agent({ "resume": agent_id, "prompt": "Continue with the next step." })
 
 ### Cursor
 
-Use the Task tool with the `resume` parameter, passing the agent ID from the initial spawn.
+Use Cursor's `resume` options
 
 ### Generic / Unknown
 
