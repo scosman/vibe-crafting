@@ -27,7 +27,7 @@ The sub-agent sees only what you pass it (a prompt) plus the repo. No conversati
 Use the `Task()` tool or equivalent sub-agent mechanism:
 
 ```python
-Task("Review this code using the guidelines in spec/references/cr_agent_prompt.md")
+Task("Review this code using the guidelines in skill/references/cr_agent_prompt.md")
 ```
 
 ### Cursor
@@ -43,6 +43,38 @@ Approximate by:
 2. Starting a new conversation with only the sub-agent prompt
 
 This is less ideal since it can't run in parallel with the parent, but works for the clean context requirement.
+
+## Resuming Sub-Agents
+
+Some workflows need to send follow-up messages to an existing sub-agent
+rather than spawning a fresh one. This preserves the agent's context.
+
+Use when: the sub-agent needs to continue work it already started
+(e.g., a coding agent addressing CR feedback on code it just wrote).
+
+### Claude Code
+
+Capture the agent ID from the initial spawn, then pass it back to Task():
+
+```python
+result = Task("Implement phase 2...")  # initial spawn
+agent_id = result.agent_id
+
+Task("Address this CR feedback...", agent_id=agent_id)  # resume
+```
+
+### Cursor
+
+Use the Task tool with the `resume` parameter, passing the agent ID from the initial spawn.
+
+### Generic / Unknown
+
+Generic tools typically don't support resuming — use a fresh spawn with accumulated context if needed.
+
+### When to Resume vs. Fresh Spawn
+
+- **Resume**: coding agent receiving CR feedback or commit approval (needs its prior context)
+- **Fresh spawn**: CR agent (must NOT have coding context)
 
 ## Fallback Language
 
