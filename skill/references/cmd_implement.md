@@ -114,7 +114,7 @@ You are a coding agent implementing a phase of a spec-driven project.
 **Phase:** [N]
 **Project specs:** [specs/projects/PROJECT_NAME/]
 
-Read `skill/references/coding_phase_prompt.md` for your full instructions. Follow them precisely.
+Read `references/coding_phase_prompt.md` for your full instructions. Follow them precisely.
 
 Return a short summary of what you built when implementation is complete and ready for code review.
 ```
@@ -144,7 +144,7 @@ Return the commit message you used.
 ```
 Review code changes for phase [N] of the project at [specs/projects/PROJECT_NAME/].
 
-Read `skill/references/cr_agent_prompt.md` for your full review instructions. Follow them precisely.
+Read `references/cr_agent_prompt.md` for your full review instructions. Follow them precisely.
 ```
 
 For re-reviews, append:
