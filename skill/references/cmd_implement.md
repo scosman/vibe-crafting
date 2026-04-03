@@ -44,6 +44,8 @@ The manager's responsibilities:
 - Surface phase summaries and roadblocks to the user
 - Send minimal, well-structured prompts that point to reference files — not restate their content
 
+**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
+
 ## Single Phase Flow
 
 If the target phase is already complete (checkbox checked in `implementation_plan.md`), tell the user and stop — don't re-implement it.

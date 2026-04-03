@@ -10,8 +10,8 @@ If something important is only in conversation history, that's a bug in the proc
 
 ## Determine Scope
 
-- **No arguments**: Review `git diff` (unstaged + staged changes)
-- **Given scope**: Review that scope (e.g., "review file X", "review phase 3", "review src/main.rs")
+- **No specific scope provided**: Review `git diff HEAD` (both unstaged + staged changes)
+- **Given scope**: Review the requested scope (e.g., "review file X", "review phase 3", "review src/main.rs", "review HEAD vs HASH", etc)
 
 ## Execution
 
