@@ -48,9 +48,17 @@ The manager's responsibilities:
 
 **Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
 
+## Progress Tracker
+
+→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
+
+Use the label **"Phase [N] Progress"** for the progress block.
+
 ## Single Phase Flow
 
 If the target phase is already complete (checkbox checked in `implementation_plan.md`), tell the user and stop — don't re-implement it.
+
+**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from coding agent).**
 
 ### Step 1: Spawn Coding Agent
 

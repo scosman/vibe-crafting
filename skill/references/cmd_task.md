@@ -69,11 +69,17 @@ created: YYYY-MM-DD
 Current Task: tasks/[slug]
 ```
 
+## Progress Tracker
+
+→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
+
+Use the label **"Task Progress"** for the progress block.
+
 ## Implementation Flow
 
-Once the clarify/pushback phase is complete and the task file is written, **run the entire implementation flow without stopping for user input.** The manager drives coding agent → CR loop → commit to completion autonomously. The only exception is escalation (see below).
+Once the clarify/pushback phase is complete and the task file is written, the manager drives the full flow: coding agent → attestation → CR loop → commit → verify → summary.
 
-Same as project mode's Single Phase Flow, adapted for tasks.
+**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from coding agent).**
 
 ### Step 1: Spawn Coding Agent
 
