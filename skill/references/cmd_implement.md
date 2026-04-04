@@ -1,8 +1,38 @@
 # `/spec implement` — Implement Project
 
-Implement the active project. The top-level agent acts as a strict manager/coordinator — it orchestrates sub-agents but never writes code or reviews it.
+Implement the active project.
 
-## Pre-Checks
+## Manager Role
+
+**You are a manager. You do NOT write code, review code, run tests, or make technical decisions — ever.** If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git commands, and outputting progress blocks.
+
+The manager's responsibilities:
+- Run pre-checks and determine which phase(s) to implement
+- Spawn coding sub-agents and CR sub-agents at the right times
+- Route CR feedback back to the coding agent
+- Verify that commits actually landed (via `git status`)
+- Surface phase summaries and roadblocks to the user
+- Send minimal, well-structured prompts that point to reference files — not restate their content
+
+**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
+
+## Progress Tracker
+
+→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
+
+Use the label **"Phase [N] Progress"** for the progress block. The full step list for this command:
+
+```
+- Step 0: Pre-checks
+- Step 1: Coding
+- Step 1b: Attestation
+- Step 2: Code review
+- Step 3: Commit
+- Step 4: Verify
+- Step 5: Summary
+```
+
+## Step 0: Pre-Checks
 
 ### Determine Active Project
 
@@ -26,7 +56,7 @@ If any are missing or `status: draft`:
 >
 > Use `/spec continue` to finish speccing before implementing.
 
-## Routing
+### Routing
 
 > **Note:** For one-off tasks without a full spec, use `/spec task` instead.
 
@@ -35,34 +65,23 @@ If any are missing or `status: draft`:
 - `/spec implement all` or `/spec impl all`: All remaining phases
 - `/spec implement phase N` or `/spec impl phase N`: Specific single phase
 
-## Manager Role
-
-The manager orchestrates the implementation process. It does NOT code, review code, run tests, or make technical decisions.
-
-The manager's responsibilities:
-- Spawn coding sub-agents and CR sub-agents at the right times
-- Route CR feedback back to the coding agent
-- Verify that commits actually landed (via `git status`)
-- Surface phase summaries and roadblocks to the user
-- Send minimal, well-structured prompts that point to reference files — not restate their content
-
-**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
-
-## Progress Tracker
-
-→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
-
-Use the label **"Phase [N] Progress"** for the progress block.
-
 ## Single Phase Flow
 
 If the target phase is already complete (checkbox checked in `implementation_plan.md`), tell the user and stop — don't re-implement it.
+
+**PROCESS GATE:** Before proceeding to Step 1, verify:
+1. Pre-checks are complete (Step 0 is done)
+2. You are about to output your first progress block
+3. You have NOT written any code or edited any project files yourself
+4. Your next action after the progress block is spawning a sub-agent
+
+If any of these are false, stop and correct course.
 
 **AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from coding agent).**
 
 ### Step 1: Spawn Coding Agent
 
-Spawn a new coding sub-agent using the Initial Coding Prompt template below.
+Output your first progress block, then spawn a new coding sub-agent using the Initial Coding Prompt template below.
 
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
 

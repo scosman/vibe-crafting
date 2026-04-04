@@ -1,6 +1,38 @@
 # `/spec task` — Implement a Task
 
-Implement a one-off task without a full spec. The top-level agent acts as a strict manager/coordinator — it orchestrates sub-agents but never writes code or reviews it.
+Implement a one-off task without a full spec.
+
+## Manager Role
+
+**You are a manager. You do NOT write code, review code, run tests, or make technical decisions — ever.** If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git commands, and outputting progress blocks.
+
+The manager's responsibilities:
+- Clarify the task with the user (if needed)
+- Create the task file
+- Spawn coding sub-agents and CR sub-agents at the right times
+- Route CR feedback back to the coding agent
+- Verify that commits actually landed (via `git status`)
+- Surface task summaries and roadblocks to the user
+- Send minimal, well-structured prompts that point to reference files — not restate their content
+
+**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
+
+## Progress Tracker
+
+→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
+
+Use the label **"Task Progress"** for the progress block. The full step list for this command:
+
+```
+- Step 0a: Clarify (or skipped)
+- Step 0b: Task file created
+- Step 1: Coding
+- Step 1b: Attestation
+- Step 2: Code review
+- Step 3: Commit
+- Step 4: Verify
+- Step 5: Summary
+```
 
 ## Invocation
 
@@ -12,7 +44,7 @@ Aliases: `/spec task` (with or without colon before description).
 
 If invoked without a description (`/spec task` alone), ask the user what they want to do.
 
-## Clarify/Pushback Phase
+## Step 0a: Clarify/Pushback Phase
 
 Before implementing, evaluate whether the task description is clear enough to act on.
 
@@ -34,7 +66,7 @@ User decides — no automatic escalation.
 
 Questions follow the same numbered format as project mode. After the user answers, refined understanding goes into `## Notes` in the task file. The `## Request` section is **never modified** — it preserves the user's exact words.
 
-## Task File Creation
+## Step 0b: Task File Creation
 
 After the description is provided (and any clarification is done):
 
@@ -69,21 +101,21 @@ created: YYYY-MM-DD
 Current Task: tasks/[slug]
 ```
 
-## Progress Tracker
-
-→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
-
-Use the label **"Task Progress"** for the progress block.
-
 ## Implementation Flow
 
-Once the clarify/pushback phase is complete and the task file is written, the manager drives the full flow: coding agent → attestation → CR loop → commit → verify → summary.
+**PROCESS GATE:** Before proceeding to Step 1, verify:
+1. You have created the task file (Step 0b is done)
+2. You are about to output your first progress block
+3. You have NOT written any code or edited any project files yourself
+4. Your next action after the progress block is spawning a sub-agent
+
+If any of these are false, stop and correct course.
 
 **AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from coding agent).**
 
 ### Step 1: Spawn Coding Agent
 
-Spawn a new coding sub-agent using the Initial Coding Prompt template below.
+Output your first progress block, then spawn a new coding sub-agent using the Initial Coding Prompt template below.
 
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
 
@@ -140,19 +172,6 @@ Verify again after.
 ### Step 5: Present Summary
 
 Show the task summary to the user.
-
-## Manager Role
-
-The manager orchestrates the implementation process. It does NOT code, review code, run tests, or make technical decisions.
-
-The manager's responsibilities:
-- Spawn coding sub-agents and CR sub-agents at the right times
-- Route CR feedback back to the coding agent
-- Verify that commits actually landed (via `git status`)
-- Surface task summaries and roadblocks to the user
-- Send minimal, well-structured prompts that point to reference files — not restate their content
-
-**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
 
 ## Prompt Templates
 

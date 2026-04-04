@@ -1,8 +1,39 @@
 # `/spec pr` — Address PR Feedback
 
-Address review feedback from a GitHub pull request. The top-level agent acts as a strict manager/coordinator — it orchestrates sub-agents but never writes code or reviews it.
+Address review feedback from a GitHub pull request. This command reuses the standard implement loop (coding agent → CR → commit) but enters at the CR feedback stage, with feedback sourced from GitHub instead of the local CR agent.
 
-This command reuses the standard implement loop (coding agent → CR → commit) but enters at the CR feedback stage, with feedback sourced from GitHub instead of the local CR agent.
+## Manager Role
+
+**You are a manager. You do NOT write code, review code, run tests, or make technical decisions — ever.** If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git/gh commands, and outputting progress blocks.
+
+The manager's responsibilities:
+- Discover the PR and fetch feedback
+- Spawn coding sub-agents and CR sub-agents at the right times
+- Route CR feedback back to the coding agent
+- Verify that commits actually landed (via `git status`)
+- Push changes and post replies to GitHub
+- Surface summaries and roadblocks to the user
+- Send minimal, well-structured prompts that point to reference files — not restate their content
+
+**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
+
+## Progress Tracker
+
+→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
+
+Use the label **"PR Feedback Progress"** for the progress block. The full step list for this command:
+
+```
+- Step 0a: Find PR
+- Step 0b: Fetch comments
+- Step 1: Coding
+- Step 1b: Attestation
+- Step 2: Code review
+- Step 3: Commit
+- Step 4: Verify and push
+- Step 5: Reply to PR comments
+- Step 6: Summary
+```
 
 ## Invocation
 
@@ -12,9 +43,7 @@ This command reuses the standard implement loop (coding agent → CR → commit)
 
 No arguments needed — the command discovers the PR from the current branch.
 
-## Pre-Checks
-
-### Find the PR
+## Step 0a: Find the PR
 
 Run `gh pr view --json number,url,title,headRefName` to find the PR for the current branch.
 
@@ -22,11 +51,9 @@ If no PR is found:
 
 > No open PR found for the current branch (`[branch name]`). Push your branch and open a PR first.
 
-### Get Repo Identity
+Also run `gh repo view --json owner,name` to extract `{owner}` and `{repo}` for subsequent API calls.
 
-Run `gh repo view --json owner,name` to extract `{owner}` and `{repo}` for subsequent API calls.
-
-### Fetch PR Comments
+## Step 0b: Fetch PR Comments
 
 Use the GraphQL API to fetch review threads with resolution status, and the REST API for general issue comments:
 
@@ -96,7 +123,7 @@ URL: [pr_url]
 
 Include the `comment_id` for each comment — the manager needs these later to post replies.
 
-## Context Loading
+### Context Loading
 
 Check if there's an active project or task:
 
@@ -107,19 +134,21 @@ Check if there's an active project or task:
 
 This is informational — the command works regardless of active project state.
 
-## Progress Tracker
-
-→ Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
-
-Use the label **"PR Feedback Progress"** for the progress block.
-
 ## Implementation Flow
+
+**PROCESS GATE:** Before proceeding to Step 1, verify:
+1. Pre-checks are complete (Steps 0a and 0b are done)
+2. You are about to output your first progress block
+3. You have NOT written any code or edited any project files yourself
+4. Your next action after the progress block is spawning a sub-agent
+
+If any of these are false, stop and correct course.
 
 **AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from coding agent).**
 
 ### Step 1: Spawn Coding Agent
 
-Spawn a new coding sub-agent using the PR Feedback Coding Prompt template below.
+Output your first progress block, then spawn a new coding sub-agent using the PR Feedback Coding Prompt template below.
 
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
 
@@ -254,21 +283,6 @@ Show a summary to the user:
 > - [N] pushed back (not implemented)
 >
 > **Replies posted:** [N] / [total]
-
-## Manager Role
-
-The manager orchestrates the implementation process. It does NOT code, review code, run tests, or make technical decisions.
-
-The manager's responsibilities:
-- Discover the PR and fetch feedback
-- Spawn coding sub-agents and CR sub-agents at the right times
-- Route CR feedback back to the coding agent
-- Verify that commits actually landed (via `git status`)
-- Push changes and post replies to GitHub
-- Surface summaries and roadblocks to the user
-- Send minimal, well-structured prompts that point to reference files — not restate their content
-
-**Important** even if asked to do work by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context! You are a manager: delegate.
 
 ## Prompt Templates
 
