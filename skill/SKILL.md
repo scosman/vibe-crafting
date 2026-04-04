@@ -1,7 +1,7 @@
 ---
 name: spec
 description: >
-  Commands: new_project, continue, implement, task, cr (code review), setup, or open guidance
+  Commands: new_project, continue, implement, task, cr (code review), pr (address PR feedback), setup, or open guidance
 
   Spec-driven development: process for planning, building, and reviewing
   code projects using structured specifications. Guides users from project
@@ -60,6 +60,12 @@ Implement the active project. Routes to phase-specific or full implementation. U
 Implement a one-off task without a full spec. Describe what you want inline and get the same implement loop (coding agent, code review, commit) without planning artifacts.
 
 → Read [task command reference](references/cmd_task.md)
+
+### `/spec pr`
+
+Address review feedback from a GitHub pull request. Finds the PR for the current branch, fetches unresolved comments, spawns a coding agent to address them, runs the standard CR loop, commits, pushes, and replies to each comment thread on GitHub.
+
+→ Read [PR feedback command reference](references/cmd_pr.md)
 
 ### `/spec cr` or `/spec code_review`
 
