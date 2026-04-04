@@ -59,8 +59,20 @@ Spawn a new coding sub-agent using the Initial Coding Prompt template below.
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
 
 The coding agent returns either:
-- A summary indicating it's ready for code review
+- A summary with an attestation block indicating it's ready for code review
 - A roadblock message (see Escalation below)
+
+### Step 1b: Validate Attestation
+
+Inspect the coding agent's return for an `<attestation>` block.
+
+- If the block is **missing**, or any value is **FALSE**: resume the coding agent with:
+
+  > Your return summary is missing the required `<attestation>` block, or not all items are TRUE. Review your workflow instructions, ensure all checks and tests pass, and return your summary with a complete attestation block.
+
+- If all values are **TRUE** (or NA where appropriate): proceed to Step 2.
+
+Do NOT run checks yourself — the coding agent is responsible. You are verifying it reported completion.
 
 ### Step 2: CR Loop
 
@@ -69,7 +81,8 @@ The coding agent returns either:
 3. If the review is clean: proceed to Step 3
 4. If issues exist:
    - Resume the coding agent with the CR Feedback Prompt template, passing the CR output
-   - Coding agent addresses issues and returns a summary
+   - Coding agent addresses issues and returns a summary with attestation block
+   - Validate attestation (same as Step 1b — resume coding agent if missing or FALSE)
    - Spawn a new CR sub-agent, passing prior feedback in a `<prior_cr_feedback>` block
    - Repeat until CR returns clean
 
@@ -78,6 +91,14 @@ The coding agent returns either:
 ### Step 3: Commit
 
 Resume the coding agent with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message.
+
+If the coding agent returns a pre-commit hook failure instead of a commit message:
+
+1. Resume the coding agent to fix the issues reported by the hook
+2. When it returns, go back to **Step 1b** (validate attestation) and then **Step 2** (CR loop)
+3. Only tell it to commit again after attestation and CR both pass
+
+Do NOT tell it to commit immediately after fixing — the fix is unreviewed code.
 
 ### Step 4: Verify
 

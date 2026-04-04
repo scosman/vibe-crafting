@@ -37,6 +37,25 @@ What "done" means depends on your invocation mode:
 
 - **Initial invocation**: Return a summary of what you built. The manager will initiate code review.
 - **CR feedback invocation**: Return a summary of changes made. The manager will initiate re-review.
-- **Commit invocation**: Return the commit message you used. The manager will verify the commit.
+- **Commit invocation**: Return the commit message you used. The manager will verify the commit. If the commit fails due to pre-commit hooks, do NOT bypass the hooks. Return a summary explaining what failed with an attestation block showing current state. The manager will route you back through review.
 
 In all modes, your final message is a short summary — not a question, not a request for input.
+
+## Attestation Block
+
+Every return summary MUST end with this block:
+
+```
+<attestation>
+- Checks pass: TRUE/FALSE/NA
+- Tests pass: TRUE/FALSE/NA
+- Tests written: TRUE/FALSE/NA
+</attestation>
+```
+
+Rules:
+- **Checks pass** means ALL project automated checks (lint, format, type-check, build, etc.) ran successfully.
+- **Tests pass** means all tests ran and passed.
+- **Tests written** means you wrote new tests for the functionality you built. NA only if the project has no test infrastructure or the change genuinely doesn't warrant tests (e.g., config-only change).
+- If any value is FALSE, explain what's failing and why in your summary above the block.
+- Do not bypass failing checks. Do not skip checks to save time.
