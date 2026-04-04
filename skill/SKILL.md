@@ -1,7 +1,7 @@
 ---
 name: spec
 description: >
-  Commands: new_project, continue, implement, cr (code review), setup, or open guidance
+  Commands: new_project, continue, implement, task, cr (code review), setup, or open guidance
 
   Spec-driven development: process for planning, building, and reviewing
   code projects using structured specifications. Guides users from project
@@ -10,8 +10,9 @@ description: >
   drafting and building.
 
   Use when the user wants to: start a new project with specs, continue
-  speccing or implementing a project, implement a planned phase, review
-  code against specs, or set up spec-driven development in a repo.
+  speccing or implementing a project, implement a planned phase, run a
+  quick task without a full spec, review code against specs, or set up
+  spec-driven development in a repo.
 ---
 
 # Spec-Driven Development
@@ -54,6 +55,12 @@ Implement the active project. Routes to phase-specific or full implementation. U
 
 → Read [implement command reference](references/cmd_implement.md)
 
+### `/spec task`
+
+Implement a one-off task without a full spec. Describe what you want inline and get the same implement loop (coding agent, code review, commit) without planning artifacts.
+
+→ Read [task command reference](references/cmd_task.md)
+
 ### `/spec cr` or `/spec code_review`
 
 Structured, spec-aware code review. Reviews `git diff` by default, or a specified scope. Always runs as a sub-agent with clean context.
@@ -64,7 +71,7 @@ Structured, spec-aware code review. Reviews `git diff` by default, or a specifie
 
 Reads current state (active project, artifact statuses) and presents relevant options. Never requires routing — direct commands always work. Can also interpret open-ended requests.
 
-To check state: read `.specs_skill_state/current_project.md` and scan artifact frontmatter. If no project exists, suggest `new_project` or `setup`. If project in progress, show state and suggest the next action.
+To check state: read `.specs_skill_state/current_project.md` and scan artifact frontmatter. Always show `/spec task` as an available option. If no project exists, suggest `new_project`, `task`, or `setup`. If project in progress, show state and suggest the next action.
 
 ## Project Structure
 
@@ -100,15 +107,32 @@ Dependency chain: `project_overview → functional_spec → architecture → com
 
 Phase plans are outside the cascade — generated fresh during implementation.
 
+## Modes
+
+The skill operates in two modes:
+
+- **Project mode**: Full spec planning → phased implementation. Use for anything that benefits from upfront design — new features, complex changes, multi-phase work.
+- **Task mode**: Inline description → single-pass implementation. Use for well-understood, small-to-medium changes — bug fixes, small features, refactors.
+
+Both modes use the same implement loop (coding agent → code review → commit). Task mode skips the spec planning steps.
+
 ## State Management
 
-The file `.specs_skill_state/current_project.md` (git-ignored) tracks your active project:
+The file `.specs_skill_state/current_project.md` (git-ignored) tracks your active work:
 
 ```
 Current Project: /specs/projects/project_name
 ```
 
-This file is per-worktree (git-ignored), so you can have parallel worktrees with different active projects.
+or for tasks:
+
+```
+Current Task: tasks/task-slug
+```
+
+Task files live at `.specs_skill_state/tasks/[slug].md`.
+
+This file is per-worktree (git-ignored), so you can have parallel worktrees with different active work.
 
 ## Monorepo Support
 

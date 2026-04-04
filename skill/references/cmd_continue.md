@@ -6,11 +6,17 @@ Resume work on the active project. The "what should I do next?" command.
 
 ### 1. Read State
 
-Load `.specs_skill_state/current_project.md` to find the active project:
+Load `.specs_skill_state/current_project.md` to find active work. Two formats:
 
 ```
 Current Project: /specs/projects/PROJECT_NAME
 ```
+
+```
+Current Task: tasks/[slug]
+```
+
+If a task is active, skip to step 3's task branch.
 
 ### 2. No Active Project
 
@@ -28,6 +34,15 @@ List available project directories under `/specs/projects/`:
 Set the selected project as active and proceed to step 3.
 
 ### 3. Determine Current State
+
+**If active work is a task** (`Current Task:` format):
+- Read the task file from `.specs_skill_state/tasks/[slug].md`
+- If `status: active`: offer to resume implementation (re-enter the implement flow via `/spec task` mechanics)
+- If `status: complete`: report done, suggest next action
+
+Task resume enters the implementation flow directly — no clarification re-run.
+
+**If active work is a project** (`Current Project:` format):
 
 Check the frontmatter `status` on each artifact in dependency order:
 

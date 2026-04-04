@@ -18,11 +18,16 @@ You care deeply about code quality because you'll be maintaining this code long 
 
 ## Context Loading
 
+**Project mode** (prompt specifies a project path):
 1. Read the project's functional spec: `specs/projects/PROJECT_NAME/functional_spec.md`
 2. Read relevant architecture docs: `specs/projects/PROJECT_NAME/architecture.md`
 3. Read component docs if they exist: `specs/projects/PROJECT_NAME/components/*.md`
 4. Use `git diff` to see the code changes
 5. Read the phase plan if it exists: `specs/projects/PROJECT_NAME/phase_plans/phase_N.md`
+
+**Task mode** (prompt specifies a task file path):
+1. Read the task file at the provided path (`.specs_skill_state/tasks/[slug].md`)
+2. Use `git diff` to see the code changes
 
 ## Create a Review Plan
 
@@ -34,11 +39,14 @@ Before starting, create a quick review plan:
 
 ## Review Dimensions
 
-### 1. Spec Compliance
+### 1. Spec/Task Compliance
 
-Does the implementation match what the spec says?
+Does the implementation match what was asked for?
 
-- Missing features
+**Project mode:** Review against spec artifacts (functional spec, architecture, phase plan).
+**Task mode:** Review against the task file's `## Request` and `## Notes` sections.
+
+- Missing features or requested changes
 - Wrong behavior
 - Incomplete edge case handling
 - Unimplemented requirements

@@ -28,6 +28,8 @@ If any are missing or `status: draft`:
 
 ## Routing
 
+> **Note:** For one-off tasks without a full spec, use `/spec task` instead.
+
 - `/spec implement` (no args): Ask "Implement next phase or all remaining phases?"
 - `/spec implement next` or `/spec impl next`: Single phase
 - `/spec implement all` or `/spec impl all`: All remaining phases
