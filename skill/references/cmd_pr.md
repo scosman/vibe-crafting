@@ -186,6 +186,13 @@ Standard CR loop — identical to `/spec implement` and `/spec task`.
 
 ### Step 3: Commit
 
+**PROCESS GATE — No commit without clean CR:** Before proceeding to Step 3, verify:
+1. The most recent sub-agent action was a CR that returned clean
+2. No code has been written or changed since that clean CR
+3. You did NOT skip re-review after the coding agent addressed CR feedback
+
+If any of these are false, you must run (or re-run) the CR loop before committing. Every code change — including CR fixes — requires a clean CR before commit.
+
 Resume the coding agent with the Commit Prompt template below. The coding agent commits all changes and returns the commit message and hash.
 
 If the coding agent returns a pre-commit hook failure instead of a commit message:
