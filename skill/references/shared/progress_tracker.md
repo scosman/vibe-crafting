@@ -31,6 +31,7 @@ Task Progress:
 - [x] Step 0b: Task file — created
 - [ ] Step 1: Coding — in progress
 - [ ] Step 1b: Attestation — pending
+- [ ] Step 1c: UI signoff — pending (or skipped if no significant UI)
 - [ ] Step 2: Code review — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
@@ -46,6 +47,7 @@ Phase 2 Progress:
 - [x] Step 0: Pre-checks — complete
 - [x] Step 1: Coding — complete
 - [x] Step 1b: Attestation — complete
+- [x] Step 1c: UI signoff — skipped (no UI changes)
 - [ ] Step 2: Code review — in progress
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
@@ -63,6 +65,7 @@ After CR finds issues and coding agent is resumed:
 <progress>
 - [x] Step 1: Coding — complete (round 2)
 - [ ] Step 1b: Attestation — in progress (round 2)
+- [ ] Step 1c: UI signoff — pending (round 2)
 - [ ] Step 2: Code review — pending (round 2)
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
@@ -76,6 +79,7 @@ After a commit hook failure resets back to Step 1b:
 <progress>
 - [x] Step 1: Coding — complete (round 3, hook fix)
 - [ ] Step 1b: Attestation — in progress (round 3)
+- [ ] Step 1c: UI signoff — pending (round 3)
 - [ ] Step 2: Code review — pending (round 3)
 - [ ] Step 3: Commit — pending (round 2)
 - [ ] Step 4: Verify — pending
