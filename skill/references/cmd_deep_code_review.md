@@ -59,15 +59,15 @@ Deep CR Progress:
 Compare the current branch against its fork point (the commit where it diverged from its upstream base).
 
 **Algorithm:**
-1. If a specific base was provided as an argument to the command, use that — skip steps 2-4
+1. If a specific base was provided as an argument to the command, use that — skip steps 2-5
 2. Get the current branch name: `git branch --show-current`
 3. Check for an open GitHub PR for this branch: `gh pr view --json baseRefName 2>/dev/null`. If a PR exists, use its base branch — this is the most reliable signal for what the change is against
-4. Find the upstream tracking branch: `git rev-parse --abbrev-ref @{upstream} 2>/dev/null`
-5. If no base found yet, try common defaults: `main`, `master`, `develop` — use the first that exists
+4. Walk the git log looking for the fork point: run `git log --format='%H %D'` and find the first commit that has a branch ref other than the current branch and HEAD. That branch is the base. For example, if the log shows a commit decorated with `origin/leonard/chat-integration, leonard/chat-integration`, the base is `leonard/chat-integration`. Prefer local branch names over `origin/` prefixes when both exist.
+5. If the log walk finds nothing (e.g., very long-lived branch with no visible refs), fall back to common defaults: `main`, `master`, `develop` — use the first that exists
 6. Find the fork point: `git merge-base <base> HEAD`
 7. The diff is: `git diff <fork-point>...HEAD`
 
-If no base can be determined, present the best guess (most common default branch names, most recent merge-base candidates) and ask the user to confirm or correct. Never present a blank prompt — always offer a concrete suggestion. This is the **only** point where the manager may stop for user input.
+If no base can be determined, present the best guess and ask the user to confirm or correct. Never present a blank prompt — always offer a concrete suggestion. This is the **only** point where the manager may stop for user input.
 
 ### Load Git Context
 
@@ -143,6 +143,18 @@ Write to `reviews/projects/[review_name]/cr_plan.md`:
 
 After writing the plan, update the progress block Step 2 sub-steps to match the planned phases.
 
+### Present Plan for Approval
+
+Show the user the plan: base branch, fork point, spec context, and the list of phases. Ask them to confirm before proceeding:
+
+> Review plan ready — [N] phases planned for branch `[branch_name]` against `[base_branch_name]`:
+>
+> [Phase list from cr_plan.md]
+>
+> Proceed with the review?
+
+Wait for user approval. If they want changes (add/remove phases, change base), update the plan and re-confirm.
+
 ## Step 2: Phase Reviews
 
 For each phase, spawn a fresh sub-agent. Use the appropriate prompt template below depending on whether it's a project-specific or reusable template phase.
@@ -203,15 +215,15 @@ Show the user:
 
 ## Autonomous Flow
 
-**Once Step 1 begins, drive the entire flow to completion without stopping for user input. No exceptions.** After each sub-agent returns, update the progress block and immediately spawn the next phase. After all phases complete, write the summary and present results.
+**Once Step 2 begins, drive the entire flow to completion without stopping for user input. No exceptions.** After each sub-agent returns, update the progress block and immediately spawn the next phase. After all phases complete, write the summary and present results.
 
-The only point where the manager may pause for user input is during Step 0 if the fork-point cannot be determined automatically.
+The manager pauses for user input at two points: (1) Step 0 if the fork-point cannot be determined automatically, and (2) end of Step 1 for plan approval. After the user approves the plan, the rest is fully autonomous.
 
 ## Non-Interactive
 
-Work autonomously. Don't ask the user for help or confirmation during the review. The one exception is fork-point confirmation in Step 0 (before the review begins).
+Work autonomously. Don't ask the user for help or confirmation during the review. The two exceptions are: fork-point confirmation in Step 0 (if needed), and plan approval at the end of Step 1.
 
-Once the review is running (Step 1 onward), keep working until all phases are complete, the summary is written, and results are presented. Don't stop to ask questions, don't ask "should I continue?", don't wait for approval between phases. The progress block tells you what to do next — do it.
+Once the review is running (Step 2 onward), keep working until all phases are complete, the summary is written, and results are presented. Don't stop to ask questions, don't ask "should I continue?", don't wait for approval between phases. The progress block tells you what to do next — do it.
 
 ## Prompt Templates
 
