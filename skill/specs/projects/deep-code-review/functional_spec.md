@@ -23,12 +23,13 @@ This is read-only — no code changes are made (only review artifacts written to
 Compare the current branch against its fork point (the commit where it diverged from its upstream base).
 
 **Algorithm:**
-1. Get the current branch name: `git branch --show-current`
-2. Find the upstream tracking branch: `git rev-parse --abbrev-ref @{upstream} 2>/dev/null`
-3. If no upstream, try common bases: `main`, `master`, `develop` — use the first that exists
-4. If a specific base is provided as an argument, use that instead
-5. Find the fork point: `git merge-base <base> HEAD`
-6. The diff is: `git diff <fork-point>...HEAD`
+1. If a specific base is provided as an argument, use that — skip steps 2-4
+2. Get the current branch name: `git branch --show-current`
+3. Check for an open GitHub PR for this branch: `gh pr view --json baseRefName 2>/dev/null`. If a PR exists, use its base branch — this is the most reliable signal for what the change is against
+4. Find the upstream tracking branch: `git rev-parse --abbrev-ref @{upstream} 2>/dev/null`
+5. If no base found yet, try common defaults: `main`, `master`, `develop` — use the first that exists
+6. Find the fork point: `git merge-base <base> HEAD`
+7. The diff is: `git diff <fork-point>...HEAD`
 
 If no base can be determined, present the best guess (most common default branch names, most recent merge-base candidates) and ask the user to confirm or correct. Never present a blank prompt — always offer a concrete suggestion.
 
