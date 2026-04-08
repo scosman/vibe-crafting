@@ -89,8 +89,7 @@ Write to `reviews/projects/[review_name]/cr_plan.md`:
 
 ## Branch
 - Current: [branch_name]
-- Base: [base_ref]
-- Fork point: [commit_hash]
+- Base: [base_branch_name] ([fork_point_hash])
 - Files changed: [count]
 
 ## Spec Context
