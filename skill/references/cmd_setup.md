@@ -6,12 +6,15 @@ One-time (or incremental) setup for using the spec skill in a repo. Idempotent â
 
 ### 1. Gitignore
 
-Add `.specs_skill_state/` to `.gitignore`:
+Add `.specs_skill_state/` and `reviews/` to `.gitignore`:
 
-- If `.gitignore` exists: check if `.specs_skill_state/` is already present. If not, append it.
-- If `.gitignore` doesn't exist: create it with `.specs_skill_state/` as the content.
+- For each entry (`.specs_skill_state/` and `reviews/`):
+  - If `.gitignore` exists: check if the entry is already present. If not, append it.
+  - If `.gitignore` doesn't exist: create it with both entries.
 
-This directory tracks per-user state (current project), so it should never be committed.
+These directories should never be committed:
+- `.specs_skill_state/` tracks per-user state (current project).
+- `reviews/` contains local code review artifacts from `/spec deep cr`.
 
 ### 2. Directory Creation
 
@@ -132,7 +135,7 @@ Summarize what was done:
 
 ```
 Setup complete:
-- Added .specs_skill_state/ to .gitignore
+- Added .specs_skill_state/ and reviews/ to .gitignore
 - Created /specs/projects/ directory (with .gitkeep)
 - [Created /specs/projects/ in sub-project roots if monorepo (with .gitkeep)]
 - [Created /specs/monorepo.md if monorepo]
