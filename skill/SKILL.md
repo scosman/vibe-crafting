@@ -1,7 +1,7 @@
 ---
 name: spec
 description: >
-  Commands: new_project, continue, implement, task, cr (code review), pr (address PR feedback), setup, or open guidance
+  Commands: new_project, continue, implement, task, cr (code review), deep cr (multi-phase code review), pr (address PR feedback), setup, or open guidance
 
   Spec-driven development: process for planning, building, and reviewing
   code projects using structured specifications. Guides users from project
@@ -72,6 +72,12 @@ Address review feedback from a GitHub pull request. Finds the PR for the current
 Structured, spec-aware code review. Reviews `git diff` by default, or a specified scope. Always runs as a sub-agent with clean context.
 
 → Read [code review command reference](references/cmd_code_review.md)
+
+### `/spec deep cr` or `/spec deep review`
+
+Multi-phase agentic code review. Compares current branch against its fork point, designs review phases tailored to the diff, runs focused sub-agents per phase, and produces persistent review artifacts.
+
+→ Read [deep code review command reference](references/cmd_deep_code_review.md)
 
 ### Bare `/spec` — Router
 
