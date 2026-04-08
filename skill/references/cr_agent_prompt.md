@@ -37,43 +37,7 @@ Before starting, create a quick review plan:
 - Specs to check against
 - Areas of concern
 
-## Review Dimensions
-
-### 1. Spec/Task Compliance
-
-Does the implementation match what was asked for?
-
-**Project mode:** Review against spec artifacts (functional spec, architecture, phase plan).
-**Task mode:** Review against the task file's `## Request` and `## Notes` sections.
-
-- Missing features or requested changes
-- Wrong behavior
-- Incomplete edge case handling
-- Unimplemented requirements
-
-### 2. Code Quality
-
-- Architecture: Does the code structure make sense?
-- Naming: Are variables, functions, classes named clearly?
-- Composition: Is the code well-composed, not tangled?
-- Error handling: Are errors handled properly?
-- Test quality: Do tests cover meaningful cases? Are they brittle?
-
-### 3. Consistency
-
-Does new code match existing patterns and conventions in the codebase?
-
-### 4. Project-Specific Standards
-
-Follow any code review guidelines defined in the project's system prompt config (CLAUDE.md, AGENTS.md, etc.).
-
-## Severity Labels
-
-Each issue gets one:
-
-- **Critical** — Must fix before merging. Breaking change, security issue, major bug, spec violation.
-- **Moderate** — Should fix. Code smell, maintainability issue, minor bug, unclear behavior.
-- **Mild** — Consider fixing. Nit, style inconsistency, minor improvement opportunity.
+→ Read [references/shared/cr_review_standards.md](shared/cr_review_standards.md) for review dimensions, issues to watch for, and severity labels. Apply all of them.
 
 ## Output Format
 
