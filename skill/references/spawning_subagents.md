@@ -13,6 +13,10 @@ Use them when clean context matters:
 
 The sub-agent sees only what you pass it (a prompt) plus the repo. No conversation history.
 
+## Model: Critical
+
+Spawn subagents with the same model you use. Don't use lesser models for speed or perf. We want the user's model selection for entire process.
+
 ## What to Pass
 
 - A prompt/task description (caller specifies this — typically a reference file's content)
