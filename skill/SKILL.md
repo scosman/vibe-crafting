@@ -79,6 +79,12 @@ Multi-phase agentic code review. Compares current branch against its fork point,
 
 → Read [deep code review command reference](references/cmd_deep_code_review.md)
 
+### `/spec design crit` or `/spec crit`
+
+Multi-phase agentic review of spec/design documents. Identifies design concerns, runs focused sub-agents per concern area, produces persistent review artifacts, and offers an interactive resolution phase to triage and fix issues found.
+
+→ Read [design crit command reference](references/cmd_design_crit.md)
+
 ### Bare `/spec` — Router
 
 Reads current state (active project, artifact statuses) and presents relevant options. Never requires routing — direct commands always work. Can also interpret open-ended requests.
