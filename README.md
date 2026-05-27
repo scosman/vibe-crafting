@@ -61,12 +61,13 @@ My setup: Cursor + Claude Opus.
 This is the opposite. You type "implement phase 4" and walk away. The agent reads the plan, writes code, runs tests, fixes lint errors, and keeps going until everything passes. You come back and review the results.
 
 - No user attention. I prompt 'Implement phase 11' and walk away.
+- Great model, but doesn't need to be the most expensive. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting). I previously had good experience with GLM 5 and Kimi K2.6, both of which are a fraction the cost of Opus. Lately, I've fallen back to using Opus here as well as it's included in my subscription. 
 - Smart but much cheaper model. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting). Models like Kimi 2.5 or GLM 5 are great choices.
 - Built-in tools so it can really be autonomous -- build, test, lint, format and web-search for docs.
 
-My setup: Claude Code in terminal using GLM 5 on the [z.ai Coder plan](https://z.ai/subscribe), web-search for docs (Z.ai or tavily), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
+My setup: Claude Code in terminal using GLM 5 via the [z.ai Coder plan](https://z.ai/subscribe) or Opus via Anthropic Subscription. Other tools: web-search for docs (Z.ai, Anthropic, or tavily), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
 
-> Yes it's ironic I'm using a Claude model in Cursor and non-Claude model in Claude Code. But it works and I like it.
+**Hint:** Run `claude --permission-mode=dontAsk` to force it to keep working instead of stopping to ask questions. This is what makes it autonomous. 
 
 # The Process
 
@@ -75,8 +76,8 @@ Here's the full flow, start to finish:
 1. **Write a project overview** — you describe what you want to build, in plain language. Don't skimp on motivation, techical guidelines, and details. [Human]
 2. **Build 4 levels of specs** — create detailed functional spec, architecture, component designs with test plans [Interactive Agent]
 3. **Build an implementation plan** — order the work into phases, write detailed per-phase plans [Interactive Agent]
-4. **For each phase:**
-   - **Build** — in a clean agent context, simply prompt "implement phase N" and let it work [Autonomous Agent]
+4. **Build each phase:**
+   - **Code** — in a clean agent context, simply prompt "implement phase N" and let it work [Autonomous Agent]
    - **Review** — review code, feedback/fixes/iteration [Interactive Agent or Autonomous Agent]
    - **Manual Testing** [Optional, for UI components] — follow agent-generated test instructions, give feedback, fix what's off [Interactive Agent]
    - **Commit** — commit checkpoint [Autonomous Agent]
