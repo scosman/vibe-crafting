@@ -27,6 +27,21 @@ The result was a codebase better than I would have written — not because I can
 
 This repo contains the actual process, along with every prompt, spec, and planning doc I used. When I reference a prompt below, you can click through and see exactly what I fed the agent.
 
+## Using the Skill
+
+Use the `/spec` skill in your coding agent to follow this process. Commands include:
+
+ - `/spec setup` - once per repo, creates necessary files, folders and .gitignore entries.
+ - `/spec new project` - guides you through a 5-stage specing process from initial idea to detailed architecture with implementation plan.
+   - `/spec implment` or `/spec implement all` - after creating a project, this implements the next phase of your project from the implementation plan. Add `all` to implement all phases without stopping after each phase.
+   - `/spec continue` - continue the current project, wherever we last left off.
+ - `/spec task` - implement smaller tasks in one command. Skips the specing process, but uses the same implemention loop running code-review and fix issues before commiting.
+ - `/spec pr` - opens a GitHub PR, waits for CR feedback from any code review bots, then addresses the feedback until clean.
+ - `/spec cr` - runs a fast code review of currently staged changes.
+ - `/spec deep cr` - runs a long multi-agent code review of current branch. Several steps: reading the spec, reading the code, planning what needs review, planning how to divide the review, running parallel review subagents, and summarizing results.
+ - `/spec design crit` - multi-phase agentic review of spec/design documents, with interactive resolution.
+ - `/spec` - explains the commands above
+
 ## The Short Version
 
 > **[Two Tools](#two-tools-interactive-vs-autonomous-agents)** — Why I use two different AI setups: an [interactive AI IDE](#interactive-agent--planning-and-review) for planning and review, and an [autonomous agent](#autonomous-agent--coding-sessions) for building
