@@ -42,7 +42,7 @@ Use the `/spec` skill in your coding agent to follow this process. Commands incl
  - `/spec design crit` - multi-phase agentic review of spec/design documents, with interactive resolution.
  - `/spec` - explains the commands above
 
-## The Short Version
+## The Process
 
 > **[Two Tools](#two-tools-interactive-vs-autonomous-agents)** — Why I use two different AI setups: an [interactive AI IDE](#interactive-agent--planning-and-review) for planning and review, and an [autonomous agent](#autonomous-agent--coding-sessions) for building
 > 
