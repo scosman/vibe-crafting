@@ -8,8 +8,8 @@ Here's the full flow, start to finish:
 4. **For each phase:**
    - **Build** — in a clean agent context, simply prompt "implement phase N" and let it work [Autonomous Agent]
    - **Review** — review code, feedback/fixes/iteration [Interactive Agent]
-   - **Manual Testing** [Optional, for UI components] — follow agent-generated test instructions, give feedback, fix what's off [Interactive Agent]
    - **Commit** — commit checkpoint
+   - **Manual Testing** [Optional, for UI components] — pull the committed work, follow agent-generated test instructions, give feedback, fix what's off [Interactive Agent]
 5. **End-to-end agentic code review** — full codebase review [Autonomous Agent → Interactive Agent]
 6. **Code review** — open a PR and review
 

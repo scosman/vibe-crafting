@@ -26,12 +26,14 @@ Use the label **"Phase [N] Progress"** for the progress block. The full step lis
 - Step 0: Pre-checks
 - Step 1: Coding
 - Step 1b: Attestation
-- Step 1c: UI signoff (if applicable)
 - Step 2: Code review
 - Step 3: Commit
 - Step 4: Verify
-- Step 5: Summary
+- Step 5: UI review (if applicable)
+- Step 6: Summary
 ```
+
+In `implement all`, Step 5 does not run per phase — one consolidated UI review runs after the final phase. See [Implement All](#implement-all).
 
 ## Step 0: Pre-Checks
 
@@ -78,7 +80,7 @@ If the target phase is already complete (checkbox checked in `implementation_pla
 
 If any of these are false, stop and correct course.
 
-**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exceptions are: escalation (roadblock from coding agent), and UI signoff (Step 1c) when the phase includes significant UI changes.**
+**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from the coding agent). UI review (Step 5) comes after the work is committed — it is the end of the flow, not a pause in it.**
 
 ### Step 1: Spawn Coding Agent
 
@@ -98,26 +100,11 @@ Inspect the coding agent's return for an `<attestation>` block.
 
   > Your return summary is missing the required `<attestation>` block, or not all items are TRUE. Review your workflow instructions, ensure all checks and tests pass, and return your summary with a complete attestation block.
 
-- If all values are **TRUE** (or NA where appropriate): proceed to Step 1c.
+- If all values are **TRUE** (or NA where appropriate): proceed to Step 2.
 
 Do NOT run checks yourself — the coding agent is responsible. You are verifying it reported completion.
 
-### Step 1c: UI Signoff
-
-If the phase involves **significant UI changes** (new screens, layout changes, new components, visual redesigns), pause and ask the user to review the UI before proceeding to code review.
-
-**Skip this step when:**
-- The phase has no UI changes
-- UI changes are trivial (copy/string updates, minor spacing tweaks)
-
-**When UI signoff is needed:**
-1. Tell the user the coding agent has finished and the UI is ready for review
-2. Summarize what UI was built/changed (based on the coding agent's summary)
-3. Ask the user to check the UI and confirm it looks good, or describe what needs to change
-4. If the user requests changes: resume the coding agent with the feedback, then go back to **Step 1b** (validate attestation) and return here for another signoff
-5. If the user approves: proceed to Step 2
-
-This step exists because code review catches code quality issues, not design issues. Human eyes should approve significant UI before the CR/fix/commit loop begins.
+Also keep the coding agent's `<ui_review>` block — you'll need it at Step 5.
 
 ### Step 2: CR Loop
 
@@ -164,7 +151,13 @@ If `git status` shows uncommitted changes, resume the coding agent:
 
 Verify again after.
 
-### Step 5: Present Summary
+### Step 5: UI Review
+
+→ Read [references/shared/ui_review.md](shared/ui_review.md) for when this step applies, what to send the user, and the feedback loop. Follow it precisely.
+
+Skipped per phase in `implement all` — see below.
+
+### Step 6: Present Summary
 
 Show the phase summary to the user.
 
@@ -173,11 +166,23 @@ Show the phase summary to the user.
 Run all remaining phases in sequence:
 
 1. Read `implementation_plan.md`, find all incomplete phases
-2. For each phase: run the Single Phase Flow above
-3. Between phases: show the phase summary, then immediately continue to next phase (don't stop to ask)
-4. After all phases: present a final summary
+2. For each phase: run Steps 0–4 of the Single Phase Flow above, then the phase summary. **Skip Step 5** — keep the phase's `<ui_review>` block for the end of the run.
+3. Between phases: show the phase summary, then immediately continue to the next phase (don't stop to ask)
+4. After the last phase: run one consolidated UI review covering the whole run, then present a final summary
 
 If a target phase is already complete (checkbox checked), skip it.
+
+**PROCESS GATE — `all` means all:** Before you stop for any reason, verify:
+1. Every incomplete phase in `implementation_plan.md` has been implemented and committed
+2. You are stopping at the end of the run, not between phases
+
+The only legal mid-run stop is an escalation (roadblock from the coding agent). Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
+
+### Consolidated UI Review
+
+→ Read [references/shared/ui_review.md](shared/ui_review.md) — the "Consolidated Review" section covers grouping the per-phase blocks and handling feedback with a fresh coding agent.
+
+This runs once, after the final phase is committed and verified, before the final summary.
 
 ## Prompt Templates
 
@@ -247,3 +252,4 @@ When the manager receives a roadblock message:
 - [references/spawning_subagents.md](references/spawning_subagents.md) — How to spawn and resume sub-agents
 - [references/coding_phase_prompt.md](references/coding_phase_prompt.md) — Full instructions for coding sub-agents
 - [references/cr_agent_prompt.md](references/cr_agent_prompt.md) — Full instructions for CR sub-agents
+- [references/shared/ui_review.md](shared/ui_review.md) — The UI review step and its prompt templates

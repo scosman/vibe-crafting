@@ -94,8 +94,8 @@ Here's the full flow, start to finish:
 4. **Build each phase:**
    - **Code** — in a clean agent context, simply prompt "implement phase N" and let it work [Autonomous Agent]
    - **Review** — review code, feedback/fixes/iteration [Interactive Agent or Autonomous Agent]
-   - **Manual Testing** [Optional, for UI components] — follow agent-generated test instructions, give feedback, fix what's off [Interactive Agent]
    - **Commit** — commit checkpoint [Autonomous Agent]
+   - **Manual Testing** [Optional, for UI components] — pull the committed work, follow agent-generated test instructions, give feedback, fix what's off [Interactive Agent]
 5. **End-to-end agentic code review (aka deep CR)** — full codebase review [Autonomous Agent → Interactive Agent]
 6. **Code review** — open a PR and review
 
@@ -149,7 +149,7 @@ This matters because AI agents are [sycophantic by default](#sycophancy-is-real)
 
 ## Build Phase by Phase
 
-For each phase, the loop is: build autonomously, review, test, iterate, commit. Here's what each step looks like.
+For each phase, the loop is: build autonomously, review, iterate, commit, then hands-on test anything the tests can't reach. Here's what each step looks like.
 
 ### Build [Autonomous Agent] `[░░░░░░░░░░] Human` · `[██████████] Agent`
 
@@ -169,15 +169,19 @@ Every phase gets a quick review before you move on. Check the code it generated,
 
 For substantial phases, I'll feed the `git diff` and phase plan to the Interactive Agent and ask it to check the implementation against the spec. You're using the smarter model to code-review the cheaper model. It's also good for catching structural mismatches.
 
+### Commit
+
+One commit per phase. Keeps the history clean and makes it easy to bisect if something breaks later.
+
+Code review is the gate here, not your eyeballs on the UI. That comes next.
+
 ### Agent-Led Manual Testing (UI Only) [Interactive Agent] `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 
 Not everything can be unit tested. UI components, system API integrations (notifications, alarms, live activities) — these need human help. When unit tests aren't sufficient, the agent writes a manual test plan as part of the phase ([manual_test_plan_guide.md](prompts/manual_test_plan_guide.md)). It creates a diagnostic view in the app and writes step-by-step instructions: "tap this button, verify this appears, check that the notification fires." 
 
+This happens *after* the commit, which is deliberate. The agent is increasingly not running on my machine — containers, remote sandboxes, worktrees. Asking me to go look at the UI before it commits is asking for something I often can't do: there's nothing to sync yet. Once it's committed, I pull and look. If something's off, that's a follow-up commit, which is fine — it goes through the same review loop as everything else.
+
 See [AI-Driven Manual Testing](#ai-driven-manual-testing) in Lessons Learned for more on how this works and what it caught.
-
-### Commit
-
-One commit per phase. Keeps the history clean and makes it easy to bisect if something breaks later.
 
 ## Final Code Review `[█████░░░░░] Human` · `[░░░░░█████] Agent`
 

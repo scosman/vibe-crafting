@@ -59,3 +59,20 @@ Rules:
 - **Tests written** means you wrote new tests for the functionality you built. NA only if the project has no test infrastructure or the change genuinely doesn't warrant tests (e.g., config-only change).
 - If any value is FALSE, explain what's failing and why in your summary above the block.
 - Do not bypass failing checks. Do not skip checks to save time.
+
+## UI Review Block
+
+Every return summary MUST also end with a `<ui_review>` block, directly after the attestation. The manager uses it to tell the user what to look at once the work is committed.
+
+```
+<ui_review>
+- Settings → Notifications — new toggle row, check spacing against the rows above it
+- Alarm list empty state — new illustration and copy
+</ui_review>
+```
+
+Rules:
+- **1–5 bullets, one line each.** Terse. A pointer to where to look and what to judge — not an explanation of what you built.
+- Only things a human has to *see* to judge: layout, visual design, flow, copy in context. Not logic, not tests, not internals.
+- If nothing user-visible changed, the whole block is `<ui_review>NONE</ui_review>`.
+- Don't pad to fill the five. Two sharp bullets beat five vague ones.

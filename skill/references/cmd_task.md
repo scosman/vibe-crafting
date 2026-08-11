@@ -28,11 +28,11 @@ Use the label **"Task Progress"** for the progress block. The full step list for
 - Step 0b: Task file created
 - Step 1: Coding
 - Step 1b: Attestation
-- Step 1c: UI signoff (if applicable)
 - Step 2: Code review
 - Step 3: Commit
 - Step 4: Verify
-- Step 5: Summary
+- Step 5: UI review (if applicable)
+- Step 6: Summary
 ```
 
 ## Invocation
@@ -112,7 +112,7 @@ Current Task: tasks/[slug]
 
 If any of these are false, stop and correct course.
 
-**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exceptions are: escalation (roadblock from coding agent), and UI signoff (Step 1c) when the task includes significant UI changes.**
+**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from the coding agent). UI review (Step 5) comes after the work is committed — it is the end of the flow, not a pause in it.**
 
 ### Step 1: Spawn Coding Agent
 
@@ -128,26 +128,11 @@ Inspect the coding agent's return for an `<attestation>` block.
 
   > Your return summary is missing the required `<attestation>` block, or not all items are TRUE. Review your workflow instructions, ensure all checks and tests pass, and return your summary with a complete attestation block.
 
-- If all values are **TRUE** (or NA where appropriate): proceed to Step 1c.
+- If all values are **TRUE** (or NA where appropriate): proceed to Step 2.
 
 Do NOT run checks yourself — the coding agent is responsible. You are verifying it reported completion.
 
-### Step 1c: UI Signoff
-
-If the task involves **significant UI changes** (new screens, layout changes, new components, visual redesigns), pause and ask the user to review the UI before proceeding to code review.
-
-**Skip this step when:**
-- The task has no UI changes
-- UI changes are trivial (copy/string updates, minor spacing tweaks)
-
-**When UI signoff is needed:**
-1. Tell the user the coding agent has finished and the UI is ready for review
-2. Summarize what UI was built/changed (based on the coding agent's summary)
-3. Ask the user to check the UI and confirm it looks good, or describe what needs to change
-4. If the user requests changes: resume the coding agent with the feedback, then go back to **Step 1b** (validate attestation) and return here for another signoff
-5. If the user approves: proceed to Step 2
-
-This step exists because code review catches code quality issues, not design issues. Human eyes should approve significant UI before the CR/fix/commit loop begins.
+Also keep the coding agent's `<ui_review>` block — you'll need it at Step 5.
 
 ### Step 2: CR Loop
 
@@ -194,7 +179,11 @@ If `git status` shows uncommitted changes, resume the coding agent:
 
 Verify again after.
 
-### Step 5: Present Summary
+### Step 5: UI Review
+
+→ Read [references/shared/ui_review.md](shared/ui_review.md) for when this step applies, what to send the user, and the feedback loop. Follow it precisely.
+
+### Step 6: Present Summary
 
 Show the task summary to the user.
 
@@ -264,3 +253,4 @@ The coding agent may surface a technical roadblock instead of a "ready for CR" s
 - [references/spawning_subagents.md](references/spawning_subagents.md) — How to spawn and resume sub-agents
 - [references/task_coding_prompt.md](references/task_coding_prompt.md) — Full instructions for task coding sub-agents
 - [references/cr_agent_prompt.md](references/cr_agent_prompt.md) — Full instructions for CR sub-agents
+- [references/shared/ui_review.md](shared/ui_review.md) — The UI review step and its prompt templates

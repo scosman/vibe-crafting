@@ -31,11 +31,11 @@ Task Progress:
 - [x] Step 0b: Task file — created
 - [ ] Step 1: Coding — in progress
 - [ ] Step 1b: Attestation — pending
-- [ ] Step 1c: UI signoff — pending (or skipped if no significant UI)
 - [ ] Step 2: Code review — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
-- [ ] Step 5: Summary — pending
+- [ ] Step 5: UI review — pending (or skipped if no significant UI)
+- [ ] Step 6: Summary — pending
 </progress>
 ```
 
@@ -47,11 +47,27 @@ Phase 2 Progress:
 - [x] Step 0: Pre-checks — complete
 - [x] Step 1: Coding — complete
 - [x] Step 1b: Attestation — complete
-- [x] Step 1c: UI signoff — skipped (no UI changes)
 - [ ] Step 2: Code review — in progress
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
-- [ ] Step 5: Summary — pending
+- [x] Step 5: UI review — skipped (no UI changes)
+- [ ] Step 6: Summary — pending
+</progress>
+```
+
+Example (`implement all`, per-phase block — Step 5 is deferred to one consolidated review after the last phase):
+
+```
+<progress>
+Phase 2 of 6 Progress:
+- [x] Step 0: Pre-checks — complete
+- [x] Step 1: Coding — complete
+- [x] Step 1b: Attestation — complete
+- [x] Step 2: Code review — clean
+- [ ] Step 3: Commit — in progress
+- [ ] Step 4: Verify — pending
+- [—] Step 5: UI review — deferred to end of run
+- [ ] Step 6: Summary — pending
 </progress>
 ```
 
@@ -65,11 +81,11 @@ After CR finds issues and coding agent is resumed:
 <progress>
 - [x] Step 1: Coding — complete (round 2)
 - [ ] Step 1b: Attestation — in progress (round 2)
-- [ ] Step 1c: UI signoff — pending (round 2)
 - [ ] Step 2: Code review — pending (round 2)
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
-- [ ] Step 5: Summary — pending
+- [ ] Step 5: UI review — pending
+- [ ] Step 6: Summary — pending
 </progress>
 ```
 
@@ -79,15 +95,31 @@ After a commit hook failure resets back to Step 1b:
 <progress>
 - [x] Step 1: Coding — complete (round 3, hook fix)
 - [ ] Step 1b: Attestation — in progress (round 3)
-- [ ] Step 1c: UI signoff — pending (round 3)
 - [ ] Step 2: Code review — pending (round 3)
 - [ ] Step 3: Commit — pending (round 2)
 - [ ] Step 4: Verify — pending
-- [ ] Step 5: Summary — pending
+- [ ] Step 5: UI review — pending
+- [ ] Step 6: Summary — pending
 </progress>
 ```
 
-Note: Steps 3–5 have their own counter independent of the 1→1b→2 loop, since commit can fail separately.
+Note: Steps 3–6 have their own counter independent of the 1→1b→2 loop, since commit can fail separately.
+
+After UI review feedback sends the whole loop back around:
+
+```
+<progress>
+- [x] Step 1: Coding — complete (round 2, UI feedback)
+- [ ] Step 1b: Attestation — in progress (round 2)
+- [ ] Step 2: Code review — pending (round 2)
+- [ ] Step 3: Commit — pending (round 2)
+- [ ] Step 4: Verify — pending (round 2)
+- [ ] Step 5: UI review — pending (round 2)
+- [ ] Step 6: Summary — pending
+</progress>
+```
+
+UI feedback resets every step, since the fix is unreviewed, uncommitted code like any other.
 
 ## Rules
 
@@ -95,5 +127,6 @@ Note: Steps 3–5 have their own counter independent of the 1→1b→2 loop, sin
 - Output the progress block **after every sub-agent return**, before doing anything else.
 - Mark each step as it completes. Show the current step as "in progress."
 - **After outputting the progress block, immediately proceed to the next pending step.** Do not wait for user input. Do not ask what to do next. The progress block tells you what to do next — do it.
-- The ONLY reasons to stop and wait for the user: (1) escalation/roadblock from the coding agent, (2) after the final step (the flow is complete).
+- The ONLY reasons to stop and wait for the user: (1) escalation/roadblock from the coding agent, (2) the UI review step, which comes after the work is committed, (3) after the final step (the flow is complete).
+- In `/spec implement all`, the per-phase UI review is deferred to a single consolidated review at the end of the run. Finishing a phase is never a reason to stop — the next phase's progress block is your next output.
 - If a step sends you back to an earlier step (e.g., commit hook failure → back to Step 1b), update the block to reflect the reset, increment the round counter, and keep going.

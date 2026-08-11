@@ -28,12 +28,12 @@ Use the label **"PR Feedback Progress"** for the progress block. The full step l
 - Step 0b: Fetch comments
 - Step 1: Coding
 - Step 1b: Attestation
-- Step 1c: UI signoff (if applicable)
 - Step 2: Code review
 - Step 3: Commit
 - Step 4: Verify and push
 - Step 5: Reply to PR comments
-- Step 6: Summary
+- Step 6: UI review (if applicable)
+- Step 7: Summary
 ```
 
 ## Invocation
@@ -145,7 +145,7 @@ This is informational — the command works regardless of active project state.
 
 If any of these are false, stop and correct course.
 
-**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exceptions are: escalation (roadblock from coding agent), and UI signoff (Step 1c) when the changes include significant UI changes.**
+**AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from the coding agent). UI review (Step 6) comes after the work is committed, pushed, and replied to — it is the end of the flow, not a pause in it.**
 
 ### Step 1: Spawn Coding Agent
 
@@ -165,26 +165,11 @@ Inspect the coding agent's return for an `<attestation>` block.
 
   > Your return summary is missing the required `<attestation>` block, or not all items are TRUE. Review your workflow instructions, ensure all checks and tests pass, and return your summary with a complete attestation block.
 
-- If all values are **TRUE** (or NA where appropriate): proceed to Step 1c.
+- If all values are **TRUE** (or NA where appropriate): proceed to Step 2.
 
 Do NOT run checks yourself — the coding agent is responsible. You are verifying it reported completion.
 
-### Step 1c: UI Signoff
-
-If the PR feedback changes involve **significant UI changes** (new screens, layout changes, new components, visual redesigns), pause and ask the user to review the UI before proceeding to code review.
-
-**Skip this step when:**
-- The changes have no UI impact
-- UI changes are trivial (copy/string updates, minor spacing tweaks)
-
-**When UI signoff is needed:**
-1. Tell the user the coding agent has finished and the UI is ready for review
-2. Summarize what UI was built/changed (based on the coding agent's summary)
-3. Ask the user to check the UI and confirm it looks good, or describe what needs to change
-4. If the user requests changes: resume the coding agent with the feedback, then go back to **Step 1b** (validate attestation) and return here for another signoff
-5. If the user approves: proceed to Step 2
-
-This step exists because code review catches code quality issues, not design issues. Human eyes should approve significant UI before the CR/fix/commit loop begins.
+Also keep the coding agent's `<ui_review>` block — you'll need it at Step 6.
 
 ### Step 2: CR Loop
 
@@ -294,7 +279,15 @@ EOF
 - Reply to every comment that was in the feedback set, whether implemented or not
 - Keep reply descriptions concise but specific
 
-### Step 6: Present Summary
+### Step 6: UI Review
+
+→ Read [references/shared/ui_review.md](shared/ui_review.md) for when this step applies, what to send the user, and the feedback loop. Follow it precisely.
+
+The changes are pushed by now, so tell the user to pull the PR branch.
+
+If UI feedback sends you back through the flow, run Steps 1b → 4 again (including the push) and return here. Do **not** re-run Step 5 — the PR comments are already answered.
+
+### Step 7: Present Summary
 
 Show a summary to the user:
 
@@ -384,4 +377,5 @@ The coding agent may surface a technical roadblock instead of a "ready for CR" s
 - [references/pr_coding_prompt.md](references/pr_coding_prompt.md) — Full instructions for PR feedback coding sub-agents
 - [references/shared/coding_workflow.md](shared/coding_workflow.md) — Shared workflow for coding agents
 - [references/shared/coding_role.md](shared/coding_role.md) — Coding agent role and persona
+- [references/shared/ui_review.md](shared/ui_review.md) — The UI review step and its prompt templates
 - [references/cr_agent_prompt.md](references/cr_agent_prompt.md) — Full instructions for CR sub-agents
