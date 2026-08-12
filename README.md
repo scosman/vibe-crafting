@@ -23,9 +23,9 @@ I wanted to try vibe coding, but for stuff I actually care about shipping. The g
 
 I ended up developing a process: upfront technical specs, phased autonomous builds, and layered code review (both manual and agentic). I don't write code, and I don't read every line the AI writes. But the AI doesn't get to wing it either — it's executing a detailed plan, hitting quality gates, and getting reviewed from multiple angles. I'm calling it "vibe crafting" for lack of a better term.
 
-The result was a codebase better than I would have written — not because I can't, but because I'm lazy. I would never have written 288 tests and a full UI test suite on my own. I've now shipped several projects this way — an iOS app from scratch, then a Python data-pipeline manager backed by Google Cloud storage.
+The result was a codebase better than I would have written — not because I can't, but because I'm lazy. I would never have written 288 tests and a full UI test suite on my own. I've now shipped dozens projects this way: iOS app, Mac Apps, Python data-pipeline, Git sync engines. 
 
-This repo contains the actual process, along with every prompt, spec, and planning doc I used. When I reference a prompt below, you can click through and see exactly what I fed the agent.
+This README describes the process. The included agent skill gives you the commands you need to use it in the agent of your choice.
 
 ## Using the Skill
 
@@ -69,20 +69,21 @@ This is the user-interactive agent where you're actually paying attention. You'r
 - IDE-based, so you can see changes inline and make quick edits
 - Used for: spec writing, architecture, code review, iteration
 
-My setup: Cursor + Claude Opus.
+My current setup: Claude Code in terminal, running Claude Opus (or Fable for tougher problems).
 
 ## Autonomous Agent — Coding Sessions
 
-This is the opposite. You type "implement phase 4" and walk away. The agent reads the plan, writes code, runs tests, fixes lint errors, and keeps going until everything passes. You come back and review the results.
+This is the opposite. You type "/spec implement all" and walk away. The agent reads the plan, writes code, runs tests, fixes lint errors, and keeps going until everything passes. You come back and review the results. These sessions can many hours.
 
-- No user attention. I prompt 'Implement phase 11' and walk away.
-- Great model, but doesn't need to be the most expensive. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting). I previously had good experience with GLM 5 and Kimi K2.6, both of which are a fraction the cost of Opus. Lately, I've fallen back to using Opus here as well as it's included in my subscription. 
-- Smart but much cheaper model. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting). Models like Kimi 2.5 or GLM 5 are great choices.
-- Built-in tools so it can really be autonomous -- build, test, lint, format and web-search for docs.
+- No user attention. I prompt 'implement all' and walk away.
+- Great model, but doesn't need to be the most expensive. The planning model has hashed out the tough decisions. This is where the bulk of your token spend happens (writing code, writing tests, fixing tests, fixing linting). I previously had good experience with GLM 5 and Kimi K2.6, both of which are a fraction the cost of Opus. Lately, I've fallen back to using Opus/Sonnet here as well as it's included in my subscription. 
+- MCP tools so it can really be autonomous -- build, test, lint, format and web-search for docs.
 
-My setup: Claude Code in terminal using GLM 5 via the [z.ai Coder plan](https://z.ai/subscribe) or Opus via Anthropic Subscription. Other tools: web-search for docs (Z.ai, Anthropic, or tavily), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands. 
+My current setup: Claude Code cloud containers that keep running, even if my laptop shuts down. Claude Opus or Sonnet.
 
-**Hint:** Run `claude --permission-mode=dontAsk` to force it to keep working instead of stopping to ask questions. This is what makes it autonomous. 
+Other tools: web-search for docs (Z.ai, Anthropic, or tavily), [Hooks MCP](https://github.com/scosman/hooks_mcp) setup with project-specific build, test, lint, format, coverage, and UI test commands.
+
+**Hint:** It is essential that it doesn't stop to ask permission. I either run in cloud sandboxes in yolo mode (no secrets, no private docs), or run locally in sandbox with `claude --permission-mode=dontAsk`.
 
 # The Process
 
@@ -223,11 +224,11 @@ For a pipeline project using Google Cloud Storage, I needed atomic batch file mo
 
 AI agents will do what you tell them. To a fault. Even if it's a bad idea.
 
-In my spec, I had a one-line requirement about notification recurrence. The agent dutifully designed an entire system around it — one that would have been fragile in both code and reliability. It never once said "hey, this is going to be a pain and might not work well." It just built what I asked for.
+In on project spec, I had a one-line requirement about notification recurrence. The agent dutifully designed an entire system around it — one that would have been fragile in both code and reliability. It never once said "hey, this is going to be a pain and might not work well." It just built what I asked for.
 
 The model wants to be helpful, which means agreeing with you and executing your plan. It won't push back unless you explicitly ask.
 
-The mitigation is simple but easy to forget: tell the agent to [challenge your assumptions](#challenge-the-ai-early). "Push back on my ideas. Tell me what's wrong with my approach. Suggest alternatives." When you do this, it actually gives good feedback — it just won't volunteer it.
+The mitigation is simple but easy to forget: tell the agent to [challenge your assumptions](#challenge-the-ai-early). "Push back on my ideas. Tell me what's wrong with my approach. Suggest alternatives." When you do this, it actually gives good feedback — it just won't volunteer it. These are built into the skill, focusing on pushing the hard decisions early.
 
 The catch: you have to remember to do this every time. The one time you forget is probably the time you needed it most.
 
@@ -237,7 +238,7 @@ Not everything can be unit tested. UI flows, system integrations (AlarmKit, noti
 
 The concept: when a phase includes UI or system integration work, the agent writes a manual test plan as part of its build loop. It creates a diagnostic view inside the app — a hidden screen with buttons to trigger specific behaviors, display internal state, and exercise edge cases. Then it writes step-by-step test instructions: "tap this button, verify this label shows the next alarm time, check that the notification fires after 30 seconds."
 
-This found real bugs. Alarm schedules were being set incorrectly — off by a time zone conversion. Intents weren't showing up in the system UI because of a missing Info.plist entry. These are exactly the kinds of things unit tests can't catch.
+This found real bugs. iOS alarm schedules were being set incorrectly — off by a time zone conversion. iOS intents weren't showing up in the system UI because of a missing Info.plist entry. These are exactly the kinds of things unit tests can't catch.
 
 The best part: I ended up doing more testing than I would have on my own. Writing test plans is tedious, so normally I'd test the happy path and move on. Here, the agent wrote thorough plans covering edge cases I would have skipped, and I just followed the instructions. Repeatable test plans as a free side effect of the build process.
 
@@ -265,40 +266,37 @@ The AI can draft specs, but it's not great at designing systems from scratch. A 
 
 This is why the process [front-loads human attention in the planning phase](#build-spec--implementation-plan-interactive-agent). The specs are a collaboration, not a delegation.
 
-## Example Projects and Costs
+## Costs
 
-Two real projects, to give a sense of scale.
+A coding subscription is essential to keeping costs down. I've tried a few: Claude, z.ai coder, Cerebras Coder, Codex, more. These are  much cheaper than API level pricing.
 
-**iOS App** — the main project described in this post. Offline-first iOS app in SwiftUI with notifications, alarms, live activities, and a full test suite.
+For example, an iOS app I built used 185M tokens of GLM, all on a $30/mo z.ai coder plan. The same token volume on Sonnet would cost roughly **$2,400**.
 
-- ~185M tokens during the coding phase (autonomous agent)
-- On the z.ai Coder plan: **$30/month** for essentially unlimited usage. I only hit the temporary rate limit once across the entire project.
-- The same token volume on Sonnet would cost roughly **$2,400**
-- The same on GLM 4.7 API pricing: **~$320**
+## Sandboxing
 
-**Pipeline Project** — a data pipeline / backend project in Python with Google Cloud integrations. Similar pattern: bulk of the tokens in the coding phase, minimal spend during planning.
+You can't (shouldn't?) just give your agents unrestricted system access. Sandboxing is essential — you don't want an AI agent with free reign over your filesystem, network, and credentials. The tension: the agent needs enough access to do its job, but not so much that a hallucinated `rm -rf` ruins your week.
 
-The z.ai Coder plan is what made this practical for me. $30/month for what would otherwise be hundreds or thousands in API costs. Your mileage will vary depending on model choice and provider, but the key insight is: separate your planning model (best available, low token volume) from your coding model (good enough, high token volume).
+**Cloud Sandboxes Make This Easy** 
 
-> One last note: all those tokens running on GPUs use electricity. Carbon credits exist and are cheap. Worth considering if you're burning through millions of tokens regularly.
+I've been migrating more and more to sandboxes for development. Allow your agent to run in yolo mode, with a limited blast radius. I'm lucky that most of my work is open source, so minimal data-exfiltration concerns.
 
-## The Hard Part: Tools and Sandboxing
+What I use: Claude Code cloud, Codex cloud, exe.dev.
 
-The hardest part of this process wasn't the AI or the prompts — it was the tooling setup so the agent could actually work autonomously.
+**Local Sandboxes are Hard**
 
-Autonomous agents need to build, test, lint, and format code. But you can't just give them unrestricted system access. Sandboxing is essential — you don't want an AI agent with free reign over your filesystem, network, and credentials. The tension: the agent needs enough access to do its job, but not so much that a hallucinated `rm -rf` ruins your day.
+Claude Code and others have attempted to solve local sandboxes using tools like seatbelt on MacOS. However, every dev-tool hits sandbox issues non-stop. You end up waking up stuck agents that should have finished.
 
-I spent more time configuring MCP servers for autonomous tooling for the iOS project than I spent on any individual coding phase. Build commands, test runners, linters, formatters — each one needed to be exposed to the agent in a controlled way. This is a one-time cost per project, but it's real.
+Docker Sandboxes are are promising: local isolated micro-VMs. I'm just starting to play with these.
 
-**Some toolchains just work.** Go and Python (with uv) were painless. The CLIs work in sandboxed environments, the build and test tools are straightforward, everything's fine.
+## Tooling & MCP
 
-**Xcode is pain.** iOS development was a different story.
+You need to give your agent the tools you need to work autonomously. They need to build, test, lint, and format code. 
 
-- Xcode's CLI tools (`xcodebuild`, etc.) don't work properly in a sandboxed environment. I had to write a custom MCP server just to bypass the sandbox for builds and compiler warnings.
-- Xcode's CLI is second-class to its GUI. Occasionally the agent would get stuck in a loop, and I'd have to open Xcode manually to clear the state.
-- Some iOS APIs — AlarmKit, certain notification types — require a physical device. Simulator testing wasn't sufficient. This is where the manual test plans became essential.
+Some toolchains just work. Go and Python (with uv) were painless. The CLIs work in sandboxed environments, the build and test tools are straightforward, everything's fine.
 
-The tooling story will get better as the ecosystem matures. Right now, budget extra setup time if your toolchain isn't natively CLI-friendly.
+Some are more work. I spent more time configuring MCP servers my iOS project than I spent on any individual coding phase.
+
+Regardless, invest in this upfront. If you don't you'll be throwing away the project.
 
 # Prior Art
 
@@ -312,9 +310,7 @@ I personally just use a few homegrown prompts and markdown files, but these may 
 
 # Conclusion
 
-I'm not writing code anymore, so you'd be tempted to call it vibe coding. But I'm going deeper into architecture than I normally would, writing more tests, running more manual tests, and producing better code than when I was constrained by my typing speed and focus. The results are genuinely better — not just faster, but higher quality.
-
-288 unit tests. A full UI test suite. Manual test plans for every system integration. Thorough code review from multiple angles. I would never have done all of that on my own. Not because I don't know how — because I'm lazy and there are only so many hours. With this process, the marginal cost of doing it right dropped to near zero.
+I'm not writing the code anymore, so you'd be tempted to call it vibe coding. But I'm going deeper into architecture than I normally would, writing more tests, running more manual tests, and producing better code than when I was constrained by my typing speed and focus. The results are genuinely better — not just faster, but higher quality.
 
 Vibe crafting is a silly name, but it gets the idea across. I'm spending more time steering and reviewing results than coding. But the process underneath is deliberate, structured, and uncompromising on quality.
 
