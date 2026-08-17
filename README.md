@@ -33,13 +33,13 @@ Use the `/spec` skill in your coding agent to follow this process. Commands incl
 
  - `/spec setup` - once per repo, creates necessary files, folders and .gitignore entries.
  - `/spec new project` - guides you through a 5-stage specing process from initial idea to detailed architecture with implementation plan.
-   - `/spec implment` or `/spec implement all` - after creating a project, this implements the next phase of your project from the implementation plan. Add `all` to implement all phases without stopping after each phase.
-   - `/spec continue` - continue the current project, wherever we last left off.
- - `/spec task` - implement smaller tasks in one command. Skips the specing process, but uses the same implemention loop running code-review and fix issues before commiting.
+ - `/spec implement` or `/spec implement all` - after creating a project, this implements the next phase of your project from the implementation plan. Add `all` to implement all phases without stopping after each phase.
+ - `/spec continue` - continue the current project, wherever we last left off.
+ - `/spec task` - implement smaller tasks in one command. Skips the lengthy specing process, but uses the same implementation loop for code-reviews/fixes before committing.
  - `/spec pr` - opens a GitHub PR, waits for CR feedback from any code review bots, then addresses the feedback until clean.
  - `/spec cr` - runs a fast code review of currently staged changes.
  - `/spec deep cr` - runs a long multi-agent code review of current branch. Several steps: reading the spec, reading the code, planning what needs review, planning how to divide the review, running parallel review subagents, and summarizing results.
- - `/spec design crit` - multi-phase agentic review of spec/design documents, with interactive resolution.
+ - `/spec design crit` - multi-phase agentic review of spec or design document. Interactive resolution of issues.
  - `/spec` - explains the commands above
 
 ## The Process
