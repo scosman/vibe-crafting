@@ -88,6 +88,8 @@ Output your first progress block, then spawn a new coding sub-agent using the In
 
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
 
+**Dispatch it in a mode that returns the agent's final message to you** — the manager must receive the return payload (attestation block, ui_review block) directly, not just a completion notification. Save the agent handle the tool gives you so you can resume this agent later. (In Claude Code: an unnamed `Agent()` call — passing `name` loses the payload.)
+
 The coding agent returns either:
 - A summary with an attestation block indicating it's ready for code review
 - A roadblock message (see Escalation below)
@@ -112,10 +114,10 @@ Also keep the coding agent's `<ui_review>` block — you'll need it at Step 5.
 2. CR agent returns structured feedback with severity labels
 3. If the review is clean: proceed to Step 3
 4. If issues exist:
-   - Resume the coding agent with the CR Feedback Prompt template, passing the CR output
+   - Resume the coding agent — using the saved agent handle — with the CR Feedback Prompt template, passing the CR output
    - Coding agent addresses issues and returns a summary with attestation block
    - Validate attestation (same as Step 1b — resume coding agent if missing or FALSE)
-   - Spawn a new CR sub-agent, passing prior feedback in a `<prior_cr_feedback>` block
+   - Spawn a new CR sub-agent (a fresh dispatch, never a resume), passing prior feedback in a `<prior_cr_feedback>` block
    - Repeat until CR returns clean
 
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
@@ -129,7 +131,7 @@ Also keep the coding agent's `<ui_review>` block — you'll need it at Step 5.
 
 If any of these are false, you must run (or re-run) the CR loop before committing. Every code change — including CR fixes — requires a clean CR before commit.
 
-Resume the coding agent with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message.
+Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message.
 
 If the coding agent returns a pre-commit hook failure instead of a commit message:
 
