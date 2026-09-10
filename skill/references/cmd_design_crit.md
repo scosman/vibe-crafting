@@ -19,6 +19,14 @@ The manager's responsibilities:
 
 **Important:** even if asked to review specs by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context. You are a manager: delegate.
 
+## The Pattern
+
+Steps 0–4 of this command are an instance of the shared fan-out pattern: scope → plan → fan out one sub-agent per unit → wait → collapse into one summary. Step 5 (resolution) is this command's own, and runs after the pattern completes.
+
+→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, re-dispatching failures, and how the collapse works. Follow them precisely.
+
+This file supplies the design-crit specifics: the unit is a **review phase**, the plan is `crit_plan.md`, the consolidated summary is `crit_summary.md` (with its Issue Queue), both under `reviews/projects/[review_name]/`, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and spec-file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
+
 ## Progress Tracker
 
 → Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
@@ -105,7 +113,7 @@ Custom phases tailored to the actual spec content. Read the spec files to identi
 - "Migration strategy review" (if there's an upgrade/migration path)
 - "Concurrency model review" (if the spec describes concurrent operations)
 
-Each spec-specific phase gets a one-paragraph description of what to focus on, plus the list of spec files relevant to that phase.
+Each spec-specific phase gets a focus paragraph (per the shared pattern) plus the list of spec files relevant to that phase.
 
 ### Reusable Template Phases
 
@@ -145,8 +153,6 @@ Write to `reviews/projects/[review_name]/crit_plan.md`:
 - ...
 ```
 
-After writing the plan, update the progress block Step 2 sub-steps to match the planned phases.
-
 ### Present Plan for Approval
 
 Show the user the plan: project path, spec files in scope, and the list of phases. Ask them to confirm before proceeding:
@@ -157,24 +163,19 @@ Show the user the plan: project path, spec files in scope, and the list of phase
 >
 > Proceed with the review?
 
-Wait for user approval. If they want changes (add/remove phases, change scope), update the plan and re-confirm.
+Approval is required — dispatch nothing until you have it. If the user wants phases added, dropped, or re-scoped, update `crit_plan.md` in place and re-confirm.
+
+A change to which spec files are in scope is the one change that reaches back into Step 0, and it reaches back **partially**: re-confirm the file list, then rewrite `crit_plan.md` in place. **Keep the review name and folder you already created** — do not re-run Generate Review Name, which would append `-v2` and orphan the plan the user is looking at.
 
 ## Step 2: Phase Reviews
 
-For each phase, spawn a fresh sub-agent. Use the appropriate prompt template below depending on whether it's a spec-specific or reusable template phase.
+One fresh sub-agent per phase, dispatched and tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) — including re-dispatching any phase whose agent errors or returns without writing its feedback file.
 
-→ Read [references/spawning_subagents.md](spawning_subagents.md) for how to spawn sub-agents.
-
-**After each sub-agent returns:**
-1. Update the progress block with the phase result (issue counts by severity)
-2. Check the phase off in `crit_plan.md`
-3. Immediately spawn the next phase — do not stop for user input
-
-Continue until all phases are complete.
+Use the prompt template below that matches the phase: Spec-Specific or Reusable Template. Each phase writes `reviews/projects/[review_name]/phase_[N]_feedback.md`; the per-phase result you record in the progress block is its issue counts by severity.
 
 ## Step 3: Summary
 
-After all phases complete, read all `reviews/projects/[review_name]/phase_N_feedback.md` files. Write `reviews/projects/[review_name]/crit_summary.md`:
+Collapse per the [fan-out pattern](shared/fan_out_pattern.md#collapse) — the manager writes this one. Read all `reviews/projects/[review_name]/phase_N_feedback.md` files, then write `reviews/projects/[review_name]/crit_summary.md`:
 
 ```markdown
 # Design Crit Summary: [review_name]
@@ -204,6 +205,10 @@ After all phases complete, read all `reviews/projects/[review_name]/phase_N_feed
 
 [List all critical issues across all phases, with spec file references]
 
+## Incomplete Phases
+
+[Any phase that did not complete after the re-dispatch attempt cap — including one that wrote partial findings. Say what it did cover and what it leaves unreviewed. "None — all phases completed." if clean.]
+
 ## Recommendations
 
 [Top 3-5 prioritized actions]
@@ -229,6 +234,7 @@ Show the user:
 - Link to the review folder: `reviews/projects/[review_name]/`
 - The Issues Overview table from the summary
 - Total counts: N critical, N moderate, N mild across all phases
+- Any phase that could not be completed, and what it leaves unreviewed
 - If critical issues exist: list them prominently with spec file references
 - Prompt: "Ready to work through issues? Say 'resolve' to start the resolution phase, or review the findings in the review folder first."
 
@@ -239,6 +245,8 @@ This phase is fully interactive. The user drives all decisions.
 ### 5a: Load the Issue Queue
 
 Load the Issue Queue from `crit_summary.md`. This is the source of truth for what needs resolution.
+
+An incomplete phase is not an issue — it's a coverage gap, and it stays in the summary's Incomplete Phases section rather than entering the queue. Mention it once when you present the groups so the user knows that area went unreviewed.
 
 ### 5b: Present Prioritized Groups
 
@@ -328,18 +336,15 @@ After all refinements are applied:
 
 ## Autonomous Flow
 
-**Steps 2 through 4 are fully autonomous — drive the entire flow to completion without stopping for user input. No exceptions.** After each sub-agent returns, update the progress block and immediately spawn the next phase. After all phases complete, write the summary and present results.
+→ [fan-out pattern: Autonomous Flow](shared/fan_out_pattern.md#autonomous-flow).
 
-The manager pauses for user input at three points:
+This command pauses at exactly three points:
+
 1. **Step 0** — scope confirmation (always)
 2. **Step 1** — plan approval (always)
-3. **Step 5** — resolution phase (fully interactive, user decides on every issue group)
+3. **Step 5** — resolution (fully interactive, user decides on every issue group)
 
-After the user approves the plan (end of Step 1), Steps 2-4 run without interruption. Step 5 only begins when the user explicitly says "resolve."
-
-## Non-Interactive (Steps 2-4)
-
-Once the review is running (Step 2 onward through Step 4), keep working until all phases are complete, the summary is written, and results are presented. Don't stop to ask questions, don't ask "should I continue?", don't wait for approval between phases. The progress block tells you what to do next — do it.
+Steps 2–4 run without interruption once the plan is approved. Step 5 begins only when the user explicitly says "resolve."
 
 ## Prompt Templates
 
@@ -383,6 +388,7 @@ Return a short summary: phase name, issue counts by severity, notable concerns.
 
 ## References
 
+- [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) — The shared plan → fan out → collapse mechanics
 - [references/spawning_subagents.md](spawning_subagents.md) — How to spawn sub-agents
 - [references/design_crit_phase_prompt.md](design_crit_phase_prompt.md) — Full instructions for phase sub-agents
 - [references/shared/design_review_standards.md](shared/design_review_standards.md) — Shared design review standards (loaded by sub-agents, not the manager)

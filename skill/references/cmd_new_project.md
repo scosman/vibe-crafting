@@ -77,7 +77,37 @@ For all planning steps, adopt this persona:
 
 This persona applies across all planning steps.
 
+## Research (Conditional, Any Planning Step)
+
+Planning is only as good as what you know. When the project depends on something external that neither you nor the user can describe accurately from memory — a standard, a third-party API, a library's real capabilities, how others have solved this — run research before you spec against a guess.
+
+→ Read [references/cmd_research.md](cmd_research.md) and follow it.
+
+**When to run it:**
+
+| Before | When the unknown is |
+|--------|---------------------|
+| Step 1 (project overview) | What's even possible or worth building — the user is exploring ("should we support the OpenEnv standard?") |
+| Step 2 (functional spec) | What the feature set must include — required behaviors defined by an external spec, protocol, or competitor baseline |
+| Step 4 (architecture) | How to build it — library and framework choices, API contracts, protocol details, performance characteristics |
+
+Don't research by reflex. Research when a wrong assumption would send the spec down the wrong path, not to pad the docs.
+
+**How it runs here — split, in this context:**
+
+- **Steps 0–2 of the research command run inline**, in this conversation: the web-access check, the subtopic plan, and **user approval of that plan**. The user sees the plan and approves both scope and cost — web tools aren't free.
+- **Step 3 onward dispatches from here too**: this context spawns the subtopic research sub-agents and the summary sub-agent directly.
+- Do **not** wrap research in a single "research manager" sub-agent — that hides the plan approval behind a handoff. One layer of sub-agents.
+- Context stays small: research is written to files, and sub-agents return only short summaries.
+- **Emit the research command's "Research Progress" block while it runs.** `new_project` isn't otherwise progress-tracked, so the block starts when research starts and ends when it does — then you're back in the planning step it was blocking.
+
+**Root folder:** `specs/projects/PROJECT_NAME/research/[topic]/` — inside the project, not the standalone `specs/research/` location.
+
+When research completes, read `specs/projects/PROJECT_NAME/research/[topic]/summary.md` and continue the planning step it was blocking. Cite the research in the artifact you write — link to the summary where a spec decision rests on a finding.
+
 ## Step 1: Project Overview
+
+If the user is still deciding what's worth building and that turns on something external — is this standard real, does that platform allow it, has someone already solved it — run [Research](#research-conditional-any-planning-step) first, and write the overview against what it found.
 
 Ask the user to describe what they want to build:
 
@@ -103,6 +133,8 @@ If they approve, mark `status: complete`. If they want changes, make them and as
 
 ## Step 2: Functional Spec
 
+If the feature set depends on an external spec, protocol, or product baseline you can't describe accurately, run [Research](#research-conditional-any-planning-step) first.
+
 → Read [references/step_functional_spec.md](references/step_functional_spec.md) and follow it.
 
 ## Step 3: UI Design (Conditional)
@@ -120,6 +152,8 @@ If UI is needed:
 → Read [references/step_ui_design.md](references/step_ui_design.md) and follow it.
 
 ## Step 4: Architecture
+
+If technical choices hinge on unknowns — which library, what an API actually supports, how a protocol behaves — run [Research](#research-conditional-any-planning-step) first. The architecture is supposed to leave no significant technical decisions to the coding agent; researching after you've written it is too late.
 
 → Read [references/step_architecture.md](references/step_architecture.md) and follow it.
 
