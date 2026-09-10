@@ -40,6 +40,7 @@ Use the `/spec` skill in your coding agent to follow this process. Commands incl
  - `/spec cr` - runs a fast code review of currently staged changes.
  - `/spec deep cr` - runs a long multi-agent code review of current branch. Several steps: reading the spec, reading the code, planning what needs review, planning how to divide the review, running parallel review subagents, and summarizing results.
  - `/spec design crit` - multi-phase agentic review of spec or design document. Interactive resolution of issues.
+ - `/spec research` - researches a topic on the web. Divides the topic into subtopics, asks you to approve the plan and then runs parallel research subagents. Rolls up findings to a summary.
  - `/spec` - explains the commands above
 
 ## The Process
