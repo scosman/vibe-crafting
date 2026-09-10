@@ -221,7 +221,9 @@ Show the user:
 
 ## Autonomous Flow
 
-→ [fan-out pattern: Autonomous Flow](shared/fan_out_pattern.md#autonomous-flow).
+→ [fan-out pattern: Autonomous Flow](shared/fan_out_pattern.md#autonomous-flow) and [Non-Interactive](shared/fan_out_pattern.md#non-interactive). Read both — a review that stops halfway to ask a question is the failure mode they exist to prevent.
+
+**Work autonomously. Don't ask the user for help or confirmation during the review.**
 
 This command pauses at exactly two points: **Step 0**, if the fork point cannot be determined automatically, and **end of Step 1**, for plan approval. From Step 2 onward the run is fully autonomous through summary and presentation.
 

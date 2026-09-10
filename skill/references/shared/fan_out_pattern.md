@@ -112,6 +112,16 @@ Don't restate the summary in chat. You just wrote it to a file for a reason.
 
 ## Autonomous Flow
 
-**Once the fan-out begins, drive to completion without stopping for user input.** After each return: progress block, then the next dispatch. After the last unit: collapse, then present.
+**Once the fan-out begins, drive the entire run to completion without stopping for user input. No exceptions.** After each return: update the progress block, then immediately dispatch the next unit. After the last unit: collapse, then present.
 
-The pauses are the ones your command file names — plan approval always, plus any scope confirmation before it or interactive phase after it. Between those, don't ask "should I continue?", don't wait for approval between units, and don't stop because a unit found something alarming. The progress block tells you what to do next — do it.
+The only legitimate pauses are the ones your command file names — plan approval always, plus any scope confirmation before it or interactive phase after it. That is the entire list. Nothing else in this pattern is a stopping point.
+
+## Non-Interactive
+
+Work autonomously. Don't ask the user for help or confirmation during the run.
+
+Once the fan-out is running, keep working until every unit is complete, the summary is written, and the results are presented. Don't stop to ask questions. Don't ask "should I continue?" Don't wait for approval between units. Don't narrate a decision back to the user hoping they'll make it for you. The progress block tells you what to do next — do it.
+
+This is stated twice on purpose, and the repetition is not an accident to be cleaned up. Managers don't break this rule at the start of a run, when the instruction is fresh. They break it in the middle, when a unit comes back with something alarming, ambiguous, or bigger than anyone scoped for — and checking in with the user suddenly feels like the responsible thing to do. It isn't. It strands a half-finished fan-out, wastes every unit already dispatched, and hands the user a decision they can't actually make yet, because the run that would inform it is the thing you just stopped. Alarming findings belong in the summary. Ambiguity gets resolved by finishing the work and looking at all of it. Take the finding, put it in the progress block, dispatch the next unit.
+
+A failed unit is not a pause either. Re-dispatch it per [Wait and Re-Dispatch](#wait-and-re-dispatch). If it hits the attempt cap, mark it a gap, carry it into the collapse, and keep going. A completed run with one honest gap is worth more to the user than a run that stopped to ask about it.

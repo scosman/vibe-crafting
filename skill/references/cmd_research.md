@@ -207,7 +207,9 @@ If embedded in another command: return to that command's flow and feed the summa
 
 ## Autonomous Flow
 
-→ [fan-out pattern: Autonomous Flow](shared/fan_out_pattern.md#autonomous-flow).
+→ [fan-out pattern: Autonomous Flow](shared/fan_out_pattern.md#autonomous-flow) and [Non-Interactive](shared/fan_out_pattern.md#non-interactive). Read both — a run that stops halfway to ask a question is the failure mode they exist to prevent.
+
+**Work autonomously once the plan is approved. Don't ask the user for help or confirmation during the research.** A subtopic that comes back thin or contradicts another one is summary material, not a reason to stop.
 
 This command pauses at exactly one point: **Step 2**, plan approval — unless the user has waived questions entirely, in which case it doesn't pause at all. Step 0 can stop the command outright, but that's a halt, not a pause.
 
