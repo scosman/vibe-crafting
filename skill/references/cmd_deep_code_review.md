@@ -18,6 +18,14 @@ The manager's responsibilities:
 
 **Important:** even if asked to review code by the user, default to using sub-agents per these instructions, unless the user specifically requests you do it in this context. You are a manager: delegate.
 
+## The Pattern
+
+This command is an instance of the shared fan-out pattern: scope → plan → fan out one sub-agent per unit → wait → collapse into one summary.
+
+→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
+
+This file supplies the deep-CR specifics. **Working folder: `reviews/projects/[review_name]/`** — created in Step 0, which also settles the review name and collision handling. The unit is a **review phase**, the plan is `cr_plan.md`, the consolidated summary is `cr_summary.md`, both at the top of the working folder, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
+
 ## Progress Tracker
 
 → Read [references/shared/progress_tracker.md](shared/progress_tracker.md) for the progress block format, round counters, and rules. Follow them precisely.
@@ -27,13 +35,16 @@ Use the label **"Deep CR Progress"** for the progress block. The full step list 
 ```
 - Step 0: Context & diff
 - Step 1: Plan
-- Step 2a: Phase 1 ([name])
-- Step 2b: Phase 2 ([name])
-- Step 2c: Phase 3 ([name])
+- Step 2: Fan out — all phases dispatched in parallel
+  - 2a: Phase 1 ([name])
+  - 2b: Phase 2 ([name])
+  - 2c: Phase 3 ([name])
   ... (one sub-step per phase, determined during Step 1)
 - Step 3: Summary
 - Step 4: Present
 ```
+
+The Step 2 sub-steps are **not a sequence** — every phase agent is dispatched at the same time and they run concurrently. Expect them to complete out of order.
 
 Example mid-flow:
 
@@ -42,11 +53,12 @@ Example mid-flow:
 Deep CR Progress:
 - [x] Step 0: Context & diff — complete
 - [x] Step 1: Plan — complete (5 phases)
-- [x] Step 2a: Phase 1 (Auth flow) — complete (1 critical, 2 moderate)
-- [x] Step 2b: Phase 2 (DB migrations) — complete (0 critical, 1 moderate)
-- [ ] Step 2c: Phase 3 (UI review) — in progress
-- [ ] Step 2d: Phase 4 (Security) — pending
-- [ ] Step 2e: Phase 5 (Test quality) — pending
+- [ ] Step 2: Fan out — 5 phases dispatched in parallel, 3 returned
+  - [x] 2a: Phase 1 (Auth flow) — complete (1 critical, 2 moderate)
+  - [x] 2b: Phase 2 (DB migrations) — complete (0 critical, 1 moderate)
+  - [ ] 2c: Phase 3 (UI review) — running
+  - [x] 2d: Phase 4 (Security) — complete (2 critical, 0 moderate)
+  - [ ] 2e: Phase 5 (Test quality) — running
 - [ ] Step 3: Summary — pending
 - [ ] Step 4: Present — pending
 </progress>
@@ -67,7 +79,7 @@ Compare the current branch against its fork point (the commit where it diverged 
 6. Find the fork point: `git merge-base <base> HEAD`
 7. The diff is: `git diff <fork-point>...HEAD`
 
-If no base can be determined, present the best guess and ask the user to confirm or correct. Never present a blank prompt — always offer a concrete suggestion. This is the **only** point where the manager may stop for user input.
+If no base can be determined, present the best guess and ask the user to confirm or correct. Never present a blank prompt — always offer a concrete suggestion. This is the only place before plan approval where the manager stops for user input.
 
 ### Load Git Context
 
@@ -100,7 +112,7 @@ Custom phases tailored to the actual diff. Read the diff stat and file contents 
 - "Authentication flow review" (if auth code changed)
 - "Payment integration review" (if payment logic changed)
 
-Each project-specific phase gets a one-paragraph description of what to focus on, plus the list of files relevant to that phase.
+Each project-specific phase gets a focus paragraph (per the shared pattern) plus the list of files relevant to that phase.
 
 ### Reusable Template Phases
 
@@ -134,6 +146,9 @@ Write to `reviews/projects/[review_name]/cr_plan.md`:
 ## Spec Context
 [Link to relevant spec/task, or "None — standalone review"]
 
+## Run
+- Model: [model the phase agents will run on]
+
 ## Phases
 
 - [ ] Phase 1: [Name] — [one-line description]
@@ -141,11 +156,9 @@ Write to `reviews/projects/[review_name]/cr_plan.md`:
 - ...
 ```
 
-After writing the plan, update the progress block Step 2 sub-steps to match the planned phases.
-
 ### Present Plan for Approval
 
-Show the user the plan: base branch, fork point, spec context, and the list of phases. Ask them to confirm before proceeding:
+Show the user the plan: base branch, fork point, spec context, the model the phase agents will run on, and the list of phases. Ask them to confirm before proceeding:
 
 > Review plan ready — [N] phases planned for branch `[branch_name]` against `[base_branch_name]`:
 >
@@ -153,24 +166,19 @@ Show the user the plan: base branch, fork point, spec context, and the list of p
 >
 > Proceed with the review?
 
-Wait for user approval. If they want changes (add/remove phases, change base), update the plan and re-confirm.
+Approval is required — dispatch nothing until you have it. If the user wants phases added, dropped, or re-scoped, update `cr_plan.md` in place and re-confirm.
+
+A base-branch correction is the one change that reaches back into Step 0, and it reaches back **partially**: re-determine the fork point and reload the git context against the corrected base, then rewrite `cr_plan.md` in place. **Keep the review name and folder you already created** — do not re-run Generate Review Name, which would append `-v2` and orphan the plan the user is looking at.
 
 ## Step 2: Phase Reviews
 
-For each phase, spawn a fresh sub-agent. Use the appropriate prompt template below depending on whether it's a project-specific or reusable template phase.
+One fresh sub-agent per phase, **all dispatched at once and running in parallel**, tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) — including re-dispatching any phase whose agent errors or returns without writing its feedback file.
 
-→ Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
-
-**After each sub-agent returns:**
-1. Update the progress block with the phase result (issue counts by severity)
-2. Check the phase off in `cr_plan.md`
-3. Immediately spawn the next phase — do not stop for user input
-
-Continue until all phases are complete.
+Use the prompt template below that matches the phase: Project-Specific or Reusable Template. Each phase writes `reviews/projects/[review_name]/phase_[N]_feedback.md`; the per-phase result you record in the progress block is its issue counts by severity.
 
 ## Step 3: Summary
 
-After all phases complete, read all `reviews/projects/[review_name]/phase_N_feedback.md` files. Write `reviews/projects/[review_name]/cr_summary.md`:
+Collapse per the [fan-out pattern](shared/fan_out_pattern.md#collapse) — the manager writes this one. Read all `reviews/projects/[review_name]/phase_N_feedback.md` files, then write `reviews/projects/[review_name]/cr_summary.md`:
 
 ```markdown
 # Code Review Summary: [review_name]
@@ -200,6 +208,10 @@ After all phases complete, read all `reviews/projects/[review_name]/phase_N_feed
 
 [List all critical issues across all phases, with file references]
 
+## Incomplete Phases
+
+[Any phase that did not complete after the re-dispatch attempt cap — including one that wrote partial findings. Say what it did cover and what it leaves unreviewed. "None — all phases completed." if clean.]
+
 ## Recommendations
 
 [Top 3-5 prioritized actions]
@@ -211,19 +223,16 @@ Show the user:
 - Link to the review folder: `reviews/projects/[review_name]/`
 - The Issues Overview table from the summary
 - Total counts: N critical, N moderate, N mild across all phases
+- Any phase that could not be completed, and what it leaves unreviewed
 - If critical issues exist: list them prominently with file references
 
 ## Autonomous Flow
 
-**Once Step 2 begins, drive the entire flow to completion without stopping for user input. No exceptions.** After each sub-agent returns, update the progress block and immediately spawn the next phase. After all phases complete, write the summary and present results.
+→ [fan-out pattern: Autonomous Flow](shared/fan_out_pattern.md#autonomous-flow) and [Non-Interactive](shared/fan_out_pattern.md#non-interactive). Read both — a review that stops halfway to ask a question is the failure mode they exist to prevent.
 
-The manager pauses for user input at two points: (1) Step 0 if the fork-point cannot be determined automatically, and (2) end of Step 1 for plan approval. After the user approves the plan, the rest is fully autonomous.
+**Work autonomously. Don't ask the user for help or confirmation during the review.**
 
-## Non-Interactive
-
-Work autonomously. Don't ask the user for help or confirmation during the review. The two exceptions are: fork-point confirmation in Step 0 (if needed), and plan approval at the end of Step 1.
-
-Once the review is running (Step 2 onward), keep working until all phases are complete, the summary is written, and results are presented. Don't stop to ask questions, don't ask "should I continue?", don't wait for approval between phases. The progress block tells you what to do next — do it.
+This command pauses at exactly two points: **Step 0**, if the fork point cannot be determined automatically, and **end of Step 1**, for plan approval. From Step 2 onward the run is fully autonomous through summary and presentation.
 
 ## Prompt Templates
 
@@ -269,6 +278,7 @@ Return a short summary: phase name, issue counts by severity, notable concerns.
 
 ## References
 
-- [references/spawning_subagents.md](references/spawning_subagents.md) — How to spawn sub-agents
-- [references/deep_cr_phase_prompt.md](references/deep_cr_phase_prompt.md) — Full instructions for phase sub-agents
+- [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) — The shared plan → fan out → collapse mechanics
+- [references/spawning_subagents.md](spawning_subagents.md) — How to spawn sub-agents
+- [references/deep_cr_phase_prompt.md](deep_cr_phase_prompt.md) — Full instructions for phase sub-agents
 - [references/shared/cr_review_standards.md](shared/cr_review_standards.md) — Shared review standards (loaded by sub-agents, not the manager)
