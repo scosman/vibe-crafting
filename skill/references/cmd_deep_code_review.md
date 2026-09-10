@@ -22,7 +22,7 @@ The manager's responsibilities:
 
 This command is an instance of the shared fan-out pattern: scope → plan → fan out one sub-agent per unit → wait → collapse into one summary.
 
-→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, re-dispatching failures, and how the collapse works. Follow them precisely.
+→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
 This file supplies the deep-CR specifics: the unit is a **review phase**, the plan is `cr_plan.md`, the consolidated summary is `cr_summary.md`, both under `reviews/projects/[review_name]/`, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
 
@@ -142,6 +142,9 @@ Write to `reviews/projects/[review_name]/cr_plan.md`:
 ## Spec Context
 [Link to relevant spec/task, or "None — standalone review"]
 
+## Run
+- Model: [model the phase agents will run on]
+
 ## Phases
 
 - [ ] Phase 1: [Name] — [one-line description]
@@ -151,7 +154,7 @@ Write to `reviews/projects/[review_name]/cr_plan.md`:
 
 ### Present Plan for Approval
 
-Show the user the plan: base branch, fork point, spec context, and the list of phases. Ask them to confirm before proceeding:
+Show the user the plan: base branch, fork point, spec context, the model the phase agents will run on, and the list of phases. Ask them to confirm before proceeding:
 
 > Review plan ready — [N] phases planned for branch `[branch_name]` against `[base_branch_name]`:
 >

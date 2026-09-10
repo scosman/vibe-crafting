@@ -41,6 +41,7 @@ Every plan file, whatever the command calls it, carries:
 
 - **The scope** it was built from (branch and fork point, spec files, research goal)
 - **A checklist of units**, one line each — this gets checked off as they complete
+- **The model** the units will run on (see [Model Selection](#model-selection)) — the user is approving a spend, and the model is most of it
 
 Every unit also needs a **focus paragraph** — what it covers, and what is explicitly some other unit's job. Where that paragraph lives is a command decision: in the plan file, in the unit's dispatch prompt, or both. Your command file's plan template and prompt templates settle it. If the plan carries the focus paragraphs, sub-agents read the plan to find their lane; if the prompts do, the plan stays a checklist and the prompt is the sub-agent's whole brief.
 
@@ -48,7 +49,7 @@ Every unit also needs a **focus paragraph** — what it covers, and what is expl
 
 ## Plan Approval
 
-Present the plan and **wait for explicit approval before dispatching anything.** Show the scope, the unit list, and where the output will go.
+Present the plan and **wait for explicit approval before dispatching anything.** Show the scope, the unit list, the model the units will run on, and where the output will go.
 
 If the user wants changes — add, drop, merge, or re-scope units — update the plan file and re-confirm. Don't dispatch against a plan the user has already asked you to change.
 
@@ -71,6 +72,18 @@ Spawn a **fresh** sub-agent per unit, using the prompt template in your command 
 2. Check the unit off in the plan file
 3. Confirm the agent actually wrote its output file — a return summary is not evidence the file exists
 4. Immediately dispatch the next pending unit. Do not stop for user input.
+
+## Model Selection
+
+**Default: spawn the units on the same model you're running on** — the user picked it, and it should hold for the whole process. Per [references/spawning_subagents.md](../spawning_subagents.md), don't drop to a cheaper model for speed.
+
+**The one exception is cost, and it exists because this pattern is a multiplier.** One agent's tokens become N agents' tokens, and a fan-out on a very expensive model is the most expensive thing this skill does.
+
+- If you are running on a **very expensive frontier model** (Fable / Astra tier, ~$50/M tokens), **step the units down** to a reasonable model — Opus, GPT Terra, or equivalent.
+- Otherwise, **use the current model.**
+- **Never step up** to a model more expensive than the user selected.
+
+This is the default for every command built on this pattern, and it covers every agent the fan-out spawns — the unit agents and the collapse agent, when the collapse is delegated. A command may override it; if yours does, its own Model Selection section says so and that wins. Name the resulting model in the plan file, so approval covers it.
 
 ## Wait and Re-Dispatch
 

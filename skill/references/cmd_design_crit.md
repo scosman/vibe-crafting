@@ -23,7 +23,7 @@ The manager's responsibilities:
 
 Steps 0–4 of this command are an instance of the shared fan-out pattern: scope → plan → fan out one sub-agent per unit → wait → collapse into one summary. Step 5 (resolution) is this command's own, and runs after the pattern completes.
 
-→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, re-dispatching failures, and how the collapse works. Follow them precisely.
+→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
 This file supplies the design-crit specifics: the unit is a **review phase**, the plan is `crit_plan.md`, the consolidated summary is `crit_summary.md` (with its Issue Queue), both under `reviews/projects/[review_name]/`, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and spec-file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
 
@@ -146,6 +146,9 @@ Write to `reviews/projects/[review_name]/crit_plan.md`:
 - [file path] (status)
 - ...
 
+## Run
+- Model: [model the phase agents will run on]
+
 ## Phases
 
 - [ ] Phase 1: [Name] — [one-line description]
@@ -155,7 +158,7 @@ Write to `reviews/projects/[review_name]/crit_plan.md`:
 
 ### Present Plan for Approval
 
-Show the user the plan: project path, spec files in scope, and the list of phases. Ask them to confirm before proceeding:
+Show the user the plan: project path, spec files in scope, the model the phase agents will run on, and the list of phases. Ask them to confirm before proceeding:
 
 > Design crit plan ready — [N] phases planned for project `[project_name]`:
 >

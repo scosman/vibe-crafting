@@ -25,7 +25,7 @@ The manager's responsibilities:
 
 This command is an instance of the shared fan-out pattern: scope → plan → fan out one sub-agent per unit → wait → collapse into one summary.
 
-→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, re-dispatching failures, and how the collapse works. Follow them precisely.
+→ Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
 This file supplies the research specifics: the unit is a **subtopic**, the plan is `research_plan.md`, the consolidated summary is `summary.md`, both at the root of the research folder — and three things the other fan-out commands don't have:
 
@@ -142,6 +142,10 @@ Write `[root]/research_plan.md`:
 
 [1-3 sentences: what the research is for, what decision it feeds. If embedded in a project, name the project and which spec step is waiting on it.]
 
+## Run
+
+- Model: [model the subtopic and summary agents will run on]
+
 ## Subtopics
 
 - [ ] [Subtopic 1 name] — [one-line description]
@@ -181,15 +185,11 @@ One fresh sub-agent per subtopic, dispatched and tracked per the [fan-out patter
 
 ### Model Selection
 
-This is the one place in the skill where you may *not* simply inherit the current model.
+→ [fan-out pattern: Model Selection](shared/fan_out_pattern.md#model-selection). No override — research takes the shared default: inherit the current model, unless it's the very expensive frontier tier (Fable / Astra, ~$50/M tokens), in which case step down to Opus, GPT Terra, or equivalent. Never step up.
 
-The default remains [references/spawning_subagents.md](spawning_subagents.md): spawn sub-agents with the same model you're using. **The carve-out is cost.** Research fans out across several agents, each burning tokens on search results and fetched pages — the most token-hungry work in this skill.
+Research is the case that default was written for. Each subtopic agent burns tokens on search results and fetched pages, which is the most token-hungry work in this skill, and the Step 4 summary agent reads all of it back. **The step-down covers both** — subtopic agents and the summary agent alike.
 
-- If you are running on a **very expensive frontier model** (Fable / Astra tier, ~$50/M tokens), **step the sub-agents down** to a reasonable model — Opus, GPT Terra, or equivalent.
-- Otherwise, **use the current model**, per the normal rule.
-- Never step *up* to a more expensive model than the user selected.
-
-This applies to every agent this command spawns — the subtopic agents **and** the Step 4 summary agent, which reads a lot of prose and is the second-most token-hungry spawn in the flow. It does not change how any other command spawns agents.
+Name the model in `research_plan.md`, so Step 2's approval covers it along with the search spend.
 
 ## Step 4: Summary
 
