@@ -35,6 +35,7 @@ Use the `/spec` skill in your coding agent to follow this process. Commands incl
  - `/spec new project` - guides you through a 5-stage specing process from initial idea to detailed architecture with implementation plan.
  - `/spec implement` or `/spec implement all` - after creating a project, this implements the next phase of your project from the implementation plan. Add `all` to implement all phases without stopping after each phase.
  - `/spec continue` - continue the current project, wherever we last left off.
+ - `/spec research` - researches a topic on the web, so you spec against what's actually true instead of what the model half-remembers. Divides the topic into subtopics, asks you to approve the plan and its cost, then runs parallel research subagents that write a tree of findings: one summary you can read on its own, linking down to the depth. Runs standalone, or as a step inside `/spec new project` when a spec depends on something you don't know yet.
  - `/spec task` - implement smaller tasks in one command. Skips the lengthy specing process, but uses the same implementation loop for code-reviews/fixes before committing.
  - `/spec pr` - opens a GitHub PR, waits for CR feedback from any code review bots, then addresses the feedback until clean.
  - `/spec cr` - runs a fast code review of currently staged changes.
