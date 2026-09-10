@@ -79,7 +79,7 @@ This persona applies across all planning steps.
 
 ## Research (Conditional, Any Planning Step)
 
-Planning is only as good as what you know. When the project depends on something external that neither you nor the user can describe accurately from memory — a standard, a third-party API, a library's real capabilities, how others have solved this — run research before you spec against a guess.
+Planning is only as good as what you know. When the project depends on something external that neither you nor the user can describe accurately from memory — a standard, a third-party API, a library's real capabilities, how others have solved this — run [research](cmd_research.md) before you spec against a guess.
 
 → Read [references/cmd_research.md](cmd_research.md) and follow it.
 
