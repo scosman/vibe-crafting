@@ -72,21 +72,29 @@ Approval covers form (are we working on the right things?) and, where the comman
 
 ## Fan Out
 
+**Dispatch every unit at once, in parallel.** That is what "fan out" means here: N sub-agents working *simultaneously*, not a queue you work through one at a time. The units were designed to be independent precisely so this is safe — nothing one unit produces is an input to another. If two units have that relationship, they were sized wrong; see [Designing the Units](#designing-the-units).
+
+Parallelism is most of the point. A 5-unit fan-out run serially takes 5× the wall-clock and gives the user nothing extra for it.
+
 Spawn a **fresh** sub-agent per unit, using the prompt template in your command file.
 
 → Read [references/spawning_subagents.md](../spawning_subagents.md) for how to spawn sub-agents.
 
+- **Issue all the dispatches in a single message**, where your tool supports concurrent calls — in Claude Code, multiple `Agent()` tool uses in one block. One dispatch per message serializes the run.
 - **Dispatch in a mode that returns the agent's final message to you.** A completion notification is not a result. (In Claude Code: an unnamed `Agent()` call — passing `name` loses the payload.)
-- **Save the handle** the tool gives you, so you can chase a stalled agent.
+- **Save every handle** the tool gives you, so you can chase a stalled agent.
 - **One unit per agent.** Never hand an agent two units to save a spawn.
 - **Sub-agents write to files and return a short summary** — name, headline result, counts, gaps. Their prompt tells them where to write, and carries whatever context your command file's template says it carries.
 
-**After each sub-agent returns:**
+**As each sub-agent returns** — in whatever order they finish, which is not the order you dispatched:
 
 1. Output the updated progress block with that unit's result
 2. Check the unit off in the plan file
 3. Confirm the agent actually wrote its output file — a return summary is not evidence the file exists
-4. Immediately dispatch the next pending unit. Do not stop for user input.
+
+Record each return as it lands. Don't wait for the whole set to start bookkeeping, and don't hold a result back to report them in dispatch order.
+
+**If you can't dispatch all at once** — your tool takes one at a time, or the unit count is large enough to be unwieldy — run the widest batches you can, and start the next batch the moment the current one lands. Serial is the fallback, never the plan. Either way, don't stop for user input between units or between batches.
 
 ## Model Selection
 
@@ -104,7 +112,7 @@ This is the default for every command built on this pattern, and it covers every
 
 **Wait for every unit before collapsing.** A summary written over a partial fan-out is worse than no summary — it reads as complete and isn't.
 
-Re-dispatch a unit whose agent errored, returned without writing its output file, or reported it couldn't finish. Give the replacement the same prompt plus a line about the prior attempt, so it builds rather than restarts:
+Re-dispatch a unit whose agent errored, returned without writing its output file, or reported it couldn't finish. If several failed, re-dispatch them together, the same way you dispatched the original fan-out. Give the replacement the same prompt plus a line about the prior attempt, so it builds rather than restarts:
 
 ```
 A previous agent worked this unit and did not finish. Anything already written under
@@ -140,7 +148,7 @@ Don't restate the summary in chat. You just wrote it to a file for a reason.
 
 ## Autonomous Flow
 
-**Once the fan-out begins, drive the entire run to completion without stopping for user input. No exceptions.** After each return: update the progress block, then immediately dispatch the next unit. After the last unit: collapse, then present.
+**Once the fan-out begins, drive the entire run to completion without stopping for user input. No exceptions.** Dispatch every unit, record each return as it lands, re-dispatch anything that failed. Once the last unit is in: collapse, then present.
 
 The only legitimate pauses are the ones your command file names — plan approval always, plus any scope confirmation before it or interactive phase after it. That is the entire list. Nothing else in this pattern is a stopping point.
 
@@ -150,6 +158,6 @@ Work autonomously. Don't ask the user for help or confirmation during the run.
 
 Once the fan-out is running, keep working until every unit is complete, the summary is written, and the results are presented. Don't stop to ask questions. Don't ask "should I continue?" Don't wait for approval between units. Don't narrate a decision back to the user hoping they'll make it for you. The progress block tells you what to do next — do it.
 
-This is stated twice on purpose, and the repetition is not an accident to be cleaned up. Managers don't break this rule at the start of a run, when the instruction is fresh. They break it in the middle, when a unit comes back with something alarming, ambiguous, or bigger than anyone scoped for — and checking in with the user suddenly feels like the responsible thing to do. It isn't. It strands a half-finished fan-out, wastes every unit already dispatched, and hands the user a decision they can't actually make yet, because the run that would inform it is the thing you just stopped. Alarming findings belong in the summary. Ambiguity gets resolved by finishing the work and looking at all of it. Take the finding, put it in the progress block, dispatch the next unit.
+This is stated twice on purpose, and the repetition is not an accident to be cleaned up. Managers don't break this rule at the start of a run, when the instruction is fresh. They break it in the middle, when a unit comes back with something alarming, ambiguous, or bigger than anyone scoped for — and checking in with the user suddenly feels like the responsible thing to do. It isn't. It strands a half-finished fan-out, wastes every unit already dispatched, and hands the user a decision they can't actually make yet, because the run that would inform it is the thing you just stopped. Alarming findings belong in the summary. Ambiguity gets resolved by finishing the work and looking at all of it. Take the finding, put it in the progress block, and let the rest of the fan-out land.
 
 A failed unit is not a pause either. Re-dispatch it per [Wait and Re-Dispatch](#wait-and-re-dispatch). If it hits the attempt cap, mark it a gap, carry it into the collapse, and keep going. A completed run with one honest gap is worth more to the user than a run that stopped to ask about it.

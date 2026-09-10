@@ -45,13 +45,16 @@ Use the label **"Research Progress"** for the progress block. The full step list
 - Step 0: Web access check
 - Step 1: Plan
 - Step 2: Approval
-- Step 3a: Subtopic 1 ([name])
-- Step 3b: Subtopic 2 ([name])
-- Step 3c: Subtopic 3 ([name])
+- Step 3: Fan out — all subtopics dispatched in parallel
+  - 3a: Subtopic 1 ([name])
+  - 3b: Subtopic 2 ([name])
+  - 3c: Subtopic 3 ([name])
   ... (one sub-step per subtopic, determined during Step 1)
 - Step 4: Summary
 - Step 5: Present
 ```
+
+The Step 3 sub-steps are **not a sequence**. Every subtopic agent is dispatched at the same time and they run concurrently, so the sub-steps are a set of in-flight agents, not a queue. They complete in whatever order they finish — expect the block to fill in out of order, and never hold a finished subtopic back to report them 3a-first.
 
 Example mid-flow:
 
@@ -61,10 +64,11 @@ Research Progress:
 - [x] Step 0: Web access check — complete (WebSearch + WebFetch)
 - [x] Step 1: Plan — complete (4 subtopics)
 - [x] Step 2: Approval — approved
-- [x] Step 3a: Subtopic 1 (Spec and versions) — complete (6 docs)
-- [ ] Step 3b: Subtopic 2 (Reference implementations) — in progress
-- [ ] Step 3c: Subtopic 3 (Ecosystem adoption) — pending
-- [ ] Step 3d: Subtopic 4 (Migration risks) — pending
+- [ ] Step 3: Fan out — 4 subtopics dispatched in parallel, 2 returned
+  - [x] 3a: Subtopic 1 (Spec and versions) — complete (6 docs)
+  - [ ] 3b: Subtopic 2 (Reference implementations) — running
+  - [x] 3c: Subtopic 3 (Ecosystem adoption) — complete (3 docs)
+  - [ ] 3d: Subtopic 4 (Migration risks) — running
 - [ ] Step 4: Summary — pending
 - [ ] Step 5: Present — pending
 </progress>
@@ -181,7 +185,7 @@ Present the plan and ask for approval:
 
 ## Step 3: Dispatch Subtopic Agents
 
-One fresh sub-agent per subtopic, dispatched and tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out), using the Research Sub-Agent Prompt template below. Each writes to its own directory and ends with `[working_folder]/[subtopic]/summary.md`; the per-subtopic result you record in the progress block is its bottom line and doc count.
+One fresh sub-agent per subtopic, **all dispatched at once and running in parallel**, tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) and using the Research Sub-Agent Prompt template below. Subtopics never depend on each other's output, so there is nothing to serialize — and web research is slow enough per agent that running them one at a time is the difference between one wait and N. Each writes to its own directory and ends with `[working_folder]/[subtopic]/summary.md`; the per-subtopic result you record in the progress block is its bottom line and doc count.
 
 ### Model Selection
 

@@ -35,13 +35,16 @@ Use the label **"Deep CR Progress"** for the progress block. The full step list 
 ```
 - Step 0: Context & diff
 - Step 1: Plan
-- Step 2a: Phase 1 ([name])
-- Step 2b: Phase 2 ([name])
-- Step 2c: Phase 3 ([name])
+- Step 2: Fan out — all phases dispatched in parallel
+  - 2a: Phase 1 ([name])
+  - 2b: Phase 2 ([name])
+  - 2c: Phase 3 ([name])
   ... (one sub-step per phase, determined during Step 1)
 - Step 3: Summary
 - Step 4: Present
 ```
+
+The Step 2 sub-steps are **not a sequence** — every phase agent is dispatched at the same time and they run concurrently. Expect them to complete out of order.
 
 Example mid-flow:
 
@@ -50,11 +53,12 @@ Example mid-flow:
 Deep CR Progress:
 - [x] Step 0: Context & diff — complete
 - [x] Step 1: Plan — complete (5 phases)
-- [x] Step 2a: Phase 1 (Auth flow) — complete (1 critical, 2 moderate)
-- [x] Step 2b: Phase 2 (DB migrations) — complete (0 critical, 1 moderate)
-- [ ] Step 2c: Phase 3 (UI review) — in progress
-- [ ] Step 2d: Phase 4 (Security) — pending
-- [ ] Step 2e: Phase 5 (Test quality) — pending
+- [ ] Step 2: Fan out — 5 phases dispatched in parallel, 3 returned
+  - [x] 2a: Phase 1 (Auth flow) — complete (1 critical, 2 moderate)
+  - [x] 2b: Phase 2 (DB migrations) — complete (0 critical, 1 moderate)
+  - [ ] 2c: Phase 3 (UI review) — running
+  - [x] 2d: Phase 4 (Security) — complete (2 critical, 0 moderate)
+  - [ ] 2e: Phase 5 (Test quality) — running
 - [ ] Step 3: Summary — pending
 - [ ] Step 4: Present — pending
 </progress>
@@ -168,7 +172,7 @@ A base-branch correction is the one change that reaches back into Step 0, and it
 
 ## Step 2: Phase Reviews
 
-One fresh sub-agent per phase, dispatched and tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) — including re-dispatching any phase whose agent errors or returns without writing its feedback file.
+One fresh sub-agent per phase, **all dispatched at once and running in parallel**, tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) — including re-dispatching any phase whose agent errors or returns without writing its feedback file.
 
 Use the prompt template below that matches the phase: Project-Specific or Reusable Template. Each phase writes `reviews/projects/[review_name]/phase_[N]_feedback.md`; the per-phase result you record in the progress block is its issue counts by severity.
 
