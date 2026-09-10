@@ -4,6 +4,21 @@ The shape shared by `/spec deep cr`, `/spec design crit`, and `/spec research`: 
 
 This file is the mechanics. Your command file supplies the specifics: what a unit is (a review phase, a research subtopic), what the plan and summary files are called, where they live, and any preconditions or extra pauses of its own.
 
+## The Working Folder
+
+**Every run of this pattern writes into exactly one folder, and the calling command supplies its path.** This file calls it the **working folder** and writes it `[working_folder]`.
+
+It is **not** the shell's current directory — nothing here ever changes where you're `cd`'d to. It is a specific path inside the repo that your command file names, and it is where the whole run lands:
+
+```
+[working_folder]/
+  [the plan file]           # written by the manager
+  [the consolidated summary] # the deliverable
+  [per-unit output]          # one file or one directory per unit
+```
+
+Your command file states its own `[working_folder]` — `reviews/projects/[review_name]/` for the review commands, `specs/research/[topic]/` for standalone research — along with whether it is created fresh per run and how name collisions are handled. Resolve it **once**, before writing the plan, and use it everywhere below. Every path in this file is relative to it.
+
 ## Why This Shape
 
 **Depth needs isolation; the user needs one answer.** A single agent asked to cover six concern areas gives each one a shallow pass and runs out of context doing it. Six agents each owning one area go deep — but six reports are not an answer.
@@ -100,7 +115,7 @@ A previous agent worked this unit and did not finish. Anything already written u
 
 ## Collapse
 
-One consolidated summary at the root of the run folder. It is the deliverable — the per-unit files are the depth beneath it.
+One consolidated summary at the top of the working folder. It is the deliverable — the per-unit files are the depth beneath it.
 
 **Progressive disclosure, one level at a time.** The summary links to the per-unit outputs; those link to whatever detail sits below them. Don't reach past a level: link the unit summary, not the deep doc behind it.
 
@@ -117,7 +132,7 @@ Who writes it is a command decision: the manager, or a **fresh** sub-agent that 
 
 Keep it short. Give the user:
 
-- The run folder path and the summary path
+- The working folder path and the summary path
 - The summary's headline — the overview table, or the bottom line
 - Anything that needs attention now (critical findings, failed units)
 

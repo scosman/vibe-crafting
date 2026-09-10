@@ -25,7 +25,7 @@ Steps 0–4 of this command are an instance of the shared fan-out pattern: scope
 
 → Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
-This file supplies the design-crit specifics: the unit is a **review phase**, the plan is `crit_plan.md`, the consolidated summary is `crit_summary.md` (with its Issue Queue), both under `reviews/projects/[review_name]/`, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and spec-file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
+This file supplies the design-crit specifics. **Working folder: `reviews/projects/[review_name]/`** — created in Step 0, which also settles the review name and collision handling. The unit is a **review phase**, the plan is `crit_plan.md`, the consolidated summary is `crit_summary.md` (with its Issue Queue), both at the top of the working folder, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and spec-file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
 
 ## Progress Tracker
 

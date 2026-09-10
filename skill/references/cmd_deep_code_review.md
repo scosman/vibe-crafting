@@ -24,7 +24,7 @@ This command is an instance of the shared fan-out pattern: scope → plan → fa
 
 → Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
-This file supplies the deep-CR specifics: the unit is a **review phase**, the plan is `cr_plan.md`, the consolidated summary is `cr_summary.md`, both under `reviews/projects/[review_name]/`, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
+This file supplies the deep-CR specifics. **Working folder: `reviews/projects/[review_name]/`** — created in Step 0, which also settles the review name and collision handling. The unit is a **review phase**, the plan is `cr_plan.md`, the consolidated summary is `cr_summary.md`, both at the top of the working folder, and **the manager writes the summary itself** rather than dispatching a summary sub-agent. Each phase's focus paragraph and file list travel in its dispatch prompt, not in the plan — the plan stays a checklist.
 
 ## Progress Tracker
 

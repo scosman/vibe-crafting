@@ -27,7 +27,7 @@ This command is an instance of the shared fan-out pattern: scope → plan → fa
 
 → Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
-This file supplies the research specifics: the unit is a **subtopic**, the plan is `research_plan.md`, the consolidated summary is `summary.md`, both at the root of the research folder — and three things the other fan-out commands don't have:
+This file supplies the research specifics. **Working folder:** `specs/research/[topic]/` standalone, or `specs/projects/PROJECT_NAME/research/[topic]/` when embedded — see [Research Folder](#research-folder) below. The unit is a **subtopic**, the plan is `research_plan.md`, the consolidated summary is `summary.md`, both at the top of the working folder — and three things the other fan-out commands don't have:
 
 - a **web-access precondition** (Step 0) that can stop the command before it starts
 - a **cost dimension to plan approval** (Step 2), because web tools bill per call
@@ -86,14 +86,14 @@ The command also runs embedded in `/spec new_project` — see [Embedded Use](#em
 
 ## Research Folder
 
-Everything for one research run lives under a root research folder:
+Everything for one research run lives under a single **working folder** — the pattern's [`[working_folder]`](shared/fan_out_pattern.md#the-working-folder). Where it sits is the one thing that differs between standalone and embedded use:
 
-| Invocation | Root folder |
+| Invocation | Working folder — `[working_folder]` |
 |---|---|
 | Standalone `/spec research [topic]` | `specs/research/[topic]/` |
 | Inside `/spec new_project` | `specs/projects/PROJECT_NAME/research/[topic]/` |
 
-The root folder is the only thing that differs between the two. Everything below is identical.
+Resolve it once, before writing the plan. Every `[working_folder]/...` path below is relative to it, and everything under it is identical in both cases.
 
 ```
 [topic]/
@@ -133,7 +133,7 @@ Note which tools you found — you'll name them for the sub-agents in Step 3.
 
 Decompose the topic into subtopics, per [unit sizing](shared/fan_out_pattern.md#designing-the-units) in the shared pattern. Typically 2–6 — each one is an agent's worth of searching and reading, so prefer fewer, meatier subtopics.
 
-Write `[root]/research_plan.md`:
+Write `[working_folder]/research_plan.md`:
 
 ```markdown
 # Research Plan: [Topic]
@@ -171,7 +171,7 @@ Present the plan and ask for approval:
 >
 > [Subtopic list from research_plan.md]
 >
-> Output goes to `[root folder]`. Web search and fetch tools aren't free, so this has a real cost.
+> Output goes to `[working_folder]`. Web search and fetch tools aren't free, so this has a real cost.
 >
 > Proceed?
 
@@ -181,7 +181,7 @@ Present the plan and ask for approval:
 
 ## Step 3: Dispatch Subtopic Agents
 
-One fresh sub-agent per subtopic, dispatched and tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out), using the Research Sub-Agent Prompt template below. Each writes to its own directory and ends with `[root]/[subtopic]/summary.md`; the per-subtopic result you record in the progress block is its bottom line and doc count.
+One fresh sub-agent per subtopic, dispatched and tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out), using the Research Sub-Agent Prompt template below. Each writes to its own directory and ends with `[working_folder]/[subtopic]/summary.md`; the per-subtopic result you record in the progress block is its bottom line and doc count.
 
 ### Model Selection
 
@@ -193,15 +193,15 @@ Name the model in `research_plan.md`, so Step 2's approval covers it along with 
 
 ## Step 4: Summary
 
-Wait for every subtopic and re-dispatch failures per the [fan-out pattern](shared/fan_out_pattern.md#wait-and-re-dispatch) — a subtopic isn't done until `[root]/[subtopic]/summary.md` exists. Carry any subtopic that hits the attempt cap forward as a known gap.
+Wait for every subtopic and re-dispatch failures per the [fan-out pattern](shared/fan_out_pattern.md#wait-and-re-dispatch) — a subtopic isn't done until `[working_folder]/[subtopic]/summary.md` exists. Carry any subtopic that hits the attempt cap forward as a known gap.
 
-Then dispatch the summary sub-agent using the Summary Sub-Agent Prompt template below, naming those gaps. Here the collapse is **delegated**: a fresh sub-agent reads all the subtopic outputs and writes `[root]/summary.md`. The manager doesn't write it — research summarizing means reading a lot of prose, and that's exactly the context the manager is trying not to hold.
+Then dispatch the summary sub-agent using the Summary Sub-Agent Prompt template below, naming those gaps. Here the collapse is **delegated**: a fresh sub-agent reads all the subtopic outputs and writes `[working_folder]/summary.md`. The manager doesn't write it — research summarizing means reading a lot of prose, and that's exactly the context the manager is trying not to hold.
 
 It is a fresh spawn, never a resumed subtopic agent.
 
 ## Step 5: Present
 
-Per the [fan-out pattern](shared/fan_out_pattern.md#present). Show the root folder, the path to `[root]/summary.md`, a one-line result per subtopic, and anything that came back thin or failed.
+Per the [fan-out pattern](shared/fan_out_pattern.md#present). Show the working folder, the path to `[working_folder]/summary.md`, a one-line result per subtopic, and anything that came back thin or failed.
 
 If embedded in another command: return to that command's flow and feed the summary into the step that was waiting on it.
 
@@ -238,18 +238,18 @@ You are a research sub-agent researching one subtopic.
 **Topic:** [topic]
 **Your subtopic:** [subtopic name]
 **Focus:** [one-paragraph focus description from research_plan.md]
-**Your directory:** [root]/[subtopic]/
-**Research plan:** [root]/research_plan.md
+**Your directory:** [working_folder]/[subtopic]/
+**Research plan:** [working_folder]/research_plan.md
 **Web tools available:** [names of the search and fetch tools found in Step 0]
 
 Read `references/research_agent_prompt.md` for your full instructions. Follow them precisely.
 
-Write your findings to your directory, ending with [root]/[subtopic]/summary.md.
+Write your findings to your directory, ending with [working_folder]/[subtopic]/summary.md.
 
 Return a short summary: subtopic name, what you found, how many docs you wrote, any gaps.
 ```
 
-For a re-dispatch after a failure, append the re-dispatch note from the [fan-out pattern](shared/fan_out_pattern.md#wait-and-re-dispatch), with `[root]/[subtopic]/` as the output path.
+For a re-dispatch after a failure, append the re-dispatch note from the [fan-out pattern](shared/fan_out_pattern.md#wait-and-re-dispatch), with `[working_folder]/[subtopic]/` as the output path.
 
 ### Summary Sub-Agent Prompt
 
@@ -258,14 +258,14 @@ You are a research summary sub-agent. Several agents researched subtopics of one
 your job is the single cross-subtopic summary.
 
 **Topic:** [topic]
-**Research root:** [root]/
-**Research plan:** [root]/research_plan.md
+**Working folder:** [working_folder]/
+**Research plan:** [working_folder]/research_plan.md
 **Subtopics:** [list of subtopic names and their directories]
 **Gaps:** [any subtopic that failed or came back thin, or "None"]
 
 Read `references/research_summary_prompt.md` for your full instructions. Follow them precisely.
 
-Write the cross-subtopic summary to [root]/summary.md.
+Write the cross-subtopic summary to [working_folder]/summary.md.
 
 Return a short summary: the headline findings and anything the research could not answer.
 ```

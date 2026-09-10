@@ -101,7 +101,7 @@ Don't research by reflex. Research when a wrong assumption would send the spec d
 - Context stays small: research is written to files, and sub-agents return only short summaries.
 - **Emit the research command's "Research Progress" block while it runs.** `new_project` isn't otherwise progress-tracked, so the block starts when research starts and ends when it does — then you're back in the planning step it was blocking.
 
-**Root folder:** `specs/projects/PROJECT_NAME/research/[topic]/` — inside the project, not the standalone `specs/research/` location.
+**Working folder:** `specs/projects/PROJECT_NAME/research/[topic]/` — this is the `[working_folder]` the research command expects, inside the project rather than the standalone `specs/research/` location.
 
 When research completes, read `specs/projects/PROJECT_NAME/research/[topic]/summary.md` and continue the planning step it was blocking. Cite the research in the artifact you write — link to the summary where a spec decision rests on a finding.
 

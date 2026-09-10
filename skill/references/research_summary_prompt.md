@@ -19,15 +19,15 @@ You did not do the research. Don't add findings of your own, and don't quietly u
 
 ## Context Loading
 
-1. Read the research plan at `[root]/research_plan.md` — the goal, and what the research was for
-2. Read **every** subtopic summary: `[root]/[subtopic]/summary.md` for each subtopic named in your prompt
+1. Read the research plan at `[working_folder]/research_plan.md` — the goal, and what the research was for
+2. Read **every** subtopic summary: `[working_folder]/[subtopic]/summary.md` for each subtopic named in your prompt
 3. Dip into the deep docs where a subtopic summary is unclear, or where two subtopics seem to disagree and you need to see the sources to say why
 
 You do **not** need web access, and you should not do new research. Your material is what's on disk. If something important is missing, that's a gap to report, not a hole to fill.
 
 ## Required: The Top-Level Summary
 
-Write `[root]/summary.md`. This is the root of a three-level tree of progressive disclosure:
+Write `[working_folder]/summary.md`. This is the root of a three-level tree of progressive disclosure:
 
 ```
 summary.md (you)  →  [subtopic]/summary.md  →  [subtopic]/deep-doc.md
@@ -90,4 +90,4 @@ Return a short summary to the manager:
 
 ---
 
-**Design note:** This prompt is self-contained. The sub-agent reads the plan and all subtopic outputs from the repo; the manager provides the topic, research root, subtopic list, and any known gaps in the spawning prompt. It is always a fresh agent — never a resumed subtopic agent — so the synthesis is not colored by having done one slice of the work.
+**Design note:** This prompt is self-contained. The sub-agent reads the plan and all subtopic outputs from the repo; the manager provides the topic, working folder, subtopic list, and any known gaps in the spawning prompt. It is always a fresh agent — never a resumed subtopic agent — so the synthesis is not colored by having done one slice of the work.

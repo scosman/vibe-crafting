@@ -119,7 +119,7 @@ Every project lives under `/specs/projects/PROJECT_NAME/`:
 
 Research output lives in a folder per topic, with a `summary.md` at its root linking to per-subtopic summaries, which link to deep docs:
 
-| Invocation | Root folder |
+| Invocation | Working folder |
 |------------|-------------|
 | Standalone `/spec research [topic]` | `/specs/research/[topic]/` |
 | During `/spec new_project` | `/specs/projects/PROJECT_NAME/research/[topic]/` |

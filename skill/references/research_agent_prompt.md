@@ -20,7 +20,7 @@ You are not writing marketing copy or a tutorial. You're writing the notes a sen
 
 ## Context Loading
 
-1. Read the research plan at the path in your prompt (`[root]/research_plan.md`) — it tells you the overall goal and what the *other* subtopics cover, so you know where your lane ends
+1. Read the research plan at the path in your prompt (`[working_folder]/research_plan.md`) — it tells you the overall goal and what the *other* subtopics cover, so you know where your lane ends
 2. Your prompt names your subtopic, your focus paragraph, and your directory
 3. If your directory already has files from a prior attempt, read them first — build on them or replace them, your call
 
@@ -43,7 +43,7 @@ Stay in your lane. If you find something important that belongs to another subto
 
 ## Your Directory Is Yours
 
-Write as many markdown files as the subtopic warrants under `[root]/[subtopic]/`. That directory is yours; no other agent writes there.
+Write as many markdown files as the subtopic warrants under `[working_folder]/[subtopic]/`. That directory is yours; no other agent writes there.
 
 - One file per coherent area of depth — `protocol-details.md`, `reference-implementations.md`, `open-questions.md`, whatever fits
 - Deep is fine. These are the depth layer of the tree; nobody has to read them unless they need that detail
@@ -54,7 +54,7 @@ There is no required file list. One rich doc is fine for a narrow subtopic; eigh
 
 ## Required: Your Subtopic Summary
 
-**You must end by writing `[root]/[subtopic]/summary.md`.** This is not optional — it's the contract with the rest of the research tree. A consumer reads this file alone to get your subtopic's findings, and follows links only when they need depth.
+**You must end by writing `[working_folder]/[subtopic]/summary.md`.** This is not optional — it's the contract with the rest of the research tree. A consumer reads this file alone to get your subtopic's findings, and follows links only when they need depth.
 
 ```markdown
 # [Subtopic Name]
