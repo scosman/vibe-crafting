@@ -30,7 +30,7 @@ It's the process I use to ship code I actually care about — an iOS app, Mac ap
 
 ```
 /spec setup                  # once per repo
-/spec new_project            # walks you through creating a spec for your project
+/spec new project            # walks you through creating a spec for your project
 /spec implement all          # walk away; it builds every phase, reviewing and committing as it goes
 /spec pr                     # after you open the PR: pulls review comments and fixes them
 ```
@@ -51,7 +51,7 @@ Two things worth getting right up front:
 | `/spec continue` | `/spec cont` | Resume the active project. Shows current state and routes to the next logical action. |
 | `/spec implement [all]` | `/spec impl` | Build the active project. `implement next` for one phase, `implement all` for every remaining phase, `implement phase N` for a specific one. Each phase runs code → review → commit. |
 | `/spec task` | — | A one-off change without the full spec process. Describe it inline, get the same implement loop (code → review → commit) with no planning artifacts. |
-| `/spec research` | — | Research a topic on the web. Splits it into subtopics, runs a sub-agent per subtopic, writes a tree of research docs under one summary. Needs web search + fetch tools. Runs standalone or inside `new_project`. |
+| `/spec research` | — | Research a topic on the web. Splits it into subtopics, runs a sub-agent per subtopic, writes a tree of research docs under one summary. Needs web search + fetch tools. Runs standalone or inside `new project`. |
 | `/spec cr` | `/spec code_review` | Fast, spec-aware code review of the current diff (or a scope you name). Always runs in a sub-agent with clean context. |
 | `/spec deep cr` | `/spec deep review` | Multi-phase agentic review of the whole branch against its fork point. Designs review phases for the diff, runs focused sub-agents in parallel, writes persistent review artifacts. |
 | `/spec design crit` | `/spec crit` | A multi-agent design review. Ends with an interactive pass to triage and fix what it found. |
