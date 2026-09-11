@@ -20,7 +20,7 @@
 
 It's the process I use to ship code I actually care about — an iOS app, Mac apps, a Python data pipeline, Git sync engines — without writing the code myself, and without compromising on architecture or quality.
 
-[Install it](#install) and you get [ten `/spec` commands](#commands) (plus a bare `/spec` router) in the agent of your choice.
+[Install it](#install) and you get [ten `/spec` commands](#commands) in the agent of your choice.
 
 **The full story** — how the process evolved, where the AI still gets things wrong, what it costs, and the sandboxing/tooling pain — is in the blog post: **[Vibe Crafting: Vibe Coding for Stuff You Care About](https://scosman.net/blog/vibe_crafting)**.
 
