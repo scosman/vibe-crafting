@@ -32,7 +32,6 @@ It's the process I use to ship code I actually care about — an iOS app, Mac ap
 /spec setup                  # once per repo
 /spec new_project            # the long, interactive part — expect real back-and-forth
 /spec implement all          # walk away; it builds every phase, reviewing and committing as it goes
-/spec deep cr                # full-branch review once the phases are done
 /spec pr                     # after you open the PR: pulls review comments and fixes them
 ```
 
