@@ -16,17 +16,19 @@
 # Vibe Crafting
 ### An agent skill for spec-driven development
 
-`/spec` is an agent skill that runs a full spec-driven build process: upfront specs written with you, phased autonomous builds, and layered code review. You make the decisions; the agent does the drafting, the building, and the first few passes of review.
+`/spec` is a [standard agent skill](https://agentskills.io/home) that runs a full spec-driven build process: upfront specs written with you, phased autonomous builds, and layered code review. You make the decisions; the agent does the drafting, the building, and the first few passes of review.
 
 It's the process I use to ship code I actually care about — an iOS app, Mac apps, a Python data pipeline, Git sync engines — without writing the code myself, and without compromising on architecture or quality.
 
-[Install it](#install) and you get [ten `/spec` commands](#commands) in the agent of your choice.
+[Install it](#quickstart) and you get [ten `/spec` commands](#commands) in the agent of your choice.
 
 **The full story** — how the process evolved, where the AI still gets things wrong, what it costs, and the sandboxing/tooling pain — is in the blog post: **[Vibe Crafting: Vibe Coding for Stuff You Care About](https://scosman.net/blog/vibe_crafting)**.
 
 ## Quickstart
 
-[Install the skill](#install) into the coding agent of your choice. Then, the shortest real path from nothing to shipped:
+**Install:** run `npx skills add scosman/vibe-crafting`, or copy [`skill/`](skill) into your agent's skills directory as `spec` (the directory name is the command name).
+
+Then the shortest real path from nothing to shipped:
 
 ```
 /spec setup                  # once per repo
@@ -58,35 +60,6 @@ Two things worth getting right up front:
 | `/spec pr` | — | Address GitHub PR feedback. Finds the PR for the branch, pulls unresolved comments, fixes them through the standard CR loop, commits, pushes, and replies to each thread. |
 
 Full details for each command live in [`skill/references/`](skill/references), one file per command. The skill loads them on demand.
-
-## Install
-
-The skill is a [standard agent skill](https://agentskills.io/home): a `SKILL.md` plus a `references/` folder. The **directory name is the command name**, so the contents of `skill/` need to land in a directory called `spec`.
-
-For Claude Code, user-level (available in every repo):
-
-```bash
-git clone https://github.com/scosman/vibe-crafting.git
-mkdir -p ~/.claude/skills/spec
-cp -R vibe-crafting/skill/. ~/.claude/skills/spec/
-```
-
-Or project-level, checked into a single repo (available to anyone who clones it):
-
-```bash
-mkdir -p .claude/skills/spec
-cp -R /path/to/vibe-crafting/skill/. .claude/skills/spec/
-```
-
-Either way you should end up with `SKILL.md` at `<skills-dir>/spec/SKILL.md`. Start a new session and `/spec` should be available.
-
-Other agents that support the skill format work too — drop the same `spec/` directory wherever that tool looks for skills.
-
-Then, once per repo:
-
-```
-/spec setup
-```
 
 ## What else is in this repo
 
