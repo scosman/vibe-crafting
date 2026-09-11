@@ -26,7 +26,7 @@ It's the process I use to ship code I actually care about — an iOS app, Mac ap
 
 ## Quickstart
 
-**Install:** run `npx skills add scosman/vibe-crafting`, or copy [`skill/`](skill) into your agent's skills directory as `spec` (the directory name is the command name).
+**Install:** run `npx skills add scosman/vibe-crafting`, or copy the [`skill/`](skill) directory into your agent's skills directory, named `spec`.
 
 Then the shortest real path from nothing to shipped:
 
