@@ -55,7 +55,7 @@ Present findings to the user:
 > - [file:line] [description]
 >
 > ### Quick-fix candidates
-> - [file:line] [description — the reviewer's exact change]
+> - [file:line] (Severity) [description — the reviewer's exact change]
 >
 > [Or: No issues found — implementation looks good!]
 
@@ -64,9 +64,10 @@ If issues exist and user wants fixes:
 - User can fix themselves, then re-run `/spec cr` with prior feedback
 - Or coding agent can address them, then re-run CR with prior feedback
 
-The loop continues until clean.
+Re-run `/spec cr` with prior feedback after fixes. What to act on is the user's call, not the reviewer's. If the user asks to apply the quick-fix candidates, spawn a quick-fix sub-agent with the instructions in [references/quick_fix_prompt.md](references/quick_fix_prompt.md) and the candidates verbatim.
 
 ## References
 
 - [references/spawning_subagents.md](references/spawning_subagents.md) — How to spawn sub-agents
 - [references/cr_agent_prompt.md](references/cr_agent_prompt.md) — Prompt passed to CR sub-agent
+- [references/quick_fix_prompt.md](references/quick_fix_prompt.md) — Prompt passed to quick-fix sub-agents

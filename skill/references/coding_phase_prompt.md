@@ -61,9 +61,9 @@ Anything you learn while implementing — including any deviation from the spec 
 The manager resumes you after your code has passed review.
 
 1. If the prompt lists backlog items, write them exactly as it instructs
-2. Commit all changes with a descriptive message summarizing the work done in this phase. The commit message is the durable record of this phase — a future maintainer reads it, not the phase plan. Record any deviation from the spec in the form: the spec said X, the code does Y, because Z.
-3. Mark the phase checkbox complete in `implementation_plan.md` (toggle only)
-4. Mark `status: complete` on the phase plan in `phase_plans/phase_N.md`
+2. Mark the phase checkbox complete in `implementation_plan.md` (toggle only)
+3. Mark `status: complete` on the phase plan in `phase_plans/phase_N.md`
+4. Commit all changes with a descriptive message summarizing the work done in this phase. The commit message is the durable record of this phase — a future maintainer reads it, not the phase plan. Record any deviation from the spec in the form: the spec said X, the code does Y, because Z.
 5. **Return the commit message** you used
 
 ---

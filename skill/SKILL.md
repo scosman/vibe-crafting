@@ -121,7 +121,7 @@ Every project lives under `/specs/projects/PROJECT_NAME/`:
 | `/components/NAME.md` | new_project Step 5 | Per-component detailed design (conditional) |
 | `implementation_plan.md` | new_project Step 6 | Phased build order as checklist |
 | `/phase_plans/phase_N.md` | Implementation | Per-phase plan written by coding agent |
-| `backlog.md` | Implementation (conditional) | Out-of-scope issues found during review; adds a final Backlog phase |
+| `backlog.md` | Implementation (conditional) | Issues in already-committed work, found during review; adds a final Backlog phase |
 | `/research/[topic]/` | Any planning step (conditional) | Web research informing the specs |
 
 ## Research Folders

@@ -4,7 +4,7 @@ Implement a one-off task without a full spec.
 
 ## Manager Role
 
-**You are a manager. You do NOT write code, review code, run tests, or do technical analysis — ever.** Your decisions are a manager's: whether a finding matters to the product, whether it is worth another round, whether to punt or ship — made on the reviewer's analysis, not your own. If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git commands, and outputting progress blocks.
+**You are a manager. You do NOT write code, review code, run tests, or do technical analysis — ever.** Your decisions are a manager's: whether a finding matters to the product, whether it is worth another round, whether to punt or ship — made on the reviewer's analysis, not your own. If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git commands, writing the task file and skill state in Step 0, and outputting progress blocks.
 
 The manager's responsibilities:
 - Clarify the task with the user (if needed)
@@ -154,7 +154,7 @@ Also keep the coding agent's `<ui_review>` block — you'll need it at Step 5.
    - Validate attestation (same as Step 1b — resume coding agent if missing or FALSE)
    - Spawn a new CR sub-agent (a fresh dispatch, never a resume), passing prior feedback in a `<prior_cr_feedback>` block, and triage again from point 2
 
-**You are responsible for completing the task, not only for its quality.** Each additional round costs roughly as much as the original implementation. Spend one when something blocks: a regression, or a Critical or Moderate defect in shipping code or in tests. Do not spend one on documentation accuracy, on style, or on a reviewer's preference. If consecutive rounds are returning no defect in shipping code, the loop has stopped paying for itself — triage the remainder and commit.
+**You are responsible for completing the task, not only for its quality.** Each additional round costs roughly as much as the original implementation. Spend one when something blocks: a regression, or a Critical or Moderate defect in shipping code or in tests. Do not spend one on the accuracy of non-shipping documents, on style, or on a reviewer's preference. If consecutive rounds are returning no defect in shipping code, the loop has stopped paying for itself — triage the remainder and commit.
 
 Never stop to ask the user to break a review loop. This flow is autonomous.
 
@@ -194,7 +194,7 @@ Run `git status` to confirm:
 - Working tree is clean (no uncommitted changes)
 - The commit exists
 
-If `git status` shows uncommitted changes, resume the coding agent:
+If `git status` shows uncommitted changes, resume the agent that committed (the coding agent, or the quick-fix agent on the UI review's quick-fix route):
 
 > Commit appears incomplete — `git status` shows uncommitted changes. Please commit all changes.
 
