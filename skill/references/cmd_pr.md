@@ -215,7 +215,7 @@ A quick fix is not code-reviewed. That is why only the reviewer may nominate one
 
 If any of these are false, go back to Step 2. Every coding round — including one that addresses CR feedback — is reviewed before commit; quick fixes — Step 2a, or the UI review's quick-fix route — are the only exception.
 
-Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes and returns the commit message and hash.
+Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes and returns the commit message and hash. On the UI review's quick-fix route, the quick-fix agent commits instead — see [references/shared/ui_review.md](shared/ui_review.md).
 
 If the coding agent returns a pre-commit hook failure instead of a commit message:
 
@@ -304,7 +304,7 @@ EOF
 
 The changes are pushed by now, so tell the user to pull the PR branch.
 
-UI feedback takes one of the two routes in that file. A quick fix follows that file's quick-fix route — its own agent applies and commits the change — then runs Step 4 again (including the push); a functional change runs Steps 1b → 4 again. Either way, return here. Do **not** re-run Step 5 — the PR comments are already answered.
+UI feedback takes one of the two routes in that file. A quick fix follows that file's quick-fix route — its own agent applies and commits the change (that commit is Step 3) — then Step 4 runs again (including the push); a functional change runs Steps 1b → 4 again. Either way, return here. Do **not** re-run Step 5 — the PR comments are already answered.
 
 ### Step 7: Present Summary
 
@@ -348,7 +348,7 @@ A code reviewer found issues with your implementation. Address all feedback belo
 Return a short summary of changes made when ready for re-review.
 
 <cr_feedback>
-[CR agent's output]
+[The CR agent's output, verbatim, minus the findings you dropped]
 </cr_feedback>
 ```
 

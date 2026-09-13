@@ -160,7 +160,7 @@ A quick fix is not code-reviewed. That is why only the reviewer may nominate one
 
 If any of these are false, go back to Step 2. Every coding round — including one that addresses CR feedback — is reviewed before commit; quick fixes — Step 2a, or the UI review's quick-fix route — are the only exception.
 
-Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message.
+Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message. On the UI review's quick-fix route, the quick-fix agent commits instead — see [references/shared/ui_review.md](shared/ui_review.md).
 
 If the coding agent returns a pre-commit hook failure instead of a commit message:
 
@@ -263,7 +263,7 @@ A code reviewer found issues with your implementation. Address all feedback belo
 Return a short summary of changes made when ready for re-review.
 
 <cr_feedback>
-[CR agent's output]
+[The CR agent's output, verbatim, minus the findings you dropped, deferred to a later phase, or sent to the backlog]
 </cr_feedback>
 ```
 
