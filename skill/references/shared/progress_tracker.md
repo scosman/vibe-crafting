@@ -48,6 +48,7 @@ Phase 2 Progress:
 - [x] Step 1: Coding — complete
 - [x] Step 1b: Attestation — complete
 - [ ] Step 2: Code review — in progress
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
 - [x] Step 5: UI review — skipped (no UI changes)
@@ -63,7 +64,8 @@ Phase 2 of 6 Progress:
 - [x] Step 0: Pre-checks — complete
 - [x] Step 1: Coding — complete
 - [x] Step 1b: Attestation — complete
-- [x] Step 2: Code review — clean
+- [x] Step 2: Code review — triaged (1 dropped, 1 to backlog)
+- [x] Step 2a: Quick fixes — complete (2 applied)
 - [ ] Step 3: Commit — in progress
 - [ ] Step 4: Verify — pending
 - [—] Step 5: UI review — deferred to end of run
@@ -127,6 +129,6 @@ UI feedback resets every step, since the fix is unreviewed, uncommitted code lik
 - Output the progress block **after every sub-agent return**, before doing anything else.
 - Mark each step as it completes. Show the current step as "in progress."
 - **After outputting the progress block, immediately proceed to the next pending step.** Do not wait for user input. Do not ask what to do next. The progress block tells you what to do next — do it.
-- The ONLY reasons to stop and wait for the user: (1) escalation/roadblock from the coding agent, (2) the UI review step, which comes after the work is committed, (3) after the final step (the flow is complete).
+- The ONLY reasons to stop and wait for the user: (1) escalation/roadblock from the coding agent, (2) the UI review step, which comes after the work is committed, (3) after the final step (the flow is complete), (4) the Backlog phase in `/spec implement`, per its command file.
 - In `/spec implement all`, the per-phase UI review is deferred to a single consolidated review at the end of the run. Finishing a phase is never a reason to stop — the next phase's progress block is your next output.
 - If a step sends you back to an earlier step (e.g., commit hook failure → back to Step 1b), update the block to reflect the reset, increment the round counter, and keep going.

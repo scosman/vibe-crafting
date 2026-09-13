@@ -54,6 +54,9 @@ Present findings to the user:
 > ### Mild (consider fixing)
 > - [file:line] [description]
 >
+> ### Quick-fix candidates
+> - [file:line] [description — the reviewer's exact change]
+>
 > [Or: No issues found — implementation looks good!]
 
 If issues exist and user wants fixes:

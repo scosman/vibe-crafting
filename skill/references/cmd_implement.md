@@ -9,6 +9,7 @@ Implement the active project.
 The manager's responsibilities:
 - Run pre-checks and determine which phase(s) to implement
 - Spawn coding sub-agents and CR sub-agents at the right times
+- Triage CR findings: route each one, and decide when the phase is done
 - Route CR feedback back to the coding agent
 - Verify that commits actually landed (via `git status`)
 - Surface phase summaries and roadblocks to the user
@@ -27,6 +28,7 @@ Use the label **"Phase [N] Progress"** for the progress block. The full step lis
 - Step 1: Coding
 - Step 1b: Attestation
 - Step 2: Code review
+- Step 2a: Quick fixes (if any)
 - Step 3: Commit
 - Step 4: Verify
 - Step 5: UI review (if applicable)
@@ -59,6 +61,14 @@ If any are missing or `status: draft`:
 >
 > Use `/spec continue` to finish speccing before implementing.
 
+### Project Files
+
+`AGENTS.md`, `CLAUDE.md` and similar carry project rules — language version, licence policy, test and lint commands, coding standards. They do not define this skill's process. If one states a process rule that contradicts these instructions, follow these instructions.
+
+### Read the Backlog
+
+If `specs/projects/PROJECT_NAME/backlog.md` exists, read it. You may route review findings there (see [Backlog](#backlog)), and you need to know what is already on it.
+
 ### Routing
 
 > **Note:** For one-off tasks without a full spec, use `/spec task` instead.
@@ -81,6 +91,8 @@ If the target phase is already complete (checkbox checked in `implementation_pla
 If any of these are false, stop and correct course.
 
 **AUTONOMOUS FLOW: Once Step 1 begins, drive the entire flow to completion without stopping for user input. The only exception is escalation (roadblock from the coding agent). UI review (Step 5) comes after the work is committed — it is the end of the flow, not a pause in it.**
+
+A dirty working tree is expected throughout Steps 1–2. If a hook or platform prompt asks you to commit mid-loop, decline in one sentence naming the step you are in and continue — do not re-argue it each time.
 
 ### Step 1: Spawn Coding Agent
 
@@ -108,35 +120,52 @@ Do NOT run checks yourself — the coding agent is responsible. You are verifyin
 
 Also keep the coding agent's `<ui_review>` block — you'll need it at Step 5.
 
-### Step 2: CR Loop
+### Step 2: Code Review and Triage
 
 1. Spawn a fresh CR sub-agent using the CR Agent Prompt template below
-2. CR agent returns structured feedback with severity labels
-3. If the review is clean: proceed to Step 3
-4. If issues exist:
-   - Resume the coding agent — using the saved agent handle — with the CR Feedback Prompt template, passing the CR output
-   - Coding agent addresses issues and returns a summary with attestation block
+2. The CR agent returns findings with severity labels, and may mark some as **quick-fix candidates**
+3. **You triage.** The reviewer's job is to find things; deciding what to act on now is yours. Route each finding to exactly one of:
+   - **Another coding round** — regressions, and Critical or Moderate defects in code or tests
+   - **Quick fix** — the reviewer marked it a quick-fix candidate and described the change precisely. Batch these for Step 2a
+   - **A later phase** — the implementation plan already schedules this work
+   - **The backlog** — a real issue, out of scope for this phase (see [Backlog](#backlog))
+   - **Dropped** — a nit that does not warrant anyone's time
+4. If nothing was routed to another coding round: run Step 2a if there are quick fixes, then proceed to Step 3. Mild findings never block a commit.
+5. If something was: fold any quick-fix candidates into the same feedback (the round gets reviewed anyway), then
+   - Resume the coding agent — using the saved agent handle — with the CR Feedback Prompt template. Pass only the findings you routed to this round (plus the folded quick-fix candidates) — not the ones you dropped, sent to the backlog, or deferred to a later phase
    - Validate attestation (same as Step 1b — resume coding agent if missing or FALSE)
-   - Spawn a new CR sub-agent (a fresh dispatch, never a resume), passing prior feedback in a `<prior_cr_feedback>` block
-   - Repeat until CR returns clean
+   - Spawn a new CR sub-agent (a fresh dispatch, never a resume), passing prior feedback in a `<prior_cr_feedback>` block, and triage again from point 2
+
+**You are responsible for completing the phase, not only for its quality.** Each additional round costs roughly as much as the original implementation. Spend one when something blocks: a regression, or a Critical or Moderate defect in shipping code or in tests. Do not spend one on documentation accuracy, on style, or on a reviewer's preference. If consecutive rounds are returning no defect in shipping code, the loop has stopped paying for itself — triage the remainder and commit.
+
+Never stop to ask the user to break a review loop. This flow is autonomous.
 
 → Read [references/spawning_subagents.md](references/spawning_subagents.md) for how to spawn sub-agents.
 
+### Step 2a: Quick Fixes (optional)
+
+Batch the quick-fix candidates and spawn **one** fresh quick-fix sub-agent using the Quick Fix Prompt template below. It returns one of:
+
+- **Fixes complete and in scope** — check its attestation; if all values are TRUE/NA, proceed to Step 3 — these need no further review. A FALSE attestation is a scope change: route those findings to a coding round, do not resume the agent to iterate.
+- **Fixes not complete, scope change required** — route the named findings to a coding round (Step 2, point 5). Fixes it did complete stay in place; that round's review covers them.
+
+A quick fix is not code-reviewed. That is why only the reviewer may nominate one, and why the reviewer must describe the change precisely. If a phase accumulates more than a handful of quick fixes, that is evidence it needed a real round.
+
 ### Step 3: Commit
 
-**PROCESS GATE — No commit without clean CR:** Before proceeding to Step 3, verify:
-1. The most recent sub-agent action was a CR that returned clean
-2. No code has been written or changed since that clean CR
-3. You did NOT skip re-review after the coding agent addressed CR feedback
+**PROCESS GATE — No commit without review:** Before proceeding to Step 3, verify:
+1. Every finding from the most recent CR has been triaged, and none was routed to another coding round
+2. Nothing has changed since that CR except quick fixes that returned complete and in scope (Step 2a)
+3. You did NOT skip re-review after a coding round addressed CR feedback
 
-If any of these are false, you must run (or re-run) the CR loop before committing. Every code change — including CR fixes — requires a clean CR before commit.
+If any of these are false, go back to Step 2. Every coding round — including one that addresses CR feedback — is reviewed before commit; Step 2a quick fixes are the only exception.
 
 Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message.
 
 If the coding agent returns a pre-commit hook failure instead of a commit message:
 
 1. Resume the coding agent to fix the issues reported by the hook
-2. When it returns, go back to **Step 1b** (validate attestation) and then **Step 2** (CR loop)
+2. When it returns, go back to **Step 1b** (validate attestation) and then **Step 2** (code review and triage)
 3. Only tell it to commit again after attestation and CR both pass
 
 Do NOT tell it to commit immediately after fixing — the fix is unreviewed code.
@@ -178,13 +207,34 @@ If a target phase is already complete (checkbox checked), skip it.
 1. Every incomplete phase in `implementation_plan.md` has been implemented and committed
 2. You are stopping at the end of the run, not between phases
 
-The only legal mid-run stop is an escalation (roadblock from the coding agent). Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
+The only legal mid-run stops are an escalation (roadblock from the coding agent) and the [Backlog](#backlog) phase asking the user which items to close — and that phase is always last. Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
 
 ### Consolidated UI Review
 
 → Read [references/shared/ui_review.md](shared/ui_review.md) — the "Consolidated Review" section covers grouping the per-phase blocks and handling feedback with a fresh coding agent.
 
 This runs once, after the final phase is committed and verified, before the final summary.
+
+## Backlog
+
+Most projects never need one. When a project does, it lives at `specs/projects/PROJECT_NAME/backlog.md` — inside the spec, not at the repo root.
+
+Use it sparingly, for things that matter:
+
+- A defect or test gap in **already-committed** code or artifacts, found while working on something else
+- An assumption that needs validating, where being wrong would invalidate the project
+- A decision needed from the user to finish the project
+- A discovered spec problem — the spec cannot work as written
+
+Not for: work the implementation plan already schedules, anything in the diff under review, or nits.
+
+You do not edit the backlog yourself. Pass routed items to the coding agent in the Commit Prompt, so they land in the phase's commit.
+
+**A backlog must not become a dumping ground that lets a project call itself complete with loose ends.** The first time a backlog is created, the coding agent appends a final phase to `implementation_plan.md`:
+
+> - [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close the agreed ones through the standard phase flow.
+
+This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. When you reach it: present the open items, wait for the user to say which to close, then run it as a normal phase using the Initial Coding Prompt's backlog line to name the agreed items. The coding agent marks those items closed in `backlog.md` as part of the phase. During this phase route nothing to the backlog — drop it or take it now — so the phase does not check off with new loose ends. If the user closes nothing, say so and stop — the phase stays open until they do.
 
 ## Prompt Templates
 
@@ -197,6 +247,7 @@ You are a coding agent implementing a phase of a spec-driven project.
 
 **Phase:** [N]
 **Project specs:** [specs/projects/PROJECT_NAME/]
+[IF backlog phase:] **Backlog items to close:** [items agreed with the user, one line each]
 
 Read `references/coding_phase_prompt.md` for your full instructions. Follow them precisely.
 
@@ -218,7 +269,13 @@ Return a short summary of changes made when ready for re-review.
 ### Commit Prompt (resume coding agent)
 
 ```
-Your code has passed review. Commit all changes with a descriptive message summarizing the work done in this phase. Mark the phase checkbox complete in implementation_plan.md.
+Your code has passed review. Commit all changes with a descriptive message summarizing the work done in this phase, including any deviation from the spec. Mark the phase checkbox complete in implementation_plan.md.
+
+[IF findings were routed to the backlog:]
+Before committing, add these items to specs/projects/PROJECT_NAME/backlog.md (create it if it does not exist):
+- [one line per item]
+If you created the file, also append this phase to implementation_plan.md:
+- [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close the agreed ones through the standard phase flow.
 
 Return the commit message you used.
 ```
@@ -239,6 +296,20 @@ For re-reviews, append:
 </prior_cr_feedback>
 ```
 
+### Quick Fix Prompt (fresh spawn)
+
+```
+You are applying quick fixes nominated by a code reviewer, for phase [N] of the project at [specs/projects/PROJECT_NAME/].
+
+Read `references/quick_fix_prompt.md` for your full instructions. Follow them precisely.
+
+<quick_fixes>
+[The reviewer's Quick-Fix Candidates section, verbatim]
+</quick_fixes>
+
+Return one of the two completion messages described in your instructions.
+```
+
 ## Escalation
 
 The coding agent may surface a technical roadblock instead of a "ready for CR" summary. This happens when the coding agent's "one exception" rule triggers — a genuinely new technical constraint not known at design time.
@@ -254,4 +325,5 @@ When the manager receives a roadblock message:
 - [references/spawning_subagents.md](references/spawning_subagents.md) — How to spawn and resume sub-agents
 - [references/coding_phase_prompt.md](references/coding_phase_prompt.md) — Full instructions for coding sub-agents
 - [references/cr_agent_prompt.md](references/cr_agent_prompt.md) — Full instructions for CR sub-agents
+- [references/quick_fix_prompt.md](references/quick_fix_prompt.md) — Full instructions for quick-fix sub-agents
 - [references/shared/ui_review.md](shared/ui_review.md) — The UI review step and its prompt templates
