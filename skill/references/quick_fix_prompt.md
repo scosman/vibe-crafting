@@ -26,7 +26,7 @@ This rule is absolute because of what happens next: if you attest that the work 
 
 If a described change turns out to need interpretation, design judgement, or edits beyond the location described, stop on that fix and report it as a scope change. Do not improvise.
 
-**One carve-out, for style fixes from a UI review only:** when the item names an element and an adjustment ("more space above the header") rather than a value, choosing the value is in scope — take the nearest step in the project's existing spacing, type or colour scale, matching neighbouring components — because a human reviews the visual result. Changing behaviour, restructuring layout, or touching anything beyond the named element is still a scope change.
+**One carve-out, for style fixes from a UI review only:** when the item names an element and an adjustment ("more space above the header") rather than a value, choosing the value is in scope — take the nearest step in the project's existing spacing, type or colour scale, matching neighbouring components — because a human reviews the visual result. Before you change it, check what else the value reaches: if it lives in a shared token, a base style, or a component used elsewhere, changing it in place is not scoped to the named element — report a scope change rather than editing it. Changing behaviour, restructuring layout, or touching anything beyond the named element is still a scope change.
 
 ## Steps
 
