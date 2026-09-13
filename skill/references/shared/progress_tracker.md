@@ -32,6 +32,7 @@ Task Progress:
 - [ ] Step 1: Coding — in progress
 - [ ] Step 1b: Attestation — pending
 - [ ] Step 2: Code review — pending
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
 - [ ] Step 5: UI review — pending (or skipped if no significant UI)
@@ -48,6 +49,7 @@ Phase 2 Progress:
 - [x] Step 1: Coding — complete
 - [x] Step 1b: Attestation — complete
 - [ ] Step 2: Code review — in progress
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
 - [x] Step 5: UI review — skipped (no UI changes)
@@ -63,7 +65,8 @@ Phase 2 of 6 Progress:
 - [x] Step 0: Pre-checks — complete
 - [x] Step 1: Coding — complete
 - [x] Step 1b: Attestation — complete
-- [x] Step 2: Code review — clean
+- [x] Step 2: Code review — triaged (1 dropped, 1 to backlog)
+- [x] Step 2a: Quick fixes — complete (2 applied)
 - [ ] Step 3: Commit — in progress
 - [ ] Step 4: Verify — pending
 - [—] Step 5: UI review — deferred to end of run
@@ -82,6 +85,7 @@ After CR finds issues and coding agent is resumed:
 - [x] Step 1: Coding — complete (round 2)
 - [ ] Step 1b: Attestation — in progress (round 2)
 - [ ] Step 2: Code review — pending (round 2)
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
 - [ ] Step 5: UI review — pending
@@ -96,6 +100,7 @@ After a commit hook failure resets back to Step 1b:
 - [x] Step 1: Coding — complete (round 3, hook fix)
 - [ ] Step 1b: Attestation — in progress (round 3)
 - [ ] Step 2: Code review — pending (round 3)
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending (round 2)
 - [ ] Step 4: Verify — pending
 - [ ] Step 5: UI review — pending
@@ -105,13 +110,29 @@ After a commit hook failure resets back to Step 1b:
 
 Note: Steps 3–6 have their own counter independent of the 1→1b→2 loop, since commit can fail separately.
 
-After UI review feedback sends the whole loop back around:
+UI review feedback takes one of two routes (see `ui_review.md`). A quick fix — copy and style — skips review, so only Steps 2a onward move:
+
+```
+<progress>
+- [x] Step 1: Coding — complete
+- [x] Step 1b: Attestation — complete
+- [x] Step 2: Code review — complete
+- [x] Step 2a: Quick fixes — complete (round 2, UI feedback: 2 strings, 1 style)
+- [ ] Step 3: Commit — in progress (round 2)
+- [ ] Step 4: Verify — pending (round 2)
+- [ ] Step 5: UI review — pending (round 2)
+- [ ] Step 6: Summary — pending
+</progress>
+```
+
+A functional change is unreviewed, uncommitted code like any other, so every step from coding on resets:
 
 ```
 <progress>
 - [x] Step 1: Coding — complete (round 2, UI feedback)
 - [ ] Step 1b: Attestation — in progress (round 2)
 - [ ] Step 2: Code review — pending (round 2)
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending (round 2)
 - [ ] Step 4: Verify — pending (round 2)
 - [ ] Step 5: UI review — pending (round 2)
@@ -119,14 +140,12 @@ After UI review feedback sends the whole loop back around:
 </progress>
 ```
 
-UI feedback resets every step, since the fix is unreviewed, uncommitted code like any other.
-
 ## Rules
 
 - **Output your first progress block BEFORE spawning the first sub-agent.** This is non-negotiable. No progress block = you haven't entered the process.
 - Output the progress block **after every sub-agent return**, before doing anything else.
 - Mark each step as it completes. Show the current step as "in progress."
 - **After outputting the progress block, immediately proceed to the next pending step.** Do not wait for user input. Do not ask what to do next. The progress block tells you what to do next — do it.
-- The ONLY reasons to stop and wait for the user: (1) escalation/roadblock from the coding agent, (2) the UI review step, which comes after the work is committed, (3) after the final step (the flow is complete).
+- The ONLY reasons to stop and wait for the user: (1) escalation/roadblock from the coding agent, (2) the UI review step, which comes after the work is committed, (3) after the final step (the flow is complete), (4) the Backlog phase in `/spec implement`, per its command file.
 - In `/spec implement all`, the per-phase UI review is deferred to a single consolidated review at the end of the run. Finishing a phase is never a reason to stop — the next phase's progress block is your next output.
 - If a step sends you back to an earlier step (e.g., commit hook failure → back to Step 1b), update the block to reflect the reset, increment the round counter, and keep going.

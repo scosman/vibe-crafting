@@ -156,7 +156,7 @@ Generic tools typically don't support resuming — use a fresh spawn with accumu
 
 ### When to Resume vs. Fresh Spawn
 
-- **Resume**: coding agent receiving CR feedback or commit approval (needs its prior context)
+- **Resume**: coding agent receiving CR feedback or commit approval; the UI quick-fix agent for its commit (needs its prior context)
 - **Fresh spawn**: CR agent (must NOT have coding context)
 
 ## Recovery: When a Payload Is Genuinely Lost
