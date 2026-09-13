@@ -32,6 +32,7 @@ Task Progress:
 - [ ] Step 1: Coding — in progress
 - [ ] Step 1b: Attestation — pending
 - [ ] Step 2: Code review — pending
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
 - [ ] Step 5: UI review — pending (or skipped if no significant UI)
@@ -84,6 +85,7 @@ After CR finds issues and coding agent is resumed:
 - [x] Step 1: Coding — complete (round 2)
 - [ ] Step 1b: Attestation — in progress (round 2)
 - [ ] Step 2: Code review — pending (round 2)
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending
 - [ ] Step 4: Verify — pending
 - [ ] Step 5: UI review — pending
@@ -98,6 +100,7 @@ After a commit hook failure resets back to Step 1b:
 - [x] Step 1: Coding — complete (round 3, hook fix)
 - [ ] Step 1b: Attestation — in progress (round 3)
 - [ ] Step 2: Code review — pending (round 3)
+- [ ] Step 2a: Quick fixes — pending
 - [ ] Step 3: Commit — pending (round 2)
 - [ ] Step 4: Verify — pending
 - [ ] Step 5: UI review — pending
@@ -107,21 +110,35 @@ After a commit hook failure resets back to Step 1b:
 
 Note: Steps 3–6 have their own counter independent of the 1→1b→2 loop, since commit can fail separately.
 
-After UI review feedback sends the whole loop back around:
+UI review feedback takes one of two routes (see `ui_review.md`). A quick fix — copy and style — skips review, so only Steps 2a onward move:
 
 ```
 <progress>
-- [x] Step 1: Coding — complete (round 2, UI feedback)
-- [ ] Step 1b: Attestation — in progress (round 2)
-- [ ] Step 2: Code review — pending (round 2)
-- [ ] Step 3: Commit — pending (round 2)
+- [x] Step 1: Coding — complete
+- [x] Step 1b: Attestation — complete
+- [x] Step 2: Code review — complete
+- [x] Step 2a: Quick fixes — complete (round 2, UI feedback: 2 strings, 1 style)
+- [ ] Step 3: Commit — in progress (round 2)
 - [ ] Step 4: Verify — pending (round 2)
 - [ ] Step 5: UI review — pending (round 2)
 - [ ] Step 6: Summary — pending
 </progress>
 ```
 
-UI feedback resets every step, since the fix is unreviewed, uncommitted code like any other.
+A functional change is unreviewed, uncommitted code like any other, so every step from coding on resets:
+
+```
+<progress>
+- [x] Step 1: Coding — complete (round 2, UI feedback)
+- [ ] Step 1b: Attestation — in progress (round 2)
+- [ ] Step 2: Code review — pending (round 2)
+- [ ] Step 2a: Quick fixes — pending
+- [ ] Step 3: Commit — pending (round 2)
+- [ ] Step 4: Verify — pending (round 2)
+- [ ] Step 5: UI review — pending (round 2)
+- [ ] Step 6: Summary — pending
+</progress>
+```
 
 ## Rules
 

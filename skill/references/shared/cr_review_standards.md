@@ -1,6 +1,6 @@
 # Code Review Standards
 
-These are the shared review standards applied by all code review agents — single-pass CR and deep CR phase sub-agents alike. Apply all of them to every review.
+These are the shared review standards applied by all code review agents — single-pass CR and deep CR phase sub-agents alike. Apply all of them to every review, and report everything you find at its true severity — deciding what gets acted on belongs to whoever dispatched you, not to you.
 
 ## Review Dimensions
 

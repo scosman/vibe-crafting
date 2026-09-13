@@ -34,9 +34,9 @@ The skill is project-agnostic. It provides the process; your project-specific co
 
 The command references below hold the role definitions, process gates and prompt templates for each command. Compaction restores only this file — not them. **If this conversation has been compacted part-way through a command, re-read that command's reference file before your next action.**
 
-When compacting, preserve: this instruction, which `/spec` command is running, and which phase and step it is on.
+When compacting, preserve: this instruction, which `/spec` command is running, which phase and step it is on, and the handles of any sub-agents you hold — the coding agent's agent ID in particular, since you resume it for review feedback and commit.
 
-During `/spec implement`, `/spec task` and `/spec pr` you are a **manager**: you spawn and resume sub-agents, run git, and print progress blocks. You do not write code, run tests, review code, or commit. Every coding round — including one that addresses review feedback — is code-reviewed before commit.
+During `/spec implement`, `/spec task` and `/spec pr` you are a **manager**: you spawn and resume sub-agents, triage review findings, run git, and print progress blocks. You do not write code, run tests, review code, or commit. Every coding round — including one that addresses review feedback — is code-reviewed before commit.
 
 ## Command Reference
 
@@ -78,7 +78,7 @@ Research a topic on the web. Splits the topic into subtopics, runs a research su
 
 ### `/spec pr`
 
-Address review feedback from a GitHub pull request. Finds the PR for the current branch, fetches unresolved comments, spawns a coding agent to address them, runs the standard CR loop, commits, pushes, and replies to each comment thread on GitHub.
+Address review feedback from a GitHub pull request. Finds the PR for the current branch, fetches unresolved comments, spawns a coding agent to address them, runs the standard code review and triage, commits, pushes, and replies to each comment thread on GitHub.
 
 → Read [PR feedback command reference](references/cmd_pr.md)
 

@@ -18,7 +18,7 @@ You are a coding agent implementing a phase of a spec-driven project.
    - `architecture.md`
    - `ui_design.md` (if exists)
    - `components/*.md` (if exist)
-3. If the prompt lists backlog items to close, read `backlog.md` — those items are this phase's scope, and you mark them closed there as part of the work
+3. If the prompt lists backlog items to close or to mark dismissed, read `backlog.md` — the items to close are this phase's scope, and you mark each item closed or dismissed there as part of the work
 
 ## Initial Invocation: Plan and Implement
 
@@ -50,7 +50,7 @@ status: draft
 - [Continue for each test...]
 ```
 
-**The phase plan is written once, before you implement, and then frozen.** It is a plan, not a log: do not append findings, verification records, decisions, round-by-round narrative, or method notes as you work. Track progress in your own context. Only in the rare case where implementation reveals the plan is fundamentally wrong should you rewrite it — and say so in your return summary.
+**The phase plan is written once, before you implement, and then frozen** — the one routine edit after that is toggling its frontmatter `status` to `complete` at commit. It is a plan, not a log: do not append findings, verification records, decisions, round-by-round narrative, or method notes as you work. Track progress in your own context. Only in the rare case where implementation reveals the plan is fundamentally wrong should you rewrite it — and say so in your return summary.
 
 Anything you learn while implementing — including any deviation from the spec — belongs in your return summary, not in the plan. When you deviate from the spec, also leave a short code comment at the point of deviation with the reason — the reviewer reads the code, not your summary. You will record it in the commit message when the manager resumes you to commit — that message is the durable record of the phase.
 

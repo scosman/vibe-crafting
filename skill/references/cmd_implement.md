@@ -4,7 +4,7 @@ Implement the active project.
 
 ## Manager Role
 
-**You are a manager. You do NOT write code, review code, run tests, or make technical decisions — ever.** If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git commands, and outputting progress blocks.
+**You are a manager. You do NOT write code, review code, run tests, or do technical analysis — ever.** Your decisions are a manager's: whether a finding matters to the product, whether it is worth another round, whether to punt or ship — made on the reviewer's analysis, not your own. If you catch yourself about to edit a file or run a test, stop. You are in the wrong role. Your only tools are: spawning sub-agents, resuming sub-agents, running git commands, and outputting progress blocks.
 
 The manager's responsibilities:
 - Run pre-checks and determine which phase(s) to implement
@@ -149,7 +149,7 @@ Batch the quick-fix candidates and spawn **one** fresh quick-fix sub-agent using
 - **Fixes complete and in scope** — check its attestation; if all values are TRUE/NA, proceed to Step 3 — these need no further review. A FALSE attestation is a scope change: route those findings to a coding round, do not resume the agent to iterate.
 - **Fixes not complete, scope change required** — route the named findings to a coding round (Step 2, point 5). Fixes it did complete stay in place; that round's review covers them.
 
-A quick fix is not code-reviewed. That is why only the reviewer may nominate one, and why the reviewer must describe the change precisely. If a phase accumulates more than a handful of quick fixes, that is evidence it needed a real round.
+A quick fix is not code-reviewed. That is why only the reviewer may nominate one at this step, and why it must describe the change precisely. If a phase accumulates more than a handful of quick fixes, that is evidence it needed a real round.
 
 ### Step 3: Commit
 
@@ -158,7 +158,7 @@ A quick fix is not code-reviewed. That is why only the reviewer may nominate one
 2. Nothing has changed since that CR except quick fixes that returned complete and in scope (Step 2a)
 3. You did NOT skip re-review after a coding round addressed CR feedback
 
-If any of these are false, go back to Step 2. Every coding round — including one that addresses CR feedback — is reviewed before commit; Step 2a quick fixes are the only exception.
+If any of these are false, go back to Step 2. Every coding round — including one that addresses CR feedback — is reviewed before commit; quick fixes — Step 2a, or the UI review's quick-fix route — are the only exception.
 
 Resume the coding agent — using the saved agent handle — with the Commit Prompt template below. The coding agent commits all changes, marks the phase complete, and returns the commit message.
 
@@ -207,11 +207,11 @@ If a target phase is already complete (checkbox checked), skip it.
 1. Every incomplete phase in `implementation_plan.md` has been implemented and committed
 2. You are stopping at the end of the run, not between phases
 
-The only legal mid-run stops are an escalation (roadblock from the coding agent) and the [Backlog](#backlog) phase asking the user which items to close — and that phase is always last. Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
+The only legal mid-run stops are an escalation (roadblock from the coding agent) and the [Backlog](#backlog) phase asking the user which items to close or dismiss — and that phase is always last. Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
 
 ### Consolidated UI Review
 
-→ Read [references/shared/ui_review.md](shared/ui_review.md) — the "Consolidated Review" section covers grouping the per-phase blocks and handling feedback with a fresh coding agent.
+→ Read [references/shared/ui_review.md](shared/ui_review.md) — the "Consolidated Review" section covers grouping the per-phase blocks and handling feedback with a fresh coding agent or quick-fix agent.
 
 This runs once, after the final phase is committed and verified, before the final summary.
 
@@ -232,9 +232,9 @@ You do not edit the backlog yourself. Pass routed items to the coding agent in t
 
 **A backlog must not become a dumping ground that lets a project call itself complete with loose ends.** The first time a backlog is created, the coding agent appends a final phase to `implementation_plan.md`:
 
-> - [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close the agreed ones through the standard phase flow.
+> - [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close or dismiss each through the standard phase flow.
 
-This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. When you reach it: present the open items, wait for the user to say which to close, then run it as a normal phase using the Initial Coding Prompt's backlog line to name the agreed items. The coding agent marks those items closed in `backlog.md` as part of the phase. During this phase route nothing to the backlog — drop it or take it now — so the phase does not check off with new loose ends. If the user closes nothing, say so and stop — the phase stays open until they do.
+This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. When you reach it: present the open items, wait for the user to decide each one — close it or dismiss it — then run it as a normal phase using the Initial Coding Prompt's backlog lines to name the items in each group. Dismissing is a valid resolution: the coding agent marks closed items closed and dismissed items dismissed in `backlog.md` as part of the phase, and the phase ticks even if every item was dismissed. During this phase route nothing to the backlog — drop it or take it now — so the phase does not check off with new loose ends. Only if the user gives no decision does the phase stay open — say so and stop.
 
 ## Prompt Templates
 
@@ -247,7 +247,8 @@ You are a coding agent implementing a phase of a spec-driven project.
 
 **Phase:** [N]
 **Project specs:** [specs/projects/PROJECT_NAME/]
-[IF backlog phase:] **Backlog items to close:** [items agreed with the user, one line each]
+[IF backlog phase:] **Backlog items to close:** [items the user agreed to close, one line each]
+[IF backlog phase:] **Backlog items to mark dismissed:** [items the user dismissed, one line each]
 
 Read `references/coding_phase_prompt.md` for your full instructions. Follow them precisely.
 
@@ -275,7 +276,7 @@ Your code has passed review. Commit all changes with a descriptive message summa
 Before committing, add these items to specs/projects/PROJECT_NAME/backlog.md (create it if it does not exist):
 - [one line per item]
 If you created the file, also append this phase to implementation_plan.md:
-- [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close the agreed ones through the standard phase flow.
+- [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close or dismiss each through the standard phase flow.
 
 Return the commit message you used.
 ```
