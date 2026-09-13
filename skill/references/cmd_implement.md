@@ -293,7 +293,7 @@ For re-reviews, append:
 
 ```
 <prior_cr_feedback>
-[Previous CR output]
+[The previous CR agent's output, verbatim, minus the findings you dropped, deferred to a later phase, or sent to the backlog]
 </prior_cr_feedback>
 ```
 
