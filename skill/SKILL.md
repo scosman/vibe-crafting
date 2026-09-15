@@ -108,6 +108,8 @@ To check state: read `.specs_skill_state/current_project.md` and scan artifact f
 
 If the request is about learning or understanding something rather than building it — "what's the current state of the OpenEnv standard?", "how does Stripe's webhook retry work?", "which library should we use for Z?" — route to `/spec research`. Also suggest it when a user's project idea depends on an external standard, API, or library that neither of you can describe accurately from memory.
 
+**Not a command:** [shared/backlog_phase.md](references/shared/backlog_phase.md) — an interactive process for deciding a queue of open questions with the user. Written for the Backlog phase of `/spec implement`; reusable wherever a flow needs a batch of decisions.
+
 ## Project Structure
 
 Every project lives under `/specs/projects/PROJECT_NAME/`:
