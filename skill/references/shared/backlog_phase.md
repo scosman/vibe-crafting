@@ -12,9 +12,17 @@ So the phase has three parts, in order, and none of them may be skipped or inter
 
 1. **Pre-flight** — sub-agents verify each item and gather the context the decisions need
 2. **The interview** — you and the user decide every item, in chat, deciding nothing else
-3. **Execution** — the decisions run as `/spec task` runs, dispatched as sub-agents
+3. **Execution** — the decided work is built, as a phase run, as `/spec task` runs, or as a mix
 
 The separation is the point. Implementing after each decision makes the user watch a build between every question, and it commits work before you know whether a later decision moots it.
+
+## Using This Outside the Backlog Phase
+
+The middle of this file is not really about backlogs. **Verify each open question → ask it with enough context to be decidable → record the answer → execute the whole set at once** is the shape of any point where a flow needs a batch of decisions from the user, and it is worth reusing wherever that comes up.
+
+Steps [B1](#step-b1-pre-flight-verification), [B2](#step-b2-the-interview) and [B3](#step-b3-the-plan-gate) carry it, along with the [Never](#never) list. Substitute your own queue for the items, your own artifact for `backlog.md`, and your own runs for Step B4. The parts that are genuinely backlog-specific — the file format, the wrap-up, the phase checkbox — are marked as such and don't generalize.
+
+The rest of this file is the Backlog phase itself.
 
 ## Progress Tracker
 
@@ -29,14 +37,14 @@ Backlog Phase Progress:
 - [x] Step B1: Pre-flight verification — complete (2 already fixed, 5 need decisions)
 - [ ] Step B2: Decisions — in progress (3 of 5)
 - [ ] Step B3: Plan approved — pending
-- [ ] Step B4: Task runs — pending
-- [ ] Step B5: Wrap-up run — pending
+- [ ] Step B4: Execution runs — pending
+- [ ] Step B5: Wrap-up — pending
 - [ ] Step B6: Verify — pending
 - [ ] Step B7: Summary — pending
 </progress>
 ```
 
-Expand Step B4 into one sub-step per task run (B4a, B4b, …) once the plan is approved, so the block and the plan name the same runs in the same order.
+Expand Step B4 into one sub-step per run (B4a, B4b, …) once the plan is approved, so the block and the plan name the same runs in the same order.
 
 ## File Format
 
@@ -176,49 +184,67 @@ One table, once, covering both what was decided and what will happen. This is th
 >
 > | # | Item | Decision | Route |
 > |---|---|---|---|
-> | B1 | Config loader ignores env overrides | Fix — read env last | Task run 1 |
-> | B2 | Retry budget shared across tenants | Change spec — per-tenant budgets | Task run 1 |
-> | B3 | Token refresh drops the retry queue | Fix — replay after refresh | Task run 2 |
-> | B4 | Missing tests on the export path | Don't fix | Wrap-up |
-> | B5 | Slow query on the audit table | Move to tracker — PROJ-412 | Wrap-up |
+> | B1 | Token refresh drops the retry queue | Fix — replay after refresh | Task run 1 |
+> | B2 | Retry budget shared across tenants | Change spec — per-tenant budgets | Task run 2 |
+> | B3 | Config loader ignores env overrides | Fix — read env last | Phase run |
+> | B4 | Three error strings say "failed" with no cause | Fix — name the cause | Phase run |
+> | B5 | Slow query on the audit table | Move to tracker — PROJ-412 | Phase run (bookkeeping) |
 >
-> Two task runs, then a wrap-up run that marks B4 and B5 and closes out the phase. Run 1 is the config and retry work, which share the settings module; run 2 is auth, on its own so it reviews and commits separately.
+> Auth and the retry budget each get their own task run — they are the substantial changes and are cleaner as separate commits. B3 and B4 are small and both in config/copy, so they go in one phase run at the end, which also marks B5 dismissed and closes out the phase.
 >
 > Good to go?
 
-Grouping rule: items share a task run when they are small and touch the same area; an item gets its own run when it is large, sits in an unrelated area, or deserves its own commit for revert-ability. Mixed is normal — one big item alone, the small ones together.
+**You pick the shape.** There are two kinds of run and the plan may use either or both:
+
+- **Phase run** — the Single Phase Flow from `cmd_implement.md`, one coding agent writing `phase_plans/phase_N.md` and covering several items in one commit. Right when the remaining items are small and shallow — string fixes, a missing null check, a test gap — where separate commits would be noise.
+- **Task run** — a `/spec task`, one group of items, its own task file, review and commit. Right when an item is substantial, sits in its own area, or is worth isolating in the history so it can be reverted alone.
+
+Mixed is the common shape: the one or two real items as task runs, then a phase run that sweeps up the small ones. All task runs is right when every item is substantial. A single phase run is right when none of them are.
+
+State the reasoning in the paragraph under the table — the user is approving a shape, not just a list, and "why these two are separate" is the part they can actually judge.
 
 After approval, write each item's `Route` line into `backlog.md`, then expand Step B4 in the progress block to match. If the user changes anything, update the table and the file, and re-confirm.
 
-## Step B4: Task Runs
+## Step B4: Execution Runs
 
-**Every closing item runs as a `/spec task` run, code review included.** No item is fixed by the manager, and none rides in on a bare commit.
+**No item is fixed by the manager, and none rides in on a bare commit.** Every closing item is built by a sub-agent and code-reviewed before it lands, whichever kind of run carries it.
 
-**Dispatch each run as a single sub-agent** that runs the whole `/spec task` flow itself — clarify through commit — spawning its own coding and CR agents internally. You track N runs, not N runs × seven steps each. That is the whole reason for the nesting: the manager's context stays small enough to hold the decisions.
+**Run them serially, one at a time**, in the order the plan lists them. Every run commits, and concurrent agents committing into one working tree collide. This is a deliberate exception to the parallel dispatch in [references/shared/fan_out_pattern.md](fan_out_pattern.md). Dispatch the next run only after the previous has returned and you have verified its commit.
 
-**Run them serially, one at a time.** This is a deliberate exception to the parallel dispatch in [references/shared/fan_out_pattern.md](fan_out_pattern.md): every task run commits, and concurrent agents committing into one working tree collide. Dispatch the next only after the previous has returned and you have verified its commit.
+### Task runs
 
-Use the Backlog Task Run Prompt below. After each return:
+**Dispatch each as a single sub-agent** that runs the whole `/spec task` flow itself — task file through commit — spawning its own coding and CR agents internally. You track N runs, not N runs × seven steps each. That is the point of the nesting: your context stays small enough to hold the decisions.
+
+Use the Backlog Task Run Prompt below.
+
+### The phase run
+
+Run the Single Phase Flow from `cmd_implement.md` — Steps 1 through 4 — but spawn the coding agent with the **Backlog Phase Coding Prompt** below instead of the Initial Coding Prompt. Everything else is unchanged: attestation, code review and triage, the CR feedback loop, commit, verify. You manage this one directly, the way you manage any phase.
+
+There is at most one phase run, and it is last — it writes `phase_plans/phase_N.md` for the Backlog phase, and a phase has one plan.
+
+### After every run
 
 1. Output the updated progress block
 2. Run `git status` and `git log -1` — confirm the tree is clean and the commit landed
 3. Confirm the run's items are ticked in `backlog.md` with a `Status` line
 4. Dispatch the next run
 
-If a run returns a roadblock, escalate it to the user the way any phase escalation is handled: present it, get a decision, resume that run's agent with the answer.
+If a run returns a roadblock, escalate it the way any phase escalation is handled: present it to the user, get a decision, resume that run's agent with the answer.
 
-## Step B5: The Wrap-Up Run
+## Step B5: Wrap-Up
 
-A final `/spec task` run, dispatched the same way, that closes the phase out:
+Closing the phase out is its own work, and it belongs to the **last run in the plan**:
 
-- Marks every **don't fix** and **move to tracker** item dismissed in `backlog.md`, with its destination where there is one
-- Verifies every item in the file is now closed or dismissed — none left open
-- Ticks the Backlog phase checkbox in `implementation_plan.md`
-- Commits
+- Mark every **don't fix** and **move to tracker** item dismissed in `backlog.md`, with its destination where there is one
+- Verify every item in the file is now closed or dismissed — none left open
+- Tick the Backlog phase checkbox in `implementation_plan.md`
 
-This run goes through code review like any other, and the review is not ceremony: the reviewer's job here is to check that each item's recorded resolution matches what actually landed in the code. A `Status: closed` line over a fix that was never made is exactly the failure this phase exists to prevent.
+Both prompt templates carry these instructions; give them to whichever run goes last. Fold it in rather than adding a run for it — the bookkeeping is reviewed as part of that run either way.
 
-If every item was dismissed, this is the only run in the phase — and the phase still ticks. Dismissing is a resolution.
+Add a dedicated run only when there is nothing to fold it into: **every item was dismissed**, so the phase has no code work at all. Then the wrap-up is a task run of its own, using the Backlog Wrap-Up Prompt below, and it is the only run in the phase. The phase still ticks. Dismissing is a resolution.
+
+**The review on the run that carries the wrap-up is not ceremony.** The reviewer's job there is to check that each item's recorded resolution matches what actually landed in the code. A `Status: closed` line over a fix that was never made is exactly the failure this phase exists to prevent — say so in the prompt, as the templates do.
 
 ## Step B6: Verify
 
@@ -228,7 +254,7 @@ Run `git status`. The tree is clean, the commits exist, and:
 - The Backlog phase checkbox in `implementation_plan.md` is ticked
 - No item was added to `backlog.md` during this phase
 
-If an item is still open, the phase is not done — the wrap-up missed something. Resume the wrap-up agent with what is outstanding.
+If an item is still open, the phase is not done — the wrap-up missed something. Resume the agent that carried the wrap-up with what is outstanding.
 
 ## Step B7: Summary
 
@@ -242,7 +268,7 @@ Short. What was decided, what was built, what was dismissed and why, and anythin
 - Never let an item with no decision drop silently — it keeps the phase open
 - Never resolve an item because a sub-agent said it was already fixed
 - Never add an item to `backlog.md` during this phase
-- Never dispatch task runs in parallel
+- Never dispatch execution runs in parallel, and never start one before the previous has committed
 - Never read code or run analysis yourself to frame a question — that is what Step B1 is for
 
 ## Prompt Templates
@@ -295,13 +321,59 @@ Skip Step 0a (clarification) — the decisions above are the clarification. Writ
 
 As part of your commit, in `backlog.md`: tick each item above and add a `**Status:** closed — see commit [sha]` line to it. Where a decision changes a spec artifact, edit that artifact and set its frontmatter status in the same commit.
 
+[IF this is the last run in the plan, append:]
+This run also closes out the Backlog phase. Before committing:
+- Mark each item below dismissed in `backlog.md`: tick it and add `**Status:** dismissed — [reason, or destination]`
+<dismissed_items>
+[For each: ID, title, "don't fix" or "move to issue tracker", and the destination where there is one]
+</dismissed_items>
+- Verify every item in `backlog.md` is now closed or dismissed. If any is still open, stop and report it rather than ticking the phase
+- Tick the Backlog phase checkbox in `implementation_plan.md`
+
+Your reviewer will check that each item's recorded resolution matches what actually landed in the repo — a `closed` line over a fix that was never made is the failure this phase exists to prevent.
+
 Return the commit message you used, and one line per item confirming it is marked closed.
 ```
 
-### Backlog Wrap-Up Prompt (fresh spawn, after all task runs)
+### Backlog Phase Coding Prompt (fresh spawn, replaces the Initial Coding Prompt)
+
+Use this for the phase run, then drive the Single Phase Flow from `cmd_implement.md` as normal.
 
 ```
-You are running the final `/spec task` of the Backlog phase of a spec-driven project — the wrap-up. You are the manager of this task: read `references/cmd_task.md` and follow the full flow, code review included. Do not write code yourself.
+You are a coding agent implementing the Backlog phase of a spec-driven project.
+
+**Phase:** [N]
+**Project specs:** [specs/projects/PROJECT_NAME/]
+**Backlog:** [specs/projects/PROJECT_NAME/backlog.md]
+
+Read `references/coding_phase_prompt.md` for your full instructions. Follow them precisely. Write the phase plan from the items below — they are this phase's entire scope.
+
+The user has already decided these items. Do not re-open the decisions and do not ask about them — implement exactly what was decided.
+
+<backlog_items>
+[For each item: ID, title, the decision, the chosen approach, and any spec artifact that must change]
+</backlog_items>
+
+In `backlog.md`, tick each item above and add a `**Status:** closed — see commit [sha]` line to it. Where a decision changes a spec artifact, edit that artifact and set its frontmatter status too.
+
+[IF this is the last run in the plan, append:]
+This run also closes out the Backlog phase. Before committing:
+- Mark each item below dismissed in `backlog.md`: tick it and add `**Status:** dismissed — [reason, or destination]`
+<dismissed_items>
+[For each: ID, title, "don't fix" or "move to issue tracker", and the destination where there is one]
+</dismissed_items>
+- Verify every item in `backlog.md` is now closed or dismissed. If any is still open, stop and report it rather than ticking the phase
+- Tick the Backlog phase checkbox in `implementation_plan.md`
+
+Your reviewer will check that each item's recorded resolution matches what actually landed in the repo — a `closed` line over a fix that was never made is the failure this phase exists to prevent.
+
+Return a short summary of what you built when implementation is complete and ready for code review.
+```
+
+### Backlog Wrap-Up Prompt (fresh spawn — only when every item was dismissed)
+
+```
+You are running the only `/spec task` of the Backlog phase of a spec-driven project — the wrap-up. Every item was dismissed, so there is no code to write. You are the manager of this task: read `references/cmd_task.md` and follow the full flow, code review included. Do not write code yourself.
 
 **Project specs:** [specs/projects/PROJECT_NAME/]
 **Backlog:** [specs/projects/PROJECT_NAME/backlog.md]

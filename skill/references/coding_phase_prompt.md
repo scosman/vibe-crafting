@@ -18,6 +18,7 @@ You are a coding agent implementing a phase of a spec-driven project.
    - `architecture.md`
    - `ui_design.md` (if exists)
    - `components/*.md` (if exist)
+3. If the prompt carries a `<backlog_items>` block, read `backlog.md` — those items are this phase's entire scope, and you record each one's resolution there as part of the work
 
 ## Initial Invocation: Plan and Implement
 

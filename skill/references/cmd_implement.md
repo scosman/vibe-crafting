@@ -236,7 +236,7 @@ Outside the Backlog phase, you do not edit the backlog yourself. Pass routed ite
 
 ### Running the Backlog Phase
 
-This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. It does not use the Single Phase Flow: the items need decisions before anyone can build, so the phase runs its own interview and then executes through `/spec task` runs.
+This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. It starts differently from every other phase: the items need decisions before anyone can build, so the phase runs its own interview first, then executes what was decided — as a phase run, as `/spec task` runs, or as a mix.
 
 → **When you reach the Backlog phase, read [references/shared/backlog_phase.md](shared/backlog_phase.md) and follow it precisely.** Do not load it before then — it applies to no other phase.
 
