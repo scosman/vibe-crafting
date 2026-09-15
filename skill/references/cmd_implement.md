@@ -207,7 +207,7 @@ If a target phase is already complete (checkbox checked), skip it.
 1. Every incomplete phase in `implementation_plan.md` has been implemented and committed
 2. You are stopping at the end of the run, not between phases
 
-The only legal mid-run stops are an escalation (roadblock from the coding agent) and the [Backlog](#backlog) phase asking the user which items to close or dismiss — and that phase is always last. Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
+The only legal mid-run stops are an escalation (roadblock from the coding agent) and the [Backlog](#backlog) phase's decision interview — and that phase is always last. Not UI review, not a phase that felt like a good checkpoint, not "this seems like a lot of changes to review at once." If phases remain, keep going.
 
 ### Consolidated UI Review
 
@@ -228,13 +228,23 @@ Use it sparingly, for things that matter:
 
 Not for: work the implementation plan already schedules, anything in the diff under review, or nits.
 
-You do not edit the backlog yourself. Pass routed items to the coding agent in the Commit Prompt, so they land in the phase's commit.
+Outside the Backlog phase, you do not edit the backlog yourself. Pass routed items to the coding agent in the Commit Prompt, so they land in the phase's commit. (During the Backlog phase the manager does write to it — decisions only. See below.)
 
 **A backlog must not become a dumping ground that lets a project call itself complete with loose ends.** The first time a backlog is created, the coding agent appends a final phase to `implementation_plan.md`:
 
-> - [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close or dismiss each through the standard phase flow.
+> - [ ] **Phase [next phase number]: Backlog.** Decide each open backlog item with the user, then close or dismiss them all.
 
-This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. When you reach it: present the open items, wait for the user to decide each one — close it or dismiss it — then run it as a normal phase using the Initial Coding Prompt's backlog lines to name the items in each group. Dismissing is a valid resolution: the coding agent marks closed items closed and dismissed items dismissed in `backlog.md` as part of the phase, and the phase ticks even if every item was dismissed. During this phase route nothing to the backlog — drop it or take it now — so the phase does not check off with new loose ends. Only if the user gives no decision does the phase stay open — say so and stop.
+### Running the Backlog Phase
+
+This is the one phase that stops for the user — it is last, so an autonomous run finishes everything else first. It does not use the Single Phase Flow: the items need decisions before anyone can build, so the phase runs its own interview and then executes through `/spec task` runs.
+
+→ **When you reach the Backlog phase, read [references/shared/backlog_phase.md](shared/backlog_phase.md) and follow it precisely.** Do not load it before then — it applies to no other phase.
+
+Three things hold regardless:
+
+- **Dismissing is a valid resolution.** The phase ticks even if every item was dismissed.
+- **Route nothing to the backlog during this phase** — drop it or take it now, so the phase does not check off with new loose ends.
+- **An item with no decision keeps the phase open.** Say which items are undecided and stop.
 
 ## Prompt Templates
 
@@ -247,8 +257,6 @@ You are a coding agent implementing a phase of a spec-driven project.
 
 **Phase:** [N]
 **Project specs:** [specs/projects/PROJECT_NAME/]
-[IF backlog phase:] **Backlog items to close:** [items the user agreed to close, one line each]
-[IF backlog phase:] **Backlog items to mark dismissed:** [items the user dismissed, one line each]
 
 Read `references/coding_phase_prompt.md` for your full instructions. Follow them precisely.
 
@@ -273,10 +281,11 @@ Return a short summary of changes made when ready for re-review.
 Your code has passed review. Mark the phase checkbox complete in implementation_plan.md, then commit all changes with a descriptive message summarizing the work done in this phase, including any deviation from the spec.
 
 [IF findings were routed to the backlog:]
-Before committing, add these items to specs/projects/PROJECT_NAME/backlog.md (create it if it does not exist):
-- [one line per item]
+Before committing, add these items to specs/projects/PROJECT_NAME/backlog.md (create it if it does not exist). One checklist entry per item, with the next free B-number as its ID:
+- [ ] **B[n] — [short title]**
+  [What the problem is, and where it was found.]
 If you created the file, also append this phase to implementation_plan.md:
-- [ ] **Phase [next phase number]: Backlog.** Review open backlog items with the user, then close or dismiss each through the standard phase flow.
+- [ ] **Phase [next phase number]: Backlog.** Decide each open backlog item with the user, then close or dismiss them all.
 
 Return the commit message you used.
 ```
@@ -328,3 +337,4 @@ When the manager receives a roadblock message:
 - [references/cr_agent_prompt.md](references/cr_agent_prompt.md) — Full instructions for CR sub-agents
 - [references/quick_fix_prompt.md](references/quick_fix_prompt.md) — Full instructions for quick-fix sub-agents
 - [references/shared/ui_review.md](shared/ui_review.md) — The UI review step and its prompt templates
+- [references/shared/backlog_phase.md](shared/backlog_phase.md) — How to run the Backlog phase (read only when you reach it)

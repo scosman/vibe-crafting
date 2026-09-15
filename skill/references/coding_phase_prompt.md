@@ -18,7 +18,6 @@ You are a coding agent implementing a phase of a spec-driven project.
    - `architecture.md`
    - `ui_design.md` (if exists)
    - `components/*.md` (if exist)
-3. If the prompt lists backlog items to close or to mark dismissed, read `backlog.md` — the items to close are this phase's scope, and you mark each item closed or dismissed there as part of the work
 
 ## Initial Invocation: Plan and Implement
 
