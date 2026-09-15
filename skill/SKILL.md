@@ -108,9 +108,7 @@ To check state: read `.specs_skill_state/current_project.md` and scan artifact f
 
 If the request is about learning or understanding something rather than building it — "what's the current state of the OpenEnv standard?", "how does Stripe's webhook retry work?", "which library should we use for Z?" — route to `/spec research`. Also suggest it when a user's project idea depends on an external standard, API, or library that neither of you can describe accurately from memory.
 
-## Deciding a Queue of Questions
-
-[references/shared/backlog_phase.md](references/shared/backlog_phase.md) is an interactive process for working through a queue of open questions with the user: verify each one first, ask it with enough context to actually be decidable, record the answer, and execute the whole set only once every question is answered. It is written for the Backlog phase of `/spec implement`, but the shape is reusable — read it whenever a flow needs a batch of user decisions made well, rather than one at a time. Load it only when you need it.
+**Not a command:** [shared/backlog_phase.md](references/shared/backlog_phase.md) — an interactive process for deciding a queue of open questions with the user. Written for the Backlog phase of `/spec implement`; reusable wherever a flow needs a batch of decisions.
 
 ## Project Structure
 
