@@ -22,7 +22,8 @@ It's the process I use to ship code I actually care about — an iOS app, Mac ap
 
 [Install it](#quickstart) and you get [ten `/spec` commands](#commands) in the agent of your choice.
 
-**The full story** — how the process evolved, where the AI still gets things wrong, what it costs, and the sandboxing/tooling pain — is in the blog post: **[Vibe Crafting: Vibe Coding for Stuff You Care About](https://scosman.net/blog/vibe_crafting)**.
+> [!TIP]
+> **Read the full story** — how the process evolved, where the AI still gets things wrong, what it costs, and the sandboxing/tooling pain — is in the blog post: **[Vibe Crafting: Vibe Coding for Stuff You Care About](https://scosman.net/blog/vibe_crafting)**.
 
 ## Quickstart
 
