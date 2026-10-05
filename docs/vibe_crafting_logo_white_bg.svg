@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Vibe Crafting">
+  <rect width="128" height="128" fill="#ffffff"/>
+  <g fill="none" stroke-width="14">
+    <path stroke="#4a54c4" d="M28,28 H92"/>
+    <path stroke="#127e63" d="M92,28 A18,18 0 0 1 92,64 H36"/>
+    <path stroke="#b8680b" d="M36,64 A18,18 0 0 0 36,100 H100"/>
+  </g>
+  <circle cx="28" cy="28" r="12" fill="#4a54c4"/>
+  <circle cx="28" cy="28" r="4.5" fill="#ffffff"/>
+  <circle cx="100" cy="100" r="12" fill="#b8680b"/>
+  <circle cx="100" cy="100" r="4.5" fill="#ffffff"/>
+</svg>
