@@ -1,3 +1,6 @@
+<img width="64" height="64" alt="vc_logo" src="https://github.com/user-attachments/assets/a5dac224-1965-4481-abf7-6bd4e1a7193b" />
+
+
 # Vibe Crafting
 ### An agent skill for spec-driven development
 
