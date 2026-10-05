@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="468" viewBox="0 72 1000 468" role="img" aria-label="Subway diagram of the Vibe Crafting process. The spec line runs through six stations, project overview, functional spec, UI design if needed, architecture, component designs if needed, and implementation plan, with optional research on overview, functional spec and architecture. It curves into the implement line, where phase 1 is shown in full: code, review, and commit, with a needs-changes loop from review back to code and a quick-fix detour from review to commit. Phases 2 through N repeat the same loop. It then curves into the review and ship line: optional deep code review, open PR, optional PR feedback with a loop for new review comments, and merge.">
+<svg xmlns="http://www.w3.org/2000/svg" width="1012" height="476" viewBox="-12 64 1012 476" role="img" aria-label="Subway diagram of the Vibe Crafting process. The spec line runs through six stations, project overview, functional spec, UI design if needed, architecture, component designs if needed, and implementation plan, with optional research on overview, functional spec and architecture. It curves into the implement line, where phase 1 is shown in full: code, review, and commit, with a needs-changes loop from review back to code and a quick-fix detour from review to commit. Phases 2 through N repeat the same loop. It then curves into the review and ship line: optional deep code review, open PR, optional PR feedback with a loop for new review comments, and merge.">
 <style>
 svg { --d-panel: #ffffff; --d-ink: #1b1e27; --d-muted: #656c7e; --d-faint: #a2a7b3; --d-on: #ffffff; --d-spec: #4a54c4; --d-build: #127e63; --d-ship: #b8680b; --d-spec-tint: #e6e8fb; --d-build-tint: #dcf1e9; }
 @media (prefers-color-scheme: dark) { svg { --d-panel: #161921; --d-ink: #e7e9ef; --d-muted: #9aa1b2; --d-faint: #636a7a; --d-on: #11131a; --d-spec: #9198f3; --d-build: #4cc59d; --d-ship: #eea24a; --d-spec-tint: #262a52; --d-build-tint: #143a2f; } }
@@ -6,7 +6,7 @@ svg { --d-panel: #ffffff; --d-ink: #1b1e27; --d-muted: #656c7e; --d-faint: #a2a7
 text { font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
 .paper { fill: var(--d-panel); }
 .chip-spec { fill: var(--d-spec-tint); } .chip-build { fill: var(--d-build-tint); }
-.chip-t { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.chip-t { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 17px; font-weight: 600; }
 .lbl { font-size: 12.5px; font-weight: 500; fill: var(--d-ink); }
 .sub { font-size: 11px; fill: var(--d-muted); }
 .faint { font-size: 11px; fill: var(--d-faint); }
@@ -30,11 +30,11 @@ text { font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe U
 .chev { fill: none; stroke: var(--d-panel); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 </style>
 
-      <rect class="paper" y="72" width="1000" height="468" rx="14"/>
+      <rect class="paper" x="-12" y="64" width="1012" height="476" rx="14"/>
 
       <!-- ===== SPEC ===== -->
-      <rect class="chip-spec" x="19.5" y="84" width="153" height="22" rx="6"/>
-      <text class="chip-t f-spec mid" x="96" y="99.5">/spec new project</text>
+      <rect class="chip-spec" x="-3.5" y="78" width="199" height="29" rx="8"/>
+      <text class="chip-t f-spec mid" x="96" y="98.5">/spec new project</text>
 
       <path class="ln spec" d="M126,130 H880"/>
       <path class="ln build" d="M880,130 A80,80 0 0 1 880,290 H120"/>
@@ -59,8 +59,8 @@ text { font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe U
       <text class="lbl mid" x="838" y="162">Implementation plan</text>
 
       <!-- ===== IMPLEMENT ===== -->
-      <rect class="chip-build" x="766" y="314" width="168" height="22" rx="6"/>
-      <text class="chip-t f-build mid" x="850" y="329.5">/spec implement all</text>
+      <rect class="chip-build" x="741" y="310" width="218" height="29" rx="8"/>
+      <text class="chip-t f-build mid" x="850" y="330.5">/spec implement all</text>
       <rect class="f-build" x="798" y="277" width="104" height="26" rx="13"/>
       <text class="badge-t mid" x="850" y="294">IMPLEMENT</text>
 
