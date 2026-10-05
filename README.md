@@ -12,10 +12,9 @@
 Then the shortest real path from nothing to shipped:
 
 ```
-/spec setup          # once per repo
-/spec new project    # walks you through creating a spec for your project
-/spec implement all  # walk away; it builds every phase, reviewing and committing as it goes
-/spec pr             # after you open the PR: pulls review comments and fixes them
+/spec setup         # once per repo
+/spec new project   # walks you through creating a spec for your project
+/spec implement all # walk away; it builds every phase, reviewing and committing as it goes
 ```
 
 ![The /spec flow: spec steps, then implement all phases with a code, review, commit loop in each, then optional deep code review and PR feedback before merge](docs/vibe_crafting_flow.svg)
