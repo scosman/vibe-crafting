@@ -1,29 +1,9 @@
-```
-██╗   ██╗██╗██████╗ ███████╗
-██║   ██║██║██╔══██╗██╔════╝
-██║   ██║██║██████╔╝█████╗  
-╚██╗ ██╔╝██║██╔══██╗██╔══╝  
- ╚████╔╝ ██║██████╔╝███████╗
-  ╚═══╝  ╚═╝╚═════╝ ╚══════╝
- ██████╗██████╗  █████╗ ███████╗████████╗██╗███╗   ██╗ ██████╗
-██╔════╝██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝
-██║     ██████╔╝███████║█████╗     ██║   ██║██╔██╗ ██║██║  ███╗
-██║     ██╔══██╗██╔══██║██╔══╝     ██║   ██║██║╚██╗██║██║   ██║
-╚██████╗██║  ██║██║  ██║██║        ██║   ██║██║ ╚████║╚██████╔╝
- ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝        ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
-```
-
 # Vibe Crafting
 ### An agent skill for spec-driven development
 
 `/spec` is a [standard agent skill](https://agentskills.io/home) that runs a full spec-driven build process: upfront specs written with you, phased autonomous builds, and layered code review. You make the decisions; the agent does the drafting, the building, and the first few passes of review.
 
-It's the process I use to ship code I actually care about — an iOS app, Mac apps, a Python data pipeline, Git sync engines — without writing the code myself, and without compromising on architecture or quality.
-
 [Install it](#quickstart) and you get [ten `/spec` commands](#commands) in the agent of your choice.
-
-> [!TIP]
-> **Read the full story** — how the process evolved, where the AI still gets things wrong, what it costs, and the sandboxing/tooling pain — is in the blog post: **[Vibe Crafting: Vibe Coding for Stuff You Care About](https://scosman.net/blog/vibe_crafting)**.
 
 ## Quickstart
 
@@ -32,17 +12,13 @@ It's the process I use to ship code I actually care about — an iOS app, Mac ap
 Then the shortest real path from nothing to shipped:
 
 ```
-/spec setup                  # once per repo
-/spec new project            # walks you through creating a spec for your project
-/spec implement all          # walk away; it builds every phase, reviewing and committing as it goes
-/spec pr                     # after you open the PR: pulls review comments and fixes them
+/spec setup           # once per repo
+/spec new project     # walks you through creating a spec for your project
+/spec implement all   # walk away; it builds every phase, reviewing and committing as it goes
+/spec pr              # after you open the PR: pulls review comments and fixes them
 ```
 
-Two things worth getting right up front:
-
-**Add an [AGENTS.md](https://agents.md).** If you haven't already, add one with your code-review guidelines, testing strategies, and best practices. It's what the coding agent follows on every phase.
-
-**Don't let the coding agent stop to ask permission.** `/spec implement all` is only useful if it actually runs unattended. I run in cloud sandboxes in yolo mode, or locally in a sandbox with `claude --permission-mode=dontAsk`. Give it build, test, lint, and format tools it can call on its own.
+![The /spec flow: spec steps, then implement all phases with a code, review, commit loop in each, then optional deep code review and PR feedback before merge](docs/vibe_crafting_flow.svg)
 
 ## Commands
 
@@ -61,6 +37,18 @@ Two things worth getting right up front:
 | `/spec pr` | — | Address GitHub PR feedback. Finds the PR for the branch, pulls unresolved comments, fixes them through the standard CR loop, commits, pushes, and replies to each thread. |
 
 Full details for each command live in [`skill/references/`](skill/references), one file per command. The skill loads them on demand.
+
+## Repo Setup
+
+Two things worth getting right up front:
+
+**Add an [AGENTS.md](https://agents.md).** If you haven't already, add one with your code-review guidelines, testing strategies, and best practices. It's what the coding agent follows on every phase.
+
+**Don't let the coding agent stop to ask permission.** `/spec implement all` is only useful if it actually runs unattended. I run in cloud sandboxes in yolo mode, or locally in a sandbox with `claude --permission-mode=dontAsk`. Give it build, test, lint, and format tools it can call on its own.
+
+## Origin Story
+
+**Read the full story** — how the process evolved, where the AI still gets things wrong, what it costs, and the sandboxing/tooling pain — is in the blog post: **[Vibe Crafting: Vibe Coding for Stuff You Care About](https://scosman.net/blog/vibe_crafting)**.
 
 ## What else is in this repo
 
