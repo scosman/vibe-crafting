@@ -27,7 +27,7 @@ This command is an instance of the shared fan-out pattern: scope → plan → fa
 
 → Read [references/shared/fan_out_pattern.md](shared/fan_out_pattern.md) for those mechanics — unit sizing, the plan artifact, plan approval, dispatch and the per-return loop, model selection, re-dispatching failures, and how the collapse works. Follow them precisely.
 
-This file supplies the research specifics. **Working folder:** `specs/research/[topic]/` standalone, or `specs/projects/PROJECT_NAME/research/[topic]/` when embedded — see [Research Folder](#research-folder) below. The unit is a **subtopic**, the plan is `research_plan.md`, the consolidated summary is `summary.md`, both at the top of the working folder — and three things the other fan-out commands don't have:
+This file supplies the research specifics. **Working folder:** `specs/research/[topic]/` standalone, or `specs/projects/PROJECT_NAME/research/[topic]/` when embedded — see [Research Folder](#research-folder) below. The unit is a **subtopic**, the plan is `research_plan.md`, the consolidated summary is `research_summary.md`, both at the top of the working folder — and three things the other fan-out commands don't have:
 
 - a **web-access precondition** (Step 0) that can stop the command before it starts
 - a **cost dimension to plan approval** (Step 2), because web tools bill per call
@@ -102,17 +102,19 @@ Resolve it once, before writing the plan. Every `[working_folder]/...` path belo
 ```
 [topic]/
   research_plan.md          # written by the manager (Step 1)
-  summary.md                # written by the summary sub-agent (Step 4)
+  research_summary.md       # written by the summary sub-agent (Step 4)
   [subtopic]/
-    summary.md              # written by that subtopic's sub-agent
+    research_summary.md     # written by that subtopic's sub-agent
     [any deep docs it wants].md
   [subtopic]/
     ...
 ```
 
-Three levels of progressive disclosure: the top-level `summary.md` links to subtopic summaries, which link to the deep docs.
+Three levels of progressive disclosure: the top-level `research_summary.md` links to subtopic summaries, which link to the deep docs.
 
-Note the naming: **subtopic summaries live at `[topic]/[subtopic]/summary.md`**, and the single cross-subtopic summary at `[topic]/summary.md`. Don't collapse those two.
+Note the naming: **subtopic summaries live at `[topic]/[subtopic]/research_summary.md`**, and the single cross-subtopic summary at `[topic]/research_summary.md`. Don't collapse those two.
+
+**Why `research_summary.md` and not `summary.md`:** Claude Code blocks sub-agents from writing `.md` files whose whole name is `summary`, `report`, `findings` or `analysis` (any case, any folder). The summaries and deep docs in this tree are all written by sub-agents, so none of them can use those names — keep it `research_summary.md`, and don't let deep docs take a blocked name either.
 
 Slugify the topic and subtopic names for the directory names (lowercase, hyphens, no slashes). On collision with an existing research folder, append `-v2`, `-v3`, etc. — don't overwrite prior research.
 
@@ -185,7 +187,7 @@ Present the plan and ask for approval:
 
 ## Step 3: Dispatch Subtopic Agents
 
-One fresh sub-agent per subtopic, **all dispatched at once and running in parallel**, tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) and using the Research Sub-Agent Prompt template below. Subtopics never depend on each other's output, so there is nothing to serialize — and web research is slow enough per agent that running them one at a time is the difference between one wait and N. Each writes to its own directory and ends with `[working_folder]/[subtopic]/summary.md`; the per-subtopic result you record in the progress block is its bottom line and doc count.
+One fresh sub-agent per subtopic, **all dispatched at once and running in parallel**, tracked per the [fan-out pattern](shared/fan_out_pattern.md#fan-out) and using the Research Sub-Agent Prompt template below. Subtopics never depend on each other's output, so there is nothing to serialize — and web research is slow enough per agent that running them one at a time is the difference between one wait and N. Each writes to its own directory and ends with `[working_folder]/[subtopic]/research_summary.md`; the per-subtopic result you record in the progress block is its bottom line and doc count.
 
 ### Model Selection
 
@@ -197,15 +199,15 @@ Name the model in `research_plan.md`, so Step 2's approval covers it along with 
 
 ## Step 4: Summary
 
-Wait for every subtopic and re-dispatch failures per the [fan-out pattern](shared/fan_out_pattern.md#wait-and-re-dispatch) — a subtopic isn't done until `[working_folder]/[subtopic]/summary.md` exists. Carry any subtopic that hits the attempt cap forward as a known gap.
+Wait for every subtopic and re-dispatch failures per the [fan-out pattern](shared/fan_out_pattern.md#wait-and-re-dispatch) — a subtopic isn't done until `[working_folder]/[subtopic]/research_summary.md` exists. Carry any subtopic that hits the attempt cap forward as a known gap.
 
-Then dispatch the summary sub-agent using the Summary Sub-Agent Prompt template below, naming those gaps. Here the collapse is **delegated**: a fresh sub-agent reads all the subtopic outputs and writes `[working_folder]/summary.md`. The manager doesn't write it — research summarizing means reading a lot of prose, and that's exactly the context the manager is trying not to hold.
+Then dispatch the summary sub-agent using the Summary Sub-Agent Prompt template below, naming those gaps. Here the collapse is **delegated**: a fresh sub-agent reads all the subtopic outputs and writes `[working_folder]/research_summary.md`. The manager doesn't write it — research summarizing means reading a lot of prose, and that's exactly the context the manager is trying not to hold.
 
 It is a fresh spawn, never a resumed subtopic agent.
 
 ## Step 5: Present
 
-Per the [fan-out pattern](shared/fan_out_pattern.md#present). Show the working folder, the path to `[working_folder]/summary.md`, a one-line result per subtopic, and anything that came back thin or failed.
+Per the [fan-out pattern](shared/fan_out_pattern.md#present). Show the working folder, the path to `[working_folder]/research_summary.md`, a one-line result per subtopic, and anything that came back thin or failed.
 
 If embedded in another command: return to that command's flow and feed the summary into the step that was waiting on it.
 
@@ -248,7 +250,7 @@ You are a research sub-agent researching one subtopic.
 
 Read `references/research_agent_prompt.md` for your full instructions. Follow them precisely.
 
-Write your findings to your directory, ending with [working_folder]/[subtopic]/summary.md.
+Write your findings to your directory, ending with [working_folder]/[subtopic]/research_summary.md.
 
 Return a short summary: subtopic name, what you found, how many docs you wrote, any gaps.
 ```
@@ -269,7 +271,7 @@ your job is the single cross-subtopic summary.
 
 Read `references/research_summary_prompt.md` for your full instructions. Follow them precisely.
 
-Write the cross-subtopic summary to [working_folder]/summary.md.
+Write the cross-subtopic summary to [working_folder]/research_summary.md.
 
 Return a short summary: the headline findings and anything the research could not answer.
 ```
