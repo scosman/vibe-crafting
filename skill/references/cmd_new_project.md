@@ -103,7 +103,7 @@ Don't research by reflex. Research when a wrong assumption would send the spec d
 
 **Working folder:** `specs/projects/PROJECT_NAME/research/[topic]/` — this is the `[working_folder]` the research command expects, inside the project rather than the standalone `specs/research/` location.
 
-When research completes, read `specs/projects/PROJECT_NAME/research/[topic]/summary.md` and continue the planning step it was blocking. Cite the research in the artifact you write — link to the summary where a spec decision rests on a finding.
+When research completes, read `specs/projects/PROJECT_NAME/research/[topic]/research_summary.md` and continue the planning step it was blocking. Cite the research in the artifact you write — link to the summary where a spec decision rests on a finding.
 
 ## Step 1: Project Overview
 

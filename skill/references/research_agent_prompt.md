@@ -52,9 +52,11 @@ Write as many markdown files as the subtopic warrants under `[working_folder]/[s
 
 There is no required file list. One rich doc is fine for a narrow subtopic; eight is fine for a broad one.
 
+Don't name a file `summary.md`, `report.md`, `findings.md` or `analysis.md` (any case) — the environment blocks sub-agents from writing those names, and the write will fail. Use a descriptive name instead.
+
 ## Required: Your Subtopic Summary
 
-**You must end by writing `[working_folder]/[subtopic]/summary.md`.** This is not optional — it's the contract with the rest of the research tree. A consumer reads this file alone to get your subtopic's findings, and follows links only when they need depth.
+**You must end by writing `[working_folder]/[subtopic]/research_summary.md`.** This is not optional — it's the contract with the rest of the research tree. A consumer reads this file alone to get your subtopic's findings, and follows links only when they need depth.
 
 ```markdown
 # [Subtopic Name]
